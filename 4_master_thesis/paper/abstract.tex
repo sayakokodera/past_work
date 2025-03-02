@@ -1,0 +1,54 @@
+%% General idea
+% (a) Assisted manual UNDT
+% Prob(a) : there is a gap b/w automatic & manual UT
+% Goal(a) : reduce the gap
+% Sol(a) : assistance system -> enables post-processing
+% (b) Reconstructing SmartInspect data
+% Prob(b): conventional reco does not work well w/ manual UT data due to the stochastic errors (e.g. undersampling)
+% Goal(b): reduce artefacts in reco
+% Sol(b): reduce spatial aliasing caused by irregular and sparse sampling 
+% (c) Spatiotemporal prediction/interpolation 
+% => emphasize that, this problem is actually very general (not application specific!!!)
+% Prob(c): Prediction of monlinear spatiaotemporal data, small data size, 
+% -> this problem is very general and actually a hot topic = very interesting resrach topic
+% Goal(c): Spatiotemporal nonlinear interpolation/prediction
+% Sol(c): 
+%(d) Newral network 
+%Prob(d) DL: lack of interpretability of the current method
+% Goal(d): Establish an interpretable DL scheme for ST-interpolation
+% Sol(d): hybrid approach
+%
+%% Contributions
+% (1) Establish a data-driven hybrid DL scheme for spatio-temporal lattice data
+% (2) Results 
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%=================================================================%
+%							 EN: max. 2400 charaters
+%							current = 2400 chars
+%=================================================================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter*{\centering Abstract} 
+\addcontentsline{toc}{chapter}{Abstract}
+% NDT, UT, manual UT
+Ultrasonic testing (UT) is a nondestructive inspection method to localize the flaws in test objects. Although automation in UT is progressing, there are still great needs for manual operations such as inspection of objects with complex geometries. To ease the operation and improve its reliability, an asistance system can be integrated into manual UT. Such a system records the measurements along with their scan positions and provides visual feedback which can be improved by applying postprocessing. %
+% Prob(1)
+Yet, conventional postprocessing methods, such as synthetic aperture focusing technique (SAFT), may not lead to a satisfactory resolution when applying to manual UT data. One possible reason is spatial undersampling, as the distribution of manual sampling tends to be sparse and irregular compared to densely scanned automatic UT. As a result, spatial aliasing in SAFT reconstructions occurs, leading to the appearence of artefacts. \par
+
+% Goal = ST-interpolation
+In an attempt to prevent spatial aliasing in SAFT reconstructions, the main goal of this work is to predict and interpolate the missing UT data of the unobserved positions as preprocessing of the measurement system. To develop a computationally efficient method, we propose a data driven hybrid approach for interpolating spatio-temporal lattice data, where the frequency responses of multiple time series data are predicted via a minimum mean square estimator. This requires the estimate of the second order statistical moments in space-frequency domain, which are computed via deep neural network. %
+This method can compute the variance of the predictions, which can be utilized to suggest sampling positions strategically. In theory, the proposed method is generic and not confined to UT data, which is one of its main advantages. \par
+
+% Results
+To evaluate the validity of the proposed method, simulations are conducted, where automatic UT data are irregularly subsampled. Overall, the proposed interpolation method yields better prediction results than an existing generic method. Moreover, the proposed preprocessing scheme is shown to contribute to an enhanced reconstruction resolution, if there are adequate datasets available, which is in our case $0.61$ samples per squared wavelength. Furthermore, sampling in high variance area appears to improve the reconstruction resolution than random sampling, indicating the usefulness of suggesting the sampling positions. \par
+
+
+
+%%% DE %%%
+\chapter*{\centering Zusammenfassung} 
+\addcontentsline{toc}{chapter}{Zusammenfassung}
+Ultraschallprüfung (UP) ist eine Zerstörungsfreie Prüfmethode, die zur Lokalisation von Fehlern in Bauteilen genutzt wird. Obwohl in einigen Fällen automatisiert werden kann, ist händische Arbeit oft eine Notwendigkeit. Um die Zuverlässigkeit der Hand-aufgenommenen UP (HaUP) zu erhöhen, können Assistenzsysteme integriert werden. Ein solches System speichert die Messdaten und die Messposition und nutzt sie, um ein visuelles Feedback zu erzeugen, welches durch Post-processing Methoden verbessert werden kann. Konventionelle Methoden zur Nachbearbeitung, wie zum Beispiel die synthetic aperture focusing technique (SAFT), verbessern häufig die HaUP Daten nicht. Ein möglicher Grund ist, dass die nötige räumliche Abtastung durch das HaUP Verfahren nicht erreicht werden kann. Bei Anwendung des SAFT Algorithmus auf solche HaUP Daten kann es deshalb, bei der Rekonstruktion, zu räumlichen Aliasing kommen. \par
+
+Mit dem Ziel räumliches Aliasing zu verhindern, werden in dieser Arbeit, als Pre-processing Schritt, UP Daten von fehlenden Positionen prognostiziert und interpoliert. Wir schlagen eine an Daten orientierte hybride Vorgehensweise vor, um die räumlich-zeitlich diskreten Daten zu interpolieren. Dabei werden die Frequenzantworten mehrerer Zeitreihen mit einer minimalen mittleren quadratischen Fehlereinschätzung prognostiziert. Dafür wird, im Raum-Frequenz Bereich, das statistische Moment zweiter Ordnung eingeschätzt, welches durch ein deep neural network berechnet wird. Diese Methode kann die Varianz der Vorhersagen berechnen, welche genutzt werden können, um wichtige Messpositionen vorzuschlagen. Theoretisch ist die vorgestellte Methode robust genug, um nicht nur auf UP Daten, sondern auf eine Vielzahl von Datensätzen angewendet werden zu können. \par
+
+Um die Validität der vorgeschlagenen Methode zu überprüfen wurden Simulationen durchgeführt, bei denen die automatisierten UP Daten unregelmäßig abgetastet waren. Insgesamt berechnet die vorgestellte Interpolation eine bessere Vorhersage, als eine andere gängige Methode. Zusätzlich erzeugt der vorgestellte Pre-processing Algorithmus, bei geeigneten Datensätzen (0,61 Sample/ Wellenlänge²) eine verbesserte Rekonstruktions-Auflösung. Weiterhin hat sich gezeigt, dass das Messen, in einem Gebieten mit hoher Varianz, zu einer höheren Rekonstruktions-Auflösung führt, was auf die Nützlichkeit des Messpositionsvorschlags hinweist. \par

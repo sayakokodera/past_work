@@ -1,0 +1,549 @@
+% Backup
+
+\subsection{Error Sources}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Accumulation of randomness}
+	%======================================== content =====%
+	\centering	
+	%
+	\begin{columns}[t]
+		%%%% Text %%%%
+		\begin{column}{0.4\textwidth}
+			\begin{overprint}
+				\vspace*{0.3cm}\\
+				System inaccuracy
+				\begin{itemize}
+					\uncover<2->{\item \cigray<5>{Positional inaccuracy}}
+					\uncover<3->{\item \cigray<5>{Inconsistent coupling}}
+				\end{itemize}
+				
+				Path selection
+				\begin{itemize}
+					\uncover<4->{\item \cihighlight<5>{Spatial undersampling}}
+				\end{itemize}
+			\end{overprint}
+		\end{column}	
+		
+		%%% image %%%
+		% grided	
+		\begin{column}{0.3\textwidth}
+			%\vspace*{0.5cm}
+			%\hspace*{2cm}
+			\begin{figure}
+				\begin{center}
+					\inputTikZ{0.4}{figures/autoUT_illustration.tex}
+				\end{center}			
+			\end{figure}
+			
+			% caption
+			\begin{center}
+				\only<1>{\large Automatic}
+				\only<2>{\large Accurate}
+				\only<3>{\large Constant}
+				\only<4->{\large Full}
+			\end{center}	
+		\end{column}
+		
+		% manual
+		\begin{column}{0.3\textwidth}
+			\begin{figure}
+				\begin{center}
+					\inputTikZ{0.4}{figures/manualUT_illustration.tex}
+				\end{center}			
+			\end{figure}	
+			
+			% caption
+			\begin{center}
+				\only<1>{\large Manual}
+				\only<2>{\large Inaccurate}
+				\only<3>{\large Inconsistent}
+				\only<4->{\large Incomplete}
+			\end{center}
+		\end{column}
+	\end{columns}
+	%===================================================%
+\end{frame}
+
+
+\subsection{ST-Interpolation}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{ST-Interpolation in SF-domain}
+	%======================================== content =====%
+	% Overview
+	\only<1>{
+		\begin{textblock}{140}(10, 25)
+			\centering
+			\inputTikZ{0.7}{figures/fig_diag_wholesystem_SFKrig.tex}
+		\end{textblock}
+	}
+	%
+	%====== Text ======%
+	%% ST-domain
+	\only<2-3>{
+		\begin{textblock}{90}(10, 20)
+			\textbf{ST-domain}: temp. correlation $\rightarrow$ vector-valued pred.\\
+			\vspace*{0.2cm}
+			\hspace*{0.3cm} Sought: %
+			\begin{equation*}
+				\bm{a}_{0} \in \RR^{M}
+			\end{equation*}\\
+			
+			\hspace*{0.3cm} Given: %
+			\begin{equation*}
+				\bm{A}_{S} = 
+				\begin{bmatrix}
+					\bm{a}_{1} & \bm{a}_{2} & \cdots & \bm{a}_{N} \\
+				\end{bmatrix}
+				\in \RR^{M \times N}
+			\end{equation*}\\
+		\end{textblock}
+	}
+	
+	% SF-Domain
+	\only<3>{
+		\begin{textblock}{90}(10, 60)
+			\textbf{SF-domain}: orthogonal Fourier bases\\
+			\vspace*{0.2cm}
+			\hspace*{0.3cm} $\Rightarrow$ individual prediction for a single frequency\\
+			\begin{equation*}
+				\bm{p}_{0} = \bm{F}_{M}  \bm{a}_{0} \text{ } \in \CC^{M}
+			\end{equation*}
+		\end{textblock}
+	}
+	
+	% Problem formulation in SF-domain
+	\only<4->{
+		\begin{textblock}{90}(10, 20)
+			\textbf{SF-domain}: $\rightarrow$ set of scalar-valued pred. $ \forall \omega_{m}$\\
+			\vspace*{0.2cm}
+			\hspace*{0.3cm} Sought: %
+			\begin{equation*}
+				p_{0m} \in \CC
+			\end{equation*}\\
+			
+			\hspace*{0.3cm} Given: %
+			\begin{equation*}
+				\bm{\pi}_{m}^{S} = 
+				\begin{bmatrix}
+					p_{1m} & p_{2m} & \cdots & p_{Nm} \\ 
+				\end{bmatrix}^{\T}
+				\in \CC^{M}
+			\end{equation*}\\
+			
+			\vspace*{0.5cm}
+			\only<5>{
+				$\Rightarrow$ \textbf{Optimal prediction}:
+				\begin{equation*}
+					\hat{p}_{0m} = \Expect{p_{0m} \text{ } | \text{ } \bm{\pi}_{m}^{S} }
+				\end{equation*}
+			}
+		\end{textblock}
+	}
+	
+	%====== Image ======%
+	\only<2->{
+		\begin{textblock}{50}(100, 20)
+			\centering
+			Samp. and pred. positions\\
+			\vspace*{0.1cm}
+			\plotbatchitppsmp{0.6}{\Large}{\Large}
+		\end{textblock}
+	}
+	
+	%===================================================%	
+\end{frame}
+
+\subsection{SF-Kriging}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Spatial Statistical Approach: SF-Kriging}
+	%======================================== content =====%
+	%======== Text =======%
+	%%% IS
+	\only<1-2>{
+		\begin{textblock}{90}(10, 18)
+			\textbf{Assumpations}: \textbf{intrinsic stationarity}\\
+			\vspace*{0.2cm} 
+			\hspace*{0.3cm} $\rightarrow$ closer points $\hat{=}$ similar values \\
+		\end{textblock}
+		
+		% 1st assumption
+		\begin{textblock}{90}(10, 35)
+			(1) Mean of the increments is 0\\
+			\begin{equation*}
+				\Expect{ p (\bm{s} ) - p ( \bm{s} + \bm{h} ) } = 0 
+			\end{equation*}
+		\end{textblock}
+		
+		% 2nd assumption
+		\begin{textblock}{90}(10, 55)
+			(2) Variance of the increments is shift invariant\\
+			\hspace*{0.5cm} $\rightarrow$ function of the spatial lag\\
+			\begin{equation*}
+				\Var{ p (\bm{s} ) - p ( \bm{s} + \bm{h} ) }  \coloneqq  2 \gamma ( \bm{h} ) 
+			\end{equation*}
+			
+			\only<2>{
+				\hspace*{0.3cm} $2 \gamma ( \bm{h} ) = $ \cihighlight{ \textbf{Frequency variogram (FV)} }
+			}
+		\end{textblock}
+	}
+	
+	% Kriging
+	\only<3->{
+		\begin{textblock}{90}(10, 18)
+			\textbf{Linear predictor}: \\
+			\vspace*{0.2cm}
+			\hspace*{2cm} $\hat{p}_{0m} = \bm{w}_{m}^{\Hermit} \bm{\pi}_{m}^{S} $\\
+			%			\begin{equation*}
+			%				\hat{p}_{0m} = \bm{w}_{m}^{\Hermit} \bm{\pi}_{m} 
+			%			\end{equation*}
+			%
+			\vspace*{0.3cm}
+			\textbf{Linear unbiased MMSE predictor (Kriging)}: \\
+			\vspace*{0.2cm}
+			\hspace*{0.8cm} $\minimize{ \bm{w}_{m} }$    $f (\weights_{m} )$     $\text{s.t.   }  \displaystyle \sum_{i = 1}^{N} w_i = 1 $
+			%			\begin{equation*}
+			%				\begin{matrix}
+			%					\minimize{ \bm{w}_{m} } & & f (\weights_{m}  ) \\
+			%				\end{matrix}
+			%			\end{equation*}
+			\begin{equation*}
+				\begin{matrix}
+					f( \weights_{m} ) 
+					& =& \Expect{ \left| p_{0m} - \hat{p}_{0m} \right|^{2} } \\
+					& = & \Var{ p_{0m} - \hat{p}_{0m} }  \\
+					& = & \displaystyle - \sum_{i = 1}^{N} \sum_{j = 1}^{N} w_i w_j \gamma_{m} ( \lagvec{ij} ) + 2 \sum_{i = 1}^{N} w_i \gamma_{m} ( \lagvec{0i} )
+				\end{matrix}
+			\end{equation*}
+			%
+			\hspace*{0.5cm} with $\lagvec{ij} = \pos{i} - \pos{j}$ and $\lagvec{0i} = \pos{0} - \pos{i}$	
+		\end{textblock}
+	}
+	
+	%======== Image ========%
+	%====== Image ======%
+	\begin{textblock}{50}(100, 20)
+		\centering
+		$\left\lbrace p ( \pos{} ) : \pos{} \subset D \right\rbrace $\\
+		\vspace*{0.1cm}
+		\plotbatchitppsmp{0.6}{\Large}{\Large}
+	\end{textblock}
+	%
+	% For highlighting the FV estimation
+	\begin{textblock}{50}(105, 70)
+		\only<4>{
+			$\rightarrow$ \cihighlight{ \textbf{Estimate of $\gamma_{m} ( \lagvec{} )$ } }
+		}
+	\end{textblock}
+	
+	%===================================================%	
+\end{frame}
+
+
+\subsection{FVnet}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{FVnet: Estimation of Spatial Statistics}
+	%======================================== content =====%
+	% Overview
+	\only<1>{
+		\begin{textblock}{140}(10, 25)
+			\centering
+			\inputTikZ{0.7}{figures/fig_diag_wholesystem_FVnet.tex}
+		\end{textblock}
+	}
+	%
+	% Properties
+	\only<2-4>{	
+		%========= Text =========%
+		\begin{textblock}{90}(10, 20)
+			\textbf{Properties and assumptions}: \\
+			\vspace*{0.2cm}
+			\hspace*{0.2cm} $\rightarrow$ within a small batch\\
+			%
+			\begin{itemize}
+				\item Intrinsic stationary
+				\item Variability in $x$ and $y$ is negligible\\
+				$\rightarrow$ $\gamma_{m} ( \lagvec{} ) = \gamma_{m} ( \lag{} ) $\\
+				\item Lattice data\\
+				$\rightarrow$ known vector-valued lags $\in \RR^{N_{h}}$ \\
+				\item Vector-valued FV $\bm{ \gamma_{m} } \in \RR^{N_{h}}$
+				\item There are certain structures in FVs \\
+				$\rightarrow$ similar within the neighboring bins
+			\end{itemize}
+		\end{textblock}
+	}
+	%
+	% Process
+	\only<5>{
+		\begin{textblock}{140}(10, 20)
+			\textbf{Problem formulation for DNN}\\
+			\hspace*{0.3cm} $\Rightarrow$ Estimate the structure of $\bm{ \gamma_{m} } \in \RR^{N_{h}}$ \\
+			\hspace*{0.3cm} $\hat{=}$ Vector-valued regression problem
+		\end{textblock}
+		
+		\begin{textblock}{140}(10, 40)
+			\textbf{Network inputs}
+			\begin{itemize}
+				\item Input 1 = Fourier coefficients of 3 bins \\
+				$\bm{\Pi}_{m} = \left[ \bm{\pi}_{m-1} \text{  } \bm{\pi}_{m-1} \text{  } \bm{\pi}_{m-1} \right] \in \CC^{N \times 3}$\\
+				\item Input 2 = Scan positions
+			\end{itemize}
+		\end{textblock}
+	}
+	%
+	%========= Image =========%
+	\only<3-5>{
+		\begin{textblock}{50}(90, 25)
+			\centering
+			\begin{overprint}
+				\only<3>{
+					\plotFV{0.6}{\Large}{\Large}{figures/coords_1D/batch_itp/fv_signal.tex}
+				}
+				\only<4->{
+					\plotFV{0.6}{\Large}{\Large}{figures/coords_1D/batch_itp/fvnorm_signal.tex}
+				}
+			\end{overprint}
+		\end{textblock}
+	}
+	
+	% Block diag
+	\only<6->{
+		\textbf{FVnet}
+		\begin{textblock}{140}(10, 25)
+			\centering
+			\inputTikZ{0.7}{ figures/fig_diag_FVnet.tex}
+		\end{textblock}
+		%
+		\begin{textblock}{140}(10, 65)
+			(i) $\Phi_{\EFV}: \CC^{M \times 3} \mapsto \RR^{N_{h} \times 3}$\\
+			\hspace*{0.3cm} Fourier coeffs. $\mapsto$ smoothed \& normalized method-of-moments estimate of the FVs\\
+			%
+			\vspace*{0.2cm}
+			(ii) $\Phi_{\hist}: \RR^{N \times 2} \mapsto \RR^{N_{h}}$\\
+			\hspace*{0.3cm} Sampling positions $\mapsto$ distribution of the available lags 
+		\end{textblock}
+	}
+	%===================================================%	
+\end{frame}
+
+
+\subsection{Parameters: MUSE}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Parameters: MUSE}
+	%======================================== content =====%
+	\begin{textblock}{140}(10, 25)
+		\begin{table}
+			\centering
+			\inputTable{0.7 \textwidth}{tables/table_params_MUSE.tex}
+		\end{table}
+	\end{textblock}
+	%===================================================%	
+\end{frame}
+
+\subsection{Parameters: SF-Kriging}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Parameters: SF-Kriging}
+	%======================================== content =====%
+	\begin{textblock}{140}(10, 25)
+		\begin{table}
+			\centering
+			\inputTable{0.7 \textwidth}{tables/table_params_itp.tex}
+		\end{table}
+	\end{textblock}
+	%===================================================%	
+\end{frame}
+
+
+\subsection{Parameters: FWM constant}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Parameters: FWM Constant}
+	%======================================== content =====%
+	\begin{textblock}{140}(10, 25)
+		\begin{table}
+			\centering
+			\inputTable{0.7 \textwidth}{tables/table_params_FWM_const.tex}
+		\end{table}
+	\end{textblock}
+	%===================================================%	
+\end{frame}
+
+
+\subsection{Parameters: FWM variable}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Parameters: FWM Variables}
+	%======================================== content =====%
+	\begin{textblock}{140}(10, 25)
+		\begin{table}
+			\centering
+			\inputTable{0.7 \textwidth}{tables/table_params_FWM_variables.tex}
+		\end{table}
+	\end{textblock}
+	%===================================================%	
+\end{frame}
+
+\subsection{Results: Batch Wise Interpolation}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Results: Batch Wise Interpolation}
+	%======================================== content =====%
+	\begin{overprint}
+		\centering
+		\only<1>{
+			\textbf{FVnet + SF-Kriging}\\
+			\vspace*{0.2cm}
+			%
+			\centering
+			\plotapred{0.8}{\large}{\large}{figures/coords_1D/batch_itp/a_fk_x0y2.tex}
+		}
+		\only<2>{
+			\textbf{IDW}\\
+			\vspace*{0.2cm}
+			%
+			\centering
+			\plotapred{0.8}{\large}{\large}{figures/coords_1D/batch_itp/a_idw_x0y2.tex}
+		}
+	\end{overprint}
+	%===================================================%	
+\end{frame}
+
+
+\subsection{Results 1} 
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Performance Evaluation for Varying Coverage} 
+	%\fontsize{10pt}
+	%======================================== content =====%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%=========== Animation: GCNR ==============%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% 7%
+	\only<1-2>{%
+		\centering
+		%<scale size>, <font size>, <slide page for the mark>, <mark coordinates>
+		\resultsanimate{1}{\large}{2}{(7, 0.928949239870331) (7, 0.9297401836195587) (7, 0.9200115019620995)}%
+	}
+	% 12%
+	\only<4>{%
+		\centering
+		%<scale size>, <font size>, <slide page for the mark>, <mark coordinates>
+		\resultsanimate{1}{\large}{4}{ (12, 0.9396880203093468) (12, 0.9531296147578115) (12, 0.960993309152738) }
+	}
+	
+	%%=======  Left: Reco true =======%%%
+	\begin{textblock}{35}(5, 25)
+		\centering
+		\begin{overprint}
+			%% R_true
+			\only<3, 5>{
+				\textbf{Reference}\\
+				\vspace*{0.3cm}
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewbothlabels{0.5}{\Large}{\Large}{figures/tex_png/simulations_logscale/R_true.png}\\
+			}
+		\end{overprint}
+	\end{textblock}
+	%
+	%
+	%%======= Center left: Reco smp or FK (for resampling) =======%%%
+	\begin{textblock}{35}(45, 25)
+		\centering
+		\begin{overprint}
+			%%%% Initial sampling positions %%%%
+			%% 7% 
+			\only<3>{
+				\textbf{No preproc.}\\
+				\vspace*{0.3cm}
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewxlabel{0.5}{\Large}{\Large}{figures/tex_png/simulations_logscale/007/R_smp.png}\\
+			}
+			%% 12%
+			\only<5>{
+				\textbf{No preproc.}\\
+				\vspace*{0.3cm}
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewxlabel{0.5}{\Large}{\Large}{figures/tex_png/simulations_logscale/012/R_smp.png}\\
+			}
+		\end{overprint}
+	\end{textblock}
+	%
+	%
+	%%======= Center right: IDWs (both sampling and resampling) =======%%%
+	\begin{textblock}{35}(80, 25)
+		\centering
+		\begin{overprint}
+			%% 7%
+			\only<3>{
+				\textbf{IDW}\\
+				\vspace*{0.4cm}
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewxlabel{0.5}{\Large}{\Large}{figures/tex_png/simulations_logscale/007/R_idw.png}\\
+			}
+			%% 12%
+			\only<5>{
+				\textbf{IDW}\\
+				\vspace*{0.4cm}
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewxlabel{0.5}{\Large}{\Large}{figures/tex_png/simulations_logscale/012/R_idw.png}\\
+			}
+		\end{overprint}
+	\end{textblock}
+	
+	%%======= Right: FKs (both sampling and resampling) =======%%%
+	\begin{textblock}{35}(115, 25)
+		\centering
+		\begin{overprint}
+			%% 7%
+			\only<3>{
+				\textbf{SF-Krig.}\\
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewxlabelwithcmap{0.5}{\Large}{\Large}{figures/tex_png/simulations_logscale/007/R_fk.png}\\
+			}
+			%% 12%
+			\only<5>{
+				\textbf{SF-Krig.}\\
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewxlabelwithcmap{0.5}{\Large}{\Large}{figures/tex_png/simulations_logscale/012/R_fk.png}\\
+			}
+		\end{overprint}
+	\end{textblock}
+	
+	%===================================================%
+\end{frame}

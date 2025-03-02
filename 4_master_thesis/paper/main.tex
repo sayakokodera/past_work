@@ -1,0 +1,132 @@
+% !TeX spellcheck = en_US
+
+\documentclass[		a4paper,
+								oneside,
+								%twoside,
+								11pt,
+								%DIV15,
+								headinclude,
+								BCOR=17mm,        % Bindekorrektur: Innen 17mm Platz lassen. Copyshop-getestet.
+								headsepline,     % Unter Kopfzeile Trennlinie (aus: headnosepline)
+								footsepline,
+								%listof=totoc,
+								%bibliography=totoc,
+								%abstracton,
+								%openright
+								]{scrreprt}%{scrbook} memoir scrreprt
+
+
+\input{header_files/packages.tex}
+\input{header_files/newcommands.tex}
+\input{header_files/mathoperators.tex}
+\input{header_files/tikzstyles.tex}
+\input{header_files/set_color.tex}
+
+\makeindex
+\makeglossaries
+\input{glossary.tex}
+\input{abbreviations.tex}
+
+
+\begin{document}
+
+\input{titlepage.tex}
+ 
+\pagenumbering{gobble} % for switching off the numbering
+\input{abstract.tex}
+
+% table of contents
+\tableofcontents 
+\addcontentsline{toc}{chapter}{Contents}
+
+\listoffigures
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoftables
+\addcontentsline{toc}{chapter}{List of Tables}
+
+\newpage % don't forget this! otherwise the page before will be also garbled
+\pagenumbering{arabic} % switch on the numbering
+\setcounter{page}{1} 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Main Part
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Introduction} \label{chap:intro}
+\input{chap_intro.tex}
+
+%%%%%% Part 1 %%%%%%
+\part[Data Model and SoA]{Manual \acrshort{ut} and Conventional Techniques for Spatiotemporal Interpolation and Deep Learning} \label{part_soa} 
+% Manual UT
+\chapter[UT Data Model]{Manual \acrshort{ut} Measurements and Assistance System} \label{chap_ut} 
+\input{chap_ut.tex}
+
+% DL
+\chapter[SoA: DL]{Deep Learning and Neural Networks} \label{chap_dl}
+\input{chap_DL.tex}
+
+% ST interpolation 
+\chapter[SoA: ST Interpolation]{Spatio-Temporal Data Analysis and Inference} \label{chap_stitp} 
+\input{chap_soa_interpolation.tex}
+
+
+%%%%%% Part 2 %%%%%%
+\part{Data Driven Space-Frequency Domain Interpolation} \label{part_method}  
+\input{chap_methods.tex}
+
+
+%%%%%% Part 3 %%%%%%
+\part[Results]{Reconstruction of Irregularly Subsampled Ultrasonic Testing Data} \label{part_results} 
+\input{chap_simulations.tex}
+
+\clearpage
+\pagebreak
+
+
+%%%%%% Part: conclusion %%%%%
+\bookmarksetup{startatroot}% to end Part
+\addtocontents{toc}{\bigskip}
+%
+\chapter*{Conclusion} 
+\addcontentsline{toc}{chapter}{Conclusion} 
+%\label{chap_conclusion}
+%
+\input{conclusion.tex}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% References, lists etc...
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+\appendix
+
+% bibliography
+\bibliography{main}
+\addcontentsline{toc}{chapter}{Bibliography}
+\newpage
+\pagebreak
+
+% list of notations/ figures / tables
+\chapter*{Notation and Symbols}
+\addcontentsline{toc}{chapter}{Notation and Symbols} 
+\input{mathnotation.tex}
+\pagebreak
+
+% Glossary & abbreviations
+\printglossaries
+\pagebreak
+
+
+%% Appendix  
+%\input{appendix.tex}
+%\addcontentsline{toc}{chapter}{Appendices}
+%\pagebreak
+
+% Declaration
+\newpage
+\pagenumbering{gobble} % to switch off the page numbering
+\input{declaration.tex}
+
+\end{document}

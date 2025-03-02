@@ -1,0 +1,77 @@
+% package collection
+
+%% Page Setting %%%
+\usepackage{fullpage}
+\usepackage{geometry} % For customizing the page dimension
+\usepackage{xcolor, colortbl}
+
+%%% Fonts & Formatting %%%
+
+
+%%% Language %%%
+\usepackage[english]{babel}
+%\usepackage[T1]{fontenc} <- from BA
+%\usepackage[utf8]{inputenc} <- from BA
+\usepackage{lmodern} %Type1-font for non-english texts and characters <- from BA
+
+
+%% Enumerate %%%
+\usepackage{enumerate}
+\usepackage{enumitem}
+
+
+%%% Math %%%
+\usepackage{amsmath,amssymb,amsfonts, amsthm, mathrsfs}   % ams packages, useful for typing math  
+\usepackage{bm}     % bm provides \boldmath for bold fonts in equations (matrices, vectors)
+\usepackage{mathtools} % for \coloneqq or so
+\usepackage{scalerel} % for scaling subscript
+
+
+%%% Units, symbols %%
+\usepackage{siunitx}
+\usepackage{gensymb}
+
+
+%%% pgfplots and TikZ %%%
+\usepackage{pgfplots}
+\pgfplotsset{compat = 1.14}
+\usepgfplotslibrary{colormaps}
+\usepgfplotslibrary{groupplots}
+\usepackage{tikz}
+\usetikzlibrary{patterns, shapes, arrows, fit, positioning, snakes} %spy 
+\usetikzlibrary{petri} % for tokens in the block diagram for iterative GD
+\usetikzlibrary{spy} % for zooming in the graph
+
+%%% Figures %%%
+\usepackage{caption} % [font = {small}] for controlling the font size
+\usepackage{subcaption}
+\usepackage{multicol} % for switching between one and multicolumn format on the same page
+
+
+%%% Tables %%%
+\usepackage{xcolor,colortbl} % for coloring a single table cell
+
+
+
+%%% Else %%%
+\usepackage[toc, page]{appendix} % For Table of Contents
+\usepackage{todonotes} % Add To-Dos, [disable] -> hide To-Dos
+%\usepackage[automake, acronym, nopostdot, nonumberlist, nogroupskip]{glossaries}
+\usepackage[makeindex]{imakeidx}
+
+
+%%% Bibliography %%%
+\usepackage{url}
+\usepackage[numbers,sort,compress]{natbib}
+\bibliographystyle{unsrt} %plain -> order by alphabet, unsrt -> order by appearance 
+\usepackage{doi}
+
+\usepackage{bookmark} % to end Part
+\usepackage{hyperref}
+%\usepackage[breaklinks,hidelinks]{hyperref}
+
+% Packages which should be loaded AFTER hyperref
+\usepackage[automake, acronym, nopostdot, nonumberlist, nogroupskip, toc]{glossaries}
+%\usepackage{imakeidx}
+
+

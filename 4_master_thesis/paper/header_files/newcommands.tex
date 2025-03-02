@@ -1,0 +1,1222 @@
+% "newcommand" collections
+% !!! In newcommands: numbers cannot be used for the command names!!!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%=====================  for general =======================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Font setting for headings
+\addtokomafont{part}{\bfseries \rmfamily}
+\addtokomafont{partnumber}{\bfseries \rmfamily} % Numbering only necessary for part!
+\addtokomafont{partentry}{\bfseries \rmfamily}
+\addtokomafont{chapter}{\bfseries \rmfamily}
+\addtokomafont{chapterentry}{\bfseries \rmfamily}
+\addtokomafont{section}{\bfseries \rmfamily}
+\addtokomafont{subsection}{\bfseries \rmfamily}
+\addtokomafont{subsubsection}{\bfseries \rmfamily}
+
+
+
+\newcommand{\redcom}[1]{%
+	\textcolor{red}{\LARGE #1}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%=====================  for math =======================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% For font size of subscript
+\newcommand{\subscript}[1]{%
+	\scaleto{ #1 }{4pt} 
+}
+
+% Math operands
+% l2 norms
+\newcommand{\norm}[1]{%
+	\left\lVert#1\right\rVert
+}
+% Transpose
+\newcommand{\TP}[1]{%
+	#1^{\T}
+}
+% Vectorization
+\newcommand{\vectorize}[1]{%
+	\operatorname{vec} \{ #1 \}
+}
+% Diagonal matrix
+\newcommand{\diag}[1]{%
+	\operatorname{diag} \{ #1 \}
+}
+% Real part
+\newcommand{\Real}{%  
+     \operatorname{Re}
+}
+ % Imaginary part
+\newcommand{\Imag}{%  
+     \operatorname{Im}
+}
+% Column space
+\newcommand{\Col}[1]{
+	\operatorname{col} \{ #1 \}
+}
+% Nullspace 
+\newcommand{\Null}[1]{
+	\operatorname{null} \{ #1 \}
+} 
+% Expected value
+\newcommand{\Expect}[1]{
+	\operatorname{E}  \left\lbrace  #1  \right\rbrace 
+} 
+% Unfolding 
+\newcommand{\unfold}[2]{ % tensor, mode
+	[ #1 ]_{ ( #2 ) }
+} 
+% Correlation
+\newcommand{\Corr}[1]{
+	\operatorname{Corr}  \left\lbrace  #1  \right\rbrace 
+} 
+%Covariance
+\newcommand{\Cov}[1]{
+	\operatorname{Cov}  \left\lbrace  #1  \right\rbrace 
+} 
+% Variance
+\newcommand{\Var}[1]{
+	\operatorname{Var}  \left\lbrace  #1  \right\rbrace 
+}
+%% MSE
+\newcommand{\MSE}[1]{
+	\operatorname{MSE}  \left\lbrace  #1  \right\rbrace 
+}
+% Minimization
+\newcommand{\minimize}[1]{ % variable
+	\underset{#1}{ \operatorname{minimize} }
+} 
+% Fourier transform (FT)
+\newcommand{\ft}[2]{ % domain, argument
+	\mathscr{F}_{ #1 } \left\lbrace  #2  \right\rbrace 
+}
+% Inverse Fourier transform (IFT)
+\newcommand{\ift}[2]{ % domain, argument
+	\mathscr{F}_{ #1 }^{-1} \left\lbrace  #2  \right\rbrace 
+}
+% DFT matrix
+\newcommand{\DFTmat}[1]{ % size
+	\bm{F}_{ #1 } 
+}
+
+
+% symbols
+% General
+\newcommand{\Identity}[1]{\bm{I}_{#1}} % Identity matrix
+\newcommand{\RR}{{\mathbb{R}}}
+\newcommand{\CC}{{\mathbb{C}}}
+\newcommand{\NN}{{\mathbb{N}}}
+\newcommand{\NormalDist}{ \mathscr{N} } % Normal distribution
+
+% Dimensions
+\newcommand{\N}[1]{N_{#1}}
+
+% Scan positions & lags
+\newcommand{\pos}[1]{
+					\bm{s}_{ #1 } 
+}
+% Prediction position
+\newcommand{\pospred}[1]{
+	\bm{s}_{ \widetilde{ #1 } } 
+}
+
+\newcommand{\lagvec}[1]{
+					\bm{h}_{#1} 
+}
+\newcommand{\lag}[1]{
+					h_{#1} 
+}
+\newcommand{\lagvecinc}[1]{
+					\bm{ \vartheta }_{#1} 
+}
+% Wavenumber 
+\newcommand{\wavenum}{
+	\bm{k}
+}
+
+
+% Data in space-time domain: ascans, data in 3D, unfolding 
+\newcommand{\ascansig}{a}
+\newcommand{\ascan}[1]{ % i-th A-Scan (vector), param = i 
+					\bm{a}_{#1}
+} 
+\newcommand{\ascanhat}[1]{ % Estimation of the i-th A-Scan (vector), param = i
+					\hat{\ascan{ }}_{#1}
+} 
+\newcommand{\Amat}[1]{ % 2D representation of the measurement data, param = measurement method
+					\bm{A}_{#1}
+} 
+\newcommand{\Atensor}[1]{ % 3D representation of the measurement data, param = measurement method
+					\bm{\mathcal{A}}_{#1}
+} 
+\newcommand{\Atensorhat}[1]{ % 3D representation of the interpolated/predicted measurement data, param = prediction method
+					\hat{\Atensor{ } }_{#1}
+} 
+\newcommand{\aall}{ % = vec{\Atensor}
+					\bm{\alpha}
+} 
+\newcommand{\aallhat}[1]{ % = vec{\Atensorhat}, param = prediction method
+					\hat{\aall}_{#1}
+} 
+
+%%%%% Data in space-freq. domain %%%%
+% Complex SRF for UT data
+\newcommand{\CSRF}{ P }
+% Incremental Complex SRF for UT data
+\newcommand{\CSRFinc}{ Q }
+% Freq. response vector
+\newcommand{\frsp}[1]{ % freq. spectrum of the i-th A-Scan (vector), param = i 
+					\bm{p}_{#1}
+} 
+\newcommand{\frsphat}[1]{ % estimate freq. spectrum of the i-th A-Scan (vector), param = i 
+					\hat{\fresp{ }}_{#1}
+} 
+\newcommand{\ftcoeffut}[1]{ % freq. spectrum of the i-th A-Scan (vector), param = i 
+	\bm{\pi}_{#1}
+} 
+\newcommand{\ftcoeffuthat}[1]{ % freq. spectrum of the i-th A-Scan (vector), param = i 
+	\hat{\ftcoeffut{ }}_{#1}
+} 
+
+\newcommand{\frspinc}[1]{ % = p_{i} - p_{j} = difference b/w two freqeunce responce, param = ij
+					\bm{q}_{#1}
+} 
+
+\newcommand{\Frsp}{ % freq. spectrum of multiple A-Scans, matrix form
+					\bm{P}
+} 
+\newcommand{\Frspinc}{ % freq. spectrum of multiple incremental process, matrix form
+					\bm{Q}
+} 
+\newcommand{\Ftensor}{ % freq. spectrum of multiple A-Scans in 3D form
+					\bm{\mathcal{P}}
+} 
+\newcommand{\Ftensorhat}[1]{ % estimated freq. spectrum of multiple A-Scans in 3D form, param = prediction method
+					\hat{\Ftensor}_{#1}
+} 
+\newcommand{\frspall}{ % = vec{\Ftensor}
+					\bm{\rho}
+} 
+\newcommand{\frspallhat}[1]{ % = vec{\Ftensorhat},  param = prediction method
+					\hat{\frspall}_{#1}
+} 
+
+
+% Pulse, SAFT matrix, spatial approximation
+\newcommand{\pulsesig}{h}
+\newcommand{\pulse}{\bm{h}}
+\newcommand{\pulsehat}{\hat{\pulse}}
+\newcommand{\pulsederiv}{\bm{j}}
+\newcommand{\pulsederivhat}{\hat{\pulsederiv}}
+\newcommand{\SAFTcol}[2]{\pulse_{#1}^{(#2)}}
+\newcommand{\SAFThatcol}[2]{\pulsehat_{#1}^{(#2)}}
+\newcommand{\SAFT}{\bm{H}}
+\newcommand{\SAFThat}{\hat{\SAFT}}
+\newcommand{\SAFTdot}{\bm{J}}
+\newcommand{\SAFTdotcol}[2]{\pulsederiv_{#1}^{(#2)}}
+\newcommand{\SAFTdothat}{\hat{\SAFTdot}}
+\newcommand{\SAFTdothatcol}[2]{\pulsederivhat_{#1}^{(#2)}}
+\newcommand{\Error}{\bm{E}}
+\newcommand{\ErrorDef}{\diag{\xxdelta} \otimes \Identity{\M}}
+% Defect map & recos
+\newcommand{\defmap}{\bm{b}} 
+\newcommand{\reflector}{\bm{r}} 
+\newcommand{\reco}{\hat{\defmap}}
+\newcommand{\recohat}[1]{\hat{\defmap}_{#1}}
+\newcommand{\Reco}{\bm{B}}  
+\newcommand{\Recohat}{\hat{\Reco}}  
+
+
+% Metrics
+\newcommand{\SEdag}{\SE^{\dagger}} 
+\newcommand{\MSEdag}{\operatorname{MSE}^{\dagger}} 
+
+% else
+\newcommand{\refcoeff}{ b }
+\newcommand{\noisevec}{\bm{n}} 
+\newcommand{\vsound}{c_{0}} 
+
+
+%%%%%%%%%%%  ST-RF modeling relevant %%%%%%%%%%%%
+% Mean
+\newcommand{\srfmean}{\mu_{ \subscript{Y} }}
+% An SRF
+\newcommand{\SRF}[1]{ %position
+				Y ( #1 )
+}
+\newcommand{\SRFhat}[1]{ %position
+				\hat{Y} ( #1 )
+}
+% Increments of an SRF
+\newcommand{\SRFinc}[1]{ %lag vector, posision
+				X^{ \left[  #1 \right] } 
+}
+% Spectral representation
+\newcommand{\SFresponse }[1]{ % SRF
+	Z_{ \subscript{ #1 } } 
+}
+\newcommand{\SRFfreq}[1]{ % posision
+	\SFresponse{ Y } ( #1 )
+}
+\newcommand{\SRFincfreq}[ 1 ]{ % lag vector, position
+	\SFresponse{ X }^{ \left[  #1 \right] } 
+}
+
+% Semivariogram
+\newcommand{\semivario}[1]{ % independent variable (e.g. lag vector and/or time lag)
+				\scaleto{\gamma}{7pt}_{ \subscript{Y} } ( #1 )
+}
+\newcommand{\semivariohat}[1]{ % independent variable (e.g. lag vector and/or time lag)
+				\hat{ \scaleto{ \gamma }{7pt} }_{ \subscript{Y} } ( #1 )
+}
+\newcommand{\vario}[1]{ % SRF, independent variable (e.g. lag vector and/or time lag)
+				2 \scaleto{\gamma}{7pt}_{ \subscript{Y} } ( #1 )
+}
+% Auto covariance function
+\newcommand{\acvfbase}[2]{ % SRF, independent variable (e.g. lag vector and/or time lag)
+	\scaleto{c}{6pt}_{ \subscript{#1} } ( #2 )
+}
+\newcommand{\acvf}[1]{ % independent variable (e.g. lag vector and/or time lag)
+				\acvfbase{Y}{ #1 }
+}
+\newcommand{\acvfhat}[1]{ % independent variable (e.g. lag vector and/or time lag)
+				\hat{ \scaleto{ c }{6pt} }_{ \subscript{Y} } ( #1 )
+}
+\newcommand{\acvfunivariate}[3]{ % SRF,  fixed parameter, variable (e.g. lag vector and/or time lag)
+	\scaleto{c}{6pt}_{ \subscript{#1} }^{ \left[ #2 \right] } ( #3 )
+}
+
+
+%%% Stat. moments
+% Correlation
+\newcommand{\acf}[2]{ %functions, arguments
+	\scaleto{\varphi}{7pt}_{ \subscript{#1} } (#2)
+} 
+% Spatial correlation of the incremental process
+\newcommand{\acfunivariate}[3]{ % SRF, fixed parameter, variable 
+	\scaleto{\varphi}{7pt}_{ \subscript{ #1 } }^{ \left[ #2 \right]  } (#3)
+}
+% Base of spectral density function 
+\newcommand{\psdbase}[1]{ % noise process
+	\Phi_{ \subscript{#1} } 
+}
+% Spectral density function 
+\newcommand{\psd }[2]{ %functions, arguments
+	\psdbase{#1} (#2)
+} 
+% Spectral density function with some fixed parameter values
+\newcommand{\psdunivariate }[3]{ %functions, fixed parameter, variable 
+	\psdbase{ #1 }^{ \left[ #2 \right] } (#3)
+} 
+ 
+%%%%%% Variogram relevant %%%%%%%
+\newcommand{\paramtoest}{\bm{\theta}} 
+
+%%%%%% Kriging relevant %%%%%%%%
+% Weights
+\newcommand{\weights}{\bm{w}} 
+% Vectors of the observed dataset
+\newcommand{\srfvec}{
+				\bm{y}_{ \scaleto{ N }{3pt} } 
+} 
+% Vectors of the observed dataset n space-time domain
+\newcommand{\strfvec}{% 
+				\bm{y} 
+} 
+% Matrix of the observed dataset in space-time domain
+\newcommand{\strfmat}{
+				\bm{Y}_{N}
+} 
+% Vectors of the observed dataset n space-time domain
+\newcommand{\freqresvec}[1]{% SRF
+	\bm{z}_{ \scaleto{ #1 }{4pt} }  
+} 
+% Matrix of the observed dataset in space-time domain
+\newcommand{\freqresmat}[1]{
+	\bm{Z}_{ #1 }
+} 
+% FT coefficients vector
+\newcommand{\ftcoeffvec}[1]{% SRF
+	\bm{\zeta}_{ #1 } 
+} 
+% Max lag function: for smpaling variogram matrix
+ \newcommand{\maxlagfctsmp}{
+ 	g_{ \scaleto{ \bm{\Gamma} }{4pt}}
+} 
+% Max lag function: for smpaling variogram matrix
+\newcommand{\maxlagfctpred}{
+	g_{ \bm{\upsilon} }
+} 
+
+%%% LInear  MMSE estimator
+% CCF vector for linear MMSE estimate
+\newcommand{\ccfvec}[1]{
+	\bm{u}_{ \subscript{#1} }
+}
+% Covariance matrix for linear MMSE estimates
+\newcommand{\ccfmat}[1]{% SRF (= indicates which covariance we are talking about)
+	\bm{R}_{ \subscript{#1} }
+} 
+
+% Variogram vectors of the sampled positions 
+\newcommand{\varismpvec}{\bm{\gamma}} 
+% Variogram matrices of the sampled positions
+\newcommand{\varismpMat}[1]{% subscript
+				\bm{\Gamma}_{ \subscript{#1} }
+} 
+% Variogram vectors of the prediction positions (to the sampled positions) 
+\newcommand{\varipredvec}[1]{ %subscript 
+				\bm{\upsilon}_{ \subscript{#1} }
+} 
+% Variogram matrices of the prediction positions (to the sampled positions) 
+\newcommand{\varipredMat}[1]{ %subscript
+				\bm{\Upsilon}_{ \subscript{#1} }
+}  
+
+
+
+
+% FK relevant
+% Modified Bessel function
+\newcommand{\mBess}[2]{ %order, arguments
+				K_{#1} \left(  #2 \right) 
+} 
+%======= Frequency variogram =======%
+% Frequency Variogram
+\newcommand{\fv}[3]{ % SRF, freq, lagvec
+	\scaleto{\gamma}{7pt}_{ \subscript{ #1 } }^{ \left[  #2 \right] } ( #3 )
+}
+% Permutation matrix
+\newcommand{\Permat}[2]{% subscript, upperscript
+			\bm{ J }_{#1}^{#2}
+} 
+% ML relevant
+\newcommand{\FeatMap}[1]{
+			\bm{\Phi} ( #1 )
+} 
+\newcommand{\kernel}[2]{
+			k ( #1, #2 )
+} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%=====================  for roman numbers =======================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\rom}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+% from https://tex.stackexchange.com/questions/23487/how-can-i-get-roman-numerals-in-text
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%=====================  for tables =======================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\inputTable}[4]{ % <scaling factor>, <file name for the table>, <caption>, <label>
+	%\resizebox{#1}{!}{ -> only works in the beamer setting?
+		\begin{table}[h!]
+		\begin{center}
+			\input{#2}
+			\caption{#3}
+			\label{#4}
+		\end{center}
+		\end{table}
+	%}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%=====================  for TikZ =======================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\inputTikZ}[2]{%  
+     \scalebox{#1}{\input{#2}}  
+}
+
+%%% For illustration of transducer & cameras %%%
+\newcommand{\Nx}{3}
+\newcommand{\Ny}{2}
+\newcommand{\ddx}{1.5cm}
+\newcommand{\ddy}{\ddx}
+\newcommand{\ddz}{1.5cm}
+\newcommand{\rCircle}{0.07cm}
+\newcommand{\rCircleCamera}{0.07cm}
+
+
+%%% draw transducer %%%
+\newcommand{\drawTransducer}[4]{ % scale,scaley, x, y in axis
+	\draw[draw = none, fill = white] (axis cs: #3 - #1, #4 - #2, 0) -- (axis cs: #3 + #1, #4 - #2, 0) -- (axis cs: #3 + #1, #4 + #2, 0) --  (axis cs: #3 + #1, #4 + #2, -#1) -- (axis cs: #3 - #1, #4 + #2, -#1) -- (axis cs: #3 - #1, #4 - #2, -#1) -- (axis cs: #3 - #1, #4 - #2, 0);
+	\draw[] (axis cs: #3 - #1, #4 - #2, 0) -- (axis cs: #3 + #1, #4 - #2, 0) -- (axis cs: #3 + #1, #4 - #2, -#1) -- (axis cs: #3 - #1, #4 - #2, -#1) -- (axis cs: #3 - #1, #4 - #2, 0);
+	\draw[] (axis cs: #3 + #1, #4 - #2, 0) -- (axis cs: #3 + #1, #4 + #2, 0) -- (axis cs: #3 + #1, #4 +  #2, -#1) -- (axis cs: #3 - #1, #4 +  #2, -#1) -- (axis cs: #3 - #1, #4 - #2, -#1);
+	\draw[] (axis cs: #3 + #1, #4 - #2, -#1) -- (axis cs: #3 + #1, #4 +  #2, -#1);
+}
+
+%%% draw video camera %%%
+\newcommand{\drawCamera}[6]{ %<rotation origin (x, y, z)>, <start x>, <start y>, <start z> in axis, <camera width [dx]>, <camera height [dz]>
+	% base
+	\draw[rotate around = {30 : (axis cs: #1)}] (axis cs: #2, #3, #4) rectangle (axis cs: #2 + #5, #3, #4 - #6) ;
+	% origin of rotation
+	\node[campoint] (rotationorg) at (axis cs: #1) {};
+	% "trapezoid" part (tip of the camera)
+	\draw[rotate around = {30 : (axis cs: #1)}] (axis cs: #2, #3, #4 - 0.25*#6) -- (axis cs: #2 - 0.5* #6, #3, #4) -- (axis cs: #2 - 0.5* #6, #3, #4-#6) -- (axis cs: #2, #3, #4 - 0.75*#6);	
+	% cable
+	\draw[rotate around = {30 : (axis cs: #1)}] (axis cs: #2 + #5, #3, #4 - 0.5*  #6) .. controls (axis cs: #2 + 1.5* #5, #3, #4 - 0.5*  #6) and (axis cs: #2 + #5, #3, - 0.5*  #6) .. (axis cs: #2 + 1.5* #5, #3, - #6);	
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%=================  for data visualization ===================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%=================== 1D visualization ======================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Variogram models
+\newcommand{\plotvariomodels}[3]{ % <scale size>, <label font size>,  <tick font size>, 
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				height = 8.5cm,
+				width = 12cm,
+				grid=both,
+				grid style={line width=.1pt, draw=gray!10},
+				xlabel = {Normalized lag},
+				ylabel = {Amplitude},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				legend style ={
+					at={(0.95, 0.35)},
+					nodes={scale=1, transform shape}
+				}
+				]
+				\input{figures/coords_1D/variograms.tex} % addplot coordinates
+				% legend
+				\addlegendentry{Spherical}
+				\addlegendentry{Exponential}
+				\addlegendentry{Mat{\'e}rn}
+				\addlegendentry{Tent}
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+% Plot: covariance vs variogram
+\newcommand{\plotcovvsvari}[3]{ % <scale size>, <label font size>,  <tick font size>, 
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				height = 8.5cm,
+				width = 12cm,
+				grid=both,
+				grid style={line width=.1pt, draw=gray!10},
+				xlabel = {Normalized lag},
+				ylabel = {Amplitude},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				legend style ={
+					at={(0.95, 0.65)},
+					nodes={scale=1, transform shape}
+				}
+				]
+				\input{figures/coords_1D/cov_vs_vari.tex} % addplot coordinates
+				% legend
+				\addlegendentry{$\acvf{ \lag{} }$}
+				\addlegendentry{$\semivario{ \lag{} }$}
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+
+% A-Scan without legend
+\newcommand{\plotascan}[4]{ % <scale size>, <label font size>,  <tick font size>, <fname>
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				grid=both,
+				grid style={line width=.1pt, draw=gray!10},
+				xlabel = {$t$ [\SI{}{\micro \second}]},
+				ylabel = {Amplitude},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				]
+				\input{#4} % addplot coordinates
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+% Plot predicted A-Scan vs ground truth
+\newcommand{\plotapred}[4]{ % <scale size>, <label font size>,  <tick font size>, <fname>
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				grid=both,
+				grid style={line width=.1pt, draw=gray!10},
+				xlabel = {$t$ [\SI{}{\micro \second}]},
+				ylabel = {Amplitude},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				legend style ={
+					at={(0.95, 0.95)},
+					nodes={scale=0.75, transform shape}
+				}
+				]
+				\input{#4} % addplot coordinates
+				% legend
+				\addlegendentry{Ground truth}
+				\addlegendentry{Prediction}
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+% FV plots without legend
+\newcommand{\plotFV}[4]{ % <scale size>, <label font size>,  <tick font size>, <fname>
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				grid=both,
+				grid style={line width=.1pt, draw=gray!10},
+				xlabel = {lag $/ \dx$ },
+				ylabel = {Amplitude},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				]
+				\input{#4} % addplot coordinates
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+% FV plots compariosn
+\newcommand{\plotFVcomp}[5]{ % <scale size>, <label font size>,  <tick font size>, <fname>, <legend to compare>
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				grid=both,
+				grid style={line width=.1pt, draw=gray!10},
+				xlabel = {lag $/ \dx$ },
+				ylabel = {Amplitude},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				legend style ={
+					at={(0.45, 0.95)},
+					nodes={scale=0.75, transform shape}
+				}
+				]
+				\input{#4} % addplot coordinates
+				% legend
+				\addlegendentry{Ground truth}
+				\addlegendentry{#5}
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+% DNN training results
+\newcommand{\plotFVtrainingresults}[4]{ % <scale size>, <label font size>,  <tick font size>, <fname>
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				grid=both,
+				grid style={line width=.1pt, draw=gray!10},
+				xlabel = {lag $/ \dx$ },
+				ylabel = {Amplitude},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				legend style ={
+					at={(0.4, 0.95)},
+					nodes={scale=0.75, transform shape}
+				}
+				]
+				\input{#4} % addplot coordinates
+				% legend
+				\addlegendentry{Input}
+				\addlegendentry{True output}
+				\addlegendentry{Prediction}
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+
+% Simulations: evaluation results
+\newcommand{\plotrestulsGCNR}[3]{ % <scale size>, <label font size>,  <tick font size>
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				height = 8.5cm,
+				width = 12cm,
+				grid=both,
+				grid style={line width=.1pt, draw=gray!10},
+				xlabel = {Coverage [$\%$] or \textcolor{tui_red}{samples / $\lambda^{2}$ }},
+				ylabel = {Relative $\MGCNR$},
+				ylabel style = {font = #2},
+				xlabel style = {
+						font = #2, 
+						yshift={-2.5em}
+				},
+				tick label style = {font = #3},
+				% Extra ticks for samples per squared wavelength
+				extra x ticks = {5, 7, 10, 12, 15},
+				extra x tick labels = {0.44, 0.61, 0.87, 1.04, 1.31},
+				extra x tick style = {
+						tui_red, 
+						font = #3, 
+						yshift={-1.5em}
+				},
+			% Legend
+				legend style ={
+					at={(0.95, 0.4)},
+					nodes={scale=0.75, transform shape}
+				}
+				]
+				\input{figures/coords_1D/simulations/gcnr.tex} % addplot coordinates
+				% legend
+				\addlegendentry{#3 No preprocessing}
+				\addlegendentry{#3 IDW}
+				\addlegendentry{#3 SF-Kriging}
+				\addlegendentry{#3 Resmp. IDW}
+				\addlegendentry{#3 Resmp. SF-Kriging}
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+
+% Simulations: evaluation results
+\newcommand{\plotrestulsMSE}[3]{ % <scale size>, <label font size>,  <tick font size>
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				height = 8.5cm,
+				width = 12cm,
+				grid=both,
+				grid style={line width=.1pt, draw=gray!10},
+				xlabel = {Coverage [$\%$] or \textcolor{tui_red}{samples / $\lambda^{2}$ }},
+				ylabel = {$\MSEdag$},
+				ylabel style = {font = #2},
+				xlabel style = {
+					font = #2, 
+					yshift={-2.5em}
+				},
+				tick label style = {font = #3},
+				% Extra ticks for samples per squared wavelength
+				extra x ticks = {5, 7, 10, 12, 15},
+				extra x tick labels = {0.44, 0.61, 0.87, 1.04, 1.31},
+				extra x tick style = {
+					tui_red, 
+					font = #3, 
+					yshift={-1.5em}
+				},
+				% Legend
+				legend style ={
+					at={(0.95, 0.95)},
+					nodes={scale=0.75, transform shape}
+				}
+				]
+				\input{figures/coords_1D/simulations/mse.tex} % addplot coordinates
+				% legend
+				\addlegendentry{#3 No preprocessing}
+				\addlegendentry{#3 IDW}
+				\addlegendentry{#3 SF-Kriging}
+				\addlegendentry{#3 Resmp. IDW}
+				\addlegendentry{#3 Resmp. SF-Kriging}
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+
+% Simulations: re/sampling positions
+\newcommand{\plotscanpositions}[5]{ % <scale size>, <label font size>,  <tick font size>, <fname for p_smp>, <fname for p_resmp>
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				%height = 8.5cm,
+				%width = 12cm,
+				grid=both,
+				grid style={line width=.1pt, draw=gray!10},
+				xlabel = {$x$ [\SI{}{\milli \metre}]},
+				ylabel = {$y$ [\SI{}{\milli \metre}]},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				xtick={0, 10, 20, 30, 40, 50},
+				%xticklabels={0, 5, 10, 15, 20, 25},
+				ytick={0, 10, 20, 30, 40, 50},
+				y%ticklabels={0, 5, 10, 15, 20, 25},
+				]
+				\input{#4} % addplot coordinates: p_smp
+				\input{#5} % addplot coordinates: p_resmp
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+
+% Scan positions for batch itp
+% Simulations: re/sampling positions
+\newcommand{\plotbatchitppsmp}[3]{ % <scale size>, <label font size>,  <tick font size>
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				%height = 8.5cm,
+				%width = 12cm,
+				grid=both,
+				grid style={line width=.1pt, draw=gray!10},
+				minor x tick num=1,
+				minor y tick num=1,
+				xlabel = {$x / \dx$},
+				ylabel =  {$y / \dy$},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				xtick={0, 2, ..., 10},
+				ytick={0, 2, ..., 10},
+				]
+				\input{figures/coords_1D/batch_itp/p_smp.tex} % addplot coordinates: p_smp
+				\input{figures/coords_1D/batch_itp/p_pred.tex} % addplot coordinates: p_pred
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%=================== 2D visualization ======================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%% Top-view %%%%%%%%%%%%%%%%
+
+% top-view image (i.e. C-Scan) WITHOUT labels
+\newcommand{\topviewnolabels}[4]{% <scale size>, <label font size>, <tick font size>, <png file name>
+	% !!!!! The same ticks are to be used for both x- and y-ticks!!
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				enlargelimits = false,
+				axis on top = true,
+				axis equal image,
+				unit vector ratio= 1 1, % change aspect ratio, one of them should be 1
+				point meta min = -1,   
+				point meta max = 1,
+				%xlabel = {$x$ [\SI{}{\milli \metre}]},
+				%ylabel = {$y$ [\SI{}{\milli \metre}]},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				%y dir = reverse,
+				xtick = {0, 5, 10, ..., 25},
+				ytick = {0, 5, 10, ..., 25},
+				]
+				\addplot graphics [
+				xmin = 0,
+				xmax = 25,
+				ymin = 0,
+				ymax = 25
+				]{#4};
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+
+% top-view image (i.e. C-Scan) with both x- & y-labels
+\newcommand{\topviewbothlabels}[4]{% <scale size>, <label font size>, <tick font size>, <png file name>
+% !!!!! The same ticks are to be used for both x- and y-ticks!!
+\scalebox{#1}{
+	\begin{tikzpicture}
+            \begin{axis}[
+                enlargelimits = false,
+                axis on top = true,
+                axis equal image,
+                unit vector ratio= 1 1, % change aspect ratio, one of them should be 1
+                point meta min = -1,   
+                point meta max = 1,
+                xlabel = {$x$ [\SI{}{\milli \metre}]},
+                ylabel = {$y$ [\SI{}{\milli \metre}]},
+                label style = {font = #2},
+                tick label style = {font = #3},
+                %y dir = reverse,
+                xtick = {0, 5, 10, ..., 25},
+                ytick = {0, 5, 10, ..., 25},
+                ]
+                \addplot graphics [
+                    xmin = 0,
+                    xmax = 25,
+                    ymin = 0,
+                    ymax = 25
+                ]{#4};
+            \end{axis}
+	\end{tikzpicture}
+	}
+}
+            
+% top-view image (i.e. C-Scan) with only x-label
+\newcommand{\topviewxlabel}[4]{% <scale size>, <label font size>, <tick font size>, <png file name>
+	% !!!!! The same ticks are to be used for both x- and y-ticks!!
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				enlargelimits = false,
+				axis on top = true,
+				axis equal image,
+				unit vector ratio= 1 1, % change aspect ratio, one of them should be 1
+				point meta min = -1,   
+				point meta max = 1,
+				xlabel = {$x$ [\SI{}{\milli \metre}]},
+				%ylabel = {$y$ [\SI{}{\milli \metre}]},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				%y dir = reverse,
+				xtick = {0, 5, 10, ..., 25},
+				ytick = {0, 5, 10, ..., 25},
+				]
+				\addplot graphics [
+				xmin = 0,
+				xmax = 25,
+				ymin = 0,
+				ymax = 25
+				]{#4};
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+
+% top-view image (i.e. C-Scan) with only y-label
+\newcommand{\topviewylabel}[4]{% <scale size>, <label font size>, <tick font size>, <png file name>
+	% !!!!! The same ticks are to be used for both x- and y-ticks!!
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				enlargelimits = false,
+				axis on top = true,
+				axis equal image,
+				unit vector ratio= 1 1, % change aspect ratio, one of them should be 1
+				point meta min = -1,   
+				point meta max = 1,
+				%xlabel = {$x$ [\SI{}{\milli \metre}]},
+				ylabel = {$y$ [\SI{}{\milli \metre}]},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				%y dir = reverse,
+				xtick = {0, 5, 10, ..., 25},
+				ytick = {0, 5, 10, ..., 25},
+				]
+				\addplot graphics [
+				xmin = 0,
+				xmax = 25,
+				ymin = 0,
+				ymax = 25
+				]{#4};
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+
+
+% top-view image (i.e. C-Scan) without labels but with cmap
+\newcommand{\topviewnolabelwithcmap}[4]{% <scale size>, <label font size>, <tick font size>, <png file name>
+	% !!!!! The same ticks are to be used for both x- and y-ticks!!
+\scalebox{#1}{
+	\begin{tikzpicture}
+            \begin{axis}[
+            	enlargelimits = false,
+            	axis on top = true,
+            	axis equal image,
+            	unit vector ratio= 1 1, % change aspect ratio, one of them should be 1
+            	point meta min = -1,   
+            	point meta max = 1,
+            	%xlabel = {$x$ [\SI{}{\milli \metre}]},
+            	%ylabel = {$y$ [\SI{}{\milli \metre}]},
+            	label style = {font = #2},
+            	tick label style = {font = #3},
+            	%y dir = reverse,
+            	xtick = {0, 5, 10, ..., 25},
+            	ytick = {0, 5, 10, ..., 25},
+                %%%%% For color map %%%%%
+                point meta min = 0,   
+                point meta max = 1,
+                colorbar,
+                colormap = {mymap}{rgb(0.0pt) = (0.97, 0.97, 0.98) ; rgb(0.06pt) = (0.99, 0.95, 0.92) ; rgb(0.12pt) = (0.99, 0.93, 0.87) ; rgb(0.75pt) = (0.94, 0.49, 0) ; rgb(0.9pt) = (0.78, 0.29, 0.0) ; rgb(0.97pt) = (0.75, 0.12, 0.06) ; rgb(1.0pt) = (0.61, 0.16, 0.15) ; } ,
+                ]
+                \addplot graphics [
+                xmin = 0,
+                xmax = 25,
+                ymin = 0,
+                ymax = 25
+                ]{#4};
+            \end{axis}
+	\end{tikzpicture}
+	}
+}
+
+
+% top-view image (i.e. C-Scan) with x label and cmap
+\newcommand{\topviewxlabelwithcmap}[4]{% <scale size>, <label font size>, <tick font size>, <png file name>
+	% !!!!! The same ticks are to be used for both x- and y-ticks!!
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				enlargelimits = false,
+				axis on top = true,
+				axis equal image,
+				unit vector ratio= 1 1, % change aspect ratio, one of them should be 1
+				point meta min = -1,   
+				point meta max = 1,
+				xlabel = {$x$ [\SI{}{\milli \metre}]},
+				%ylabel = {$y$ [\SI{}{\milli \metre}]},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				%y dir = reverse,
+				xtick = {0, 5, 10, ..., 25},
+				ytick = {0, 5, 10, ..., 25},
+				%%%%% For color map %%%%%
+				point meta min = 0,   
+				point meta max = 1,
+				colorbar,
+				colormap = {mymap}{rgb(0.0pt) = (0.97, 0.97, 0.98) ; rgb(0.06pt) = (0.99, 0.95, 0.92) ; rgb(0.12pt) = (0.99, 0.93, 0.87) ; rgb(0.75pt) = (0.94, 0.49, 0) ; rgb(0.9pt) = (0.78, 0.29, 0.0) ; rgb(0.97pt) = (0.75, 0.12, 0.06) ; rgb(1.0pt) = (0.61, 0.16, 0.15) ; } ,
+				]
+				\addplot graphics [
+				xmin = 0,
+				xmax = 25,
+				ymin = 0,
+				ymax = 25
+				]{#4};
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+% top-view image (i.e. C-Scan) with x label and cmap
+\newcommand{\topviewbothlabelscmap}[4]{% <scale size>, <label font size>, <tick font size>, <png file name>
+	% !!!!! The same ticks are to be used for both x- and y-ticks!!
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				enlargelimits = false,
+				axis on top = true,
+				axis equal image,
+				unit vector ratio= 1 1, % change aspect ratio, one of them should be 1
+				point meta min = -1,   
+				point meta max = 1,
+				xlabel = {$x$ [\SI{}{\milli \metre}]},
+				ylabel = {$y$ [\SI{}{\milli \metre}]},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				%y dir = reverse,
+				xtick = {0, 5, 10, ..., 25},
+				ytick = {0, 5, 10, ..., 25},
+				%%%%% For color map %%%%%
+				point meta min = 0,   
+				point meta max = 1,
+				colorbar,
+				colormap = {mymap}{rgb(0.0pt) = (0.97, 0.97, 0.98) ; rgb(0.06pt) = (0.99, 0.95, 0.92) ; rgb(0.12pt) = (0.99, 0.93, 0.87) ; rgb(0.75pt) = (0.94, 0.49, 0) ; rgb(0.9pt) = (0.78, 0.29, 0.0) ; rgb(0.97pt) = (0.75, 0.12, 0.06) ; rgb(1.0pt) = (0.61, 0.16, 0.15) ; } ,
+				]
+				\addplot graphics [
+				xmin = 0,
+				xmax = 25,
+				ymin = 0,
+				ymax = 25
+				]{#4};
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+%================ For batch interpolation ====================%
+% With color map for batch interpolation
+% top-view image (i.e. C-Scan) with both labels and cmap
+\newcommand{\batchitptopview}[5]{% <scale size>, <label font size>, <tick font size>, <vmax>,  <png file name>
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				enlargelimits = false,
+				axis on top = true,
+				axis equal image,
+				unit vector ratio= 1 1, % change aspect ratio, one of them should be 1
+				xlabel = {$x / \dx$},
+				ylabel = {$y / \dy$},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				xtick = {0, 5, 10},
+				ytick = {0, 5, 10},
+				%yticklabel = \empty,
+				%y dir = reverse,
+				%%%%% For color map %%%%%
+				point meta min = 0,   
+				point meta max = #4,
+				colorbar,
+				colormap = {mymap}{rgb(0.0pt) = (0.9688, 0.9688, 0.9766) ; rgb(0.35pt) = (0.9883, 0.9297, 0.8672) ; rgb(0.75pt) = (0.9414, 0.4922, 0) ; rgb(1.0pt) = (0.7490, 0.1216, 0.0627); } ,
+				]
+				\addplot graphics [
+				xmin = 0,
+				xmax = 10,
+				ymin = 0,
+				ymax = 10
+				]{#5};
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+
+%%%%%%%%%%%%% Side-view %%%%%%%%%%%%%%%%
+
+% Side-view image (i.e. B-Scan) WITHOUT labels
+\newcommand{\sideviewnolabels}[4]{% <scale size>, <label font size>, <tick font size>, <png file name>
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				enlargelimits = false,
+				axis on top = true,
+				axis equal image,
+				unit vector ratio= 1 1, % change aspect ratio, one of them should be 1
+				point meta min = -1,   
+				point meta max = 1,
+				%xlabel = {$x$ [\SI{}{\milli \metre}]},
+				%ylabel = {$z$ [\SI{}{\milli \metre}]},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				y dir = reverse,
+				xtick = {0, 5, 10, ..., 25},
+				ytick = {77.3, 83, 88.5},
+				]
+				\addplot graphics [
+				xmin = 0,
+				xmax = 25,
+				ymin = 77.3,
+				ymax = 88.5
+				]{#4};
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+% Side-view image (i.e. B-Scan) with both x- & y-labels
+\newcommand{\sideviewbothlabels}[4]{% <scale size>, <label font size>, <tick font size>, <png file name>
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				enlargelimits = false,
+				axis on top = true,
+				axis equal image,
+				unit vector ratio= 1 1, % change aspect ratio, one of them should be 1
+				point meta min = -1,   
+				point meta max = 1,
+				xlabel = {$x$ [\SI{}{\milli \metre}]},
+				ylabel = {$z$ [\SI{}{\milli \metre}]},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				y dir = reverse,
+				xtick = {0, 5, 10, ..., 25},
+				ytick = {77.3, 83, 88.5},
+				]
+				\addplot graphics [
+				xmin = 0,
+				xmax = 25,
+				ymin = 77.3,
+				ymax = 88.5
+				]{#4};
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+% Side-view image (i.e. B-Scan) with only x-label
+\newcommand{\sideviewxlabel}[4]{% <scale size>, <label font size>, <tick font size>, <png file name>
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				enlargelimits = false,
+				axis on top = true,
+				axis equal image,
+				unit vector ratio= 1 1, % change aspect ratio, one of them should be 1
+				point meta min = -1,   
+				point meta max = 1,
+				xlabel = {$x$ [\SI{}{\milli \metre}]},
+				%ylabel = {$z$ [\SI{}{\milli \metre}]},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				y dir = reverse,
+				xtick = {0, 5, 10, ..., 25},
+				ytick = {77.3, 83, 88.5},
+				]
+				\addplot graphics [
+				xmin = 0,
+				xmax = 25,
+				ymin = 77.3,
+				ymax = 88.5
+				]{#4};
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+
+% Side-view image (i.e. B-Scan) with only y-label
+\newcommand{\sideviewylabel}[4]{% <scale size>, <label font size>, <tick font size>, <png file name>
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				enlargelimits = false,
+				axis on top = true,
+				axis equal image,
+				unit vector ratio= 1 1, % change aspect ratio, one of them should be 1
+				point meta min = -1,   
+				point meta max = 1,
+				%xlabel = {$x$ [\SI{}{\milli \metre}]},
+				ylabel = {$z$ [\SI{}{\milli \metre}]},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				y dir = reverse,
+				xtick = {0, 5, 10, ..., 25},
+				ytick = {77.3, 83, 88.5},
+				]
+				\addplot graphics [
+				xmin = 0,
+				xmax = 25,
+				ymin = 77.3,
+				ymax = 88.5
+				]{#4};
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+% Side-view image (i.e. B-Scan) with only x-label with color map
+\newcommand{\sideviewxlabelwithcmap}[4]{% <scale size>, <label font size>, <tick font size>, <png file name>
+	\scalebox{#1}{
+		\begin{tikzpicture}
+			\begin{axis}[
+				enlargelimits = false,
+				axis on top = true,
+				axis equal image,
+				unit vector ratio= 1 1, % change aspect ratio, one of them should be 1
+				point meta min = -1,   
+				point meta max = 1,
+				xlabel = {$x$ [\SI{}{\milli \metre}]},
+				%ylabel = {$z$ [\SI{}{\milli \metre}]},
+				label style = {font = #2},
+				tick label style = {font = #3},
+				y dir = reverse,
+				xtick = {0, 5, 10, ..., 25},
+				ytick = {77.3, 83, 88.5},
+				%%%%% For color map %%%%%
+				point meta min = -1,   
+				point meta max = 1,
+				colorbar,
+				colormap = {mymap}{rgb(0.0pt) = (0.04, 0.15, 0.18) ; rgb(0.1pt) = (0, 0.22, 0.39) ; rgb(0.47pt) = (0.91, 0.93, 0.96) ; rgb(0.49pt) = (0.97, 0.98, 0.99) ; rgb(0.5pt) = (0.97, 0.97, 0.98) ; rgb(0.51pt) = (0.99, 0.95, 0.92) ; rgb(0.53pt) = (0.99, 0.93, 0.87) ; rgb(0.8pt) = (0.94, 0.49, 0) ; rgb(0.95pt) = (0.75, 0.12, 0.06) ; rgb(1.0pt) = (0.61, 0.16, 0.15) ; } ,
+				]
+				\addplot graphics [
+				xmin = 0,
+				xmax = 25,
+				ymin = 77.3,
+				ymax = 88.5
+				]{#4};
+			\end{axis}
+		\end{tikzpicture}
+	}
+}
+
+

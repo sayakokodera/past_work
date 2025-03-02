@@ -1,0 +1,9 @@
+pdflatex main
+bibtex main
+makeindex main
+makeglossaries main
+pdflatex main
+bibtex main
+makeindex main
+makeglossaries main
+pdflatex main

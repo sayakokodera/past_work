@@ -1,0 +1,143 @@
+\section*{Variable Types, array access and functions}
+\begin{flushleft}
+\normalsize
+%\renewcommand{\arraystretch}{1.5}  
+\begin{tabular}{l l l}
+$\bm{v}$ & Vector\\
+$\bm{v}_i$ & Access to the $i$-th scalar element of $\bm{v}$\\
+$\bm{U}$ & Matrix \\
+$\bm{U}_{ij} $ & Access to the scalar element in $\bm{U}$, where $i$ and $j$ denote its column and row, \\ & respectively \\ 
+%$[\bm{U}]_{i}$ &  Access to the $i$-th column of $\bm{U}$\\
+$\vectorize{ \bm{U} }$ & Vectorization of a matrix $\bm{U}$\\
+%$\Mdict$  & Tensor\\
+%$\Mdict(i, j, k)$ & Zugriff auf das Skalarelement in $\Mdict$, wobei $i$ der Reihe, $j$ der Spalte und $k$\\ & der dritten Dimension entsprechen \\
+\end{tabular}
+\end{flushleft}
+
+
+\section*{Frequently used terms and symbols}
+\begin{flushleft}
+\normalsize
+\begin{tabular}{l l l}
+$c_0$ & Speed of sound in a medium\\
+$f_{S}$ & Sampling frequency \\
+$\lambda$ &  Wave length\\
+$\dx$  & Spatial discretization step along the $x$-axis\\
+$\dy$  & Spatial discretization step along the $y$-axis\\
+$\dz$  & Spatial discretization step along the $z$-axis \\
+$\dt$  & Temporal resolution of the measurement\\
+$\N{x}$  & Number of samples along the $x$-axis in reconstruction and ground truth\\
+$\N{y}$  & Number of samples along the $y$-axis in reconstruction and ground truth\\
+$\N{z}$  & Number of samples along the $z$-axis in reconstruction and ground truth\\
+$\N{t}$  & Number of temporal samples of the measurements\\
+%$\bm{a}$ & einzelner Datenvektor, \gls{ascan} \\
+%$\bm{C}$ & 2D Referenzdaten \\
+%$\hat{\bm{C}} $ & 2D fehlerhafte Daten \\
+%$\mse$ & \acrfull{mse}\\
+%$\rmse$ & \acrfull{rmsenormal}\\
+%$\rmse^{\dagger}$ & \acrfull{rmse}\\
+\end{tabular}
+\end{flushleft}
+
+
+\section*{Notations for \acrshort*{srf} and \acrshort*{strf}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%===================== SRF ======================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{ \acrfull{srf} }
+\acrshort*{srf} depends on the position $\pos{i}$:
+\begin{equation*}
+	\SRF{ \pos{i} } .
+\end{equation*}
+
+% SoS
+For \glssymbol{sos} \acrshort*{srf}: its spatial correlation function depends solely on the lag vector $\lagvec{}$:
+\begin{equation*}
+	\acf{ Y }{ \lagvec{} } = \Corr{ \SRF{\pos{} }, \SRF{ \pos{} + \lagvec{} } } .
+\end{equation*}
+
+% IS
+For \glssymbol{is} \acrshort*{srf}: \\
+Spatial incremental process for a fixed $\lagvec{ij}$, which depends on the position $\pos{i}$:
+\begin{equation*}
+	\begin{matrix}
+		\SRFinc{ \lagvec{ij} } ( \pos{i} )
+				& = & \SRF{ \pos{i} } - \SRF{ \pos{j} } \\
+				& = & \SRF{ \pos{i} } - \SRF{ \pos{i} + \lagvec{ij} } .\\
+	\end{matrix}
+\end{equation*}
+
+% ACF of the incremental process
+Since $\SRF{\pos{i}}$ is  \glssymbol*{is}, $ \SRFinc{ \lagvec{ij} } ( \pos{i} ) $ is zero-mean spatial \glssymbol*{sos}. This leads its
+spatial correlation function with a fixed $\lagvec{ij}$ to be expressed as a function of the lag vector $ \lagvecinc{}$ independent of $\pos{i}$: 
+\begin{equation*}
+	\acfunivariate{ X }{ \lagvec{ij} }{ \lagvecinc{ } } = \Corr{ \SRFinc{ \lagvec{ij} } ( \pos{i} ) ,  \SRFinc{ \lagvec{ij} } ( \pos{i} + \lagvecinc{} ) } .
+\end{equation*}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%==================== STRF ======================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{ \acrfull{strf} }
+\acrshort*{strf} depends on the position $\pos{i}$ and time:
+\begin{equation*}
+	\SRF{ \pos{i}, t } .
+\end{equation*}
+
+% Frequency response
+This spatio-temporal process can also be described in terms of the (temporal) frequency as 
+\begin{equation*}
+	\SRFfreq{ \pos{i}, \omega } = \ft{t}{ \SRF{ \pos{i}, t } } 
+\end{equation*}
+
+% ST-SoS
+For spatio-temporal \glssymbol*{sos} \acrshort*{strf}: its spatial correlation depends on the spatial lagvector $\lagvec{}$ 
+\begin{equation*}
+	\acfunivariate{ Y }{ t }{ \lagvec{}} = \Corr{ \SRF{\pos{}, t }, \SRF{ \pos{} + \lagvec{}, t } }, 
+\end{equation*}
+and its spatio-temporal correlation depends also on the temporal lag $\tau$ as 
+\begin{equation*}
+	\acf{ Y }{ \lagvec{}, \tau } = \Corr{ \SRF{\pos{}, t }, \SRF{ \pos{} + \lagvec{}, t + \tau } } .
+\end{equation*}
+
+
+% ST-IS
+For a spatio-temporal \glssymbol*{is} \acrshort*{strf}: \\
+For a fixed $\lagvec{ij}$, its spatial incremental process varies with the position $\pos{i}$
+\begin{equation*}
+	\SRFinc{ \lagvec{ij} } ( \pos{i}, t ) = \SRF{ \pos{i}, t } - \SRF{ \pos{j}, t} .
+\end{equation*}
+
+% ACF of the incremental procss
+Analog to the purely spatial case, the incremental process $\SRFinc{ \lagvec{ij} } ( \pos{i}, t ) $ is zero-mean spatio-temporal \glssymbol*{sos}. This means that for a fixed lag vector $\lagvec{ij}$ its spatial correlation depends only on the lag vector $\lagvecinc{}$ and independent of the position $\pos{i}$
+\begin{equation*}
+	\acfunivariate{ X }{ \lagvec{ ij }, t }{ \lagvecinc{} } = \Corr{ \SRFinc{ \lagvec{ij} } ( \pos{i}, t ) ,  \SRFinc{ \lagvec{ij} } ( \pos{i} + \lagvecinc{}, t ) } .
+\end{equation*}
+
+% Spectral representaion
+This incremental process can also be expressed in the frequency domain as 
+\begin{equation*}
+	\SRFincfreq{ \lagvec{ ij } } ( \pos{i}, \omega ) = \ft{t}{ \SRFinc{ \lagvec{ij} } ( \pos{i}, t ) },
+\end{equation*}
+which depends on the position $\pos{i}$.
+%% Output of a narrow band-pass -> normally distributed
+%For a single frequency component $\omega_{m}$, the frequency response of the incremental process is asymptotically normally distributed over the space with mean zero as
+%\begin{equation*}
+%	\SRFincfreq{ \lagvec{ ij } } ( \pos{i}, \omega_{m} ) \sim \CC \NormalDist \left(  0, \sigma^{2} ( \lagvec{ ij }, \omega_{m} )  \right) 
+%\end{equation*}
+
+% ACF of the freq. response
+For a fixed lag vector $\lagvec{ ij }$ of the increment and a single frequency component $\omega_{m}$, the spatial correlation of the incremental frequency response is defined as 
+\begin{equation*}
+	\begin{matrix}
+		\acfunivariate{ \SFresponse{ X } }{ \lagvec{ ij }, \omega_{m} }{ \lagvecinc{} }  
+		& = 
+		& \Corr{ \SRFincfreq{ \lagvec{ ij } } ( \pos{i}, \omega_{m} ), \SRFincfreq{ \lagvec{ ij } } ( \pos{i} + \lagvecinc{}, \omega_{m} )  } 
+		&  \text{ }
+		& \forall 
+		& \omega_{m}.\\
+	\end{matrix}
+\end{equation*}
+
+%\input{tables/table_math_letters.tex}
+

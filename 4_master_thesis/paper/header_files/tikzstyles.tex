@@ -1,0 +1,58 @@
+%%%% TikZ setup %%%%
+
+% for SmartInspect
+\tikzstyle{scanpath} = [tui_blue, dotted, ->, shorten >=1mm, shorten <=1mm,]
+\tikzstyle{scanpoint} = [circle, draw, black, inner sep = \rCircle, fill = black]
+\tikzstyle{campoint} = [circle, draw, black, inner sep = \rCircleCamera, fill = gray]
+
+% for synthetic aperture
+\tikzstyle{griddot} = [circle, draw, black, inner sep = 0.01cm, fill = black]
+
+% for drawing block diagram
+\tikzstyle{line} = [draw, thick]
+\tikzstyle{line1} = [draw, thick, ->]
+\tikzstyle{line3} = [draw, gray, thick, dashed, ->]
+\tikzstyle{line4} = [draw, tui_blue, very thick, dashed, -]
+% For entire system 
+\tikzstyle{largebox} = [rectangle, draw, dashed, very thick, 
+text width = 9.6cm,  minimum height = 3.3cm
+]
+\tikzstyle{block1} = [rectangle, draw,  
+	text width=3cm, text centered, minimum height = 2cm
+	]
+\tikzstyle{block2} = [rectangle, draw,  
+	text width=4.5cm, text centered, minimum height = 2cm
+	]
+\tikzstyle{junction} = [circle, draw, fill=black, minimum size = 1pt, scale = 0.5]
+% For FVnet
+\tikzstyle{block3} = [rectangle, draw,  
+text width=2cm, text centered, minimum height = 1cm
+]
+\tikzstyle{block4} = [rectangle, draw,  
+text width=1.3cm, text centered, minimum height = 3cm
+]
+\tikzstyle{largecircle} = [circle, draw,  
+text width=1.5cm, text centered, minimum size = 1pt
+]
+\tikzstyle{diamblock} = [diamond, draw,  
+text width=1.2cm, text centered
+]
+\tikzstyle{largebox2} = [rectangle, draw, fri_gray_dark!70, very thick, 
+text width = 5.3cm,  minimum height = 4.3cm
+]
+\tikzstyle{largebox3} = [rectangle, draw, fri_gray_dark!70, very thick, 
+text width = 10.8cm,  minimum height = 4.3cm
+]
+\tikzstyle{largebox4} = [rectangle, draw, dashed, fri_gray_dark!70, very thick, 
+text width = 7.5cm,  minimum height = 3.2cm
+]
+
+
+% for markers in RMSE
+\pgfplotsset{
+  every axis plot post/.append style={
+    every mark/.append style={line width=3pt}
+  }
+}
+% for posscan simulation flow
+\tikzstyle{graydashed} = [draw, gray, thick, dashed]

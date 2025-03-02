@@ -1,0 +1,1341 @@
+\documentclass[11pt,compress,aspectratio=169]{beamer} % selection of font size = 9, 10, 11, 12, 14, ....pt
+
+
+% specify the language of the document here
+%
+\newcommand\setslidelanguage{english}
+%\newcommand\setslidelanguage{german}
+
+%
+% this flag turns on a basic Fraunhofer CI overwrite
+% this just changes colors atm, types and more convenient
+% theme handling have to be added
+%
+%\newcommand\setslidetheme{tui} % - alpha
+%\newcommand\setslidetheme{tuiiis} % - alpha
+%\newcommand\setslidetheme{tuiizfp} % - alpha
+%\newcommand\setslidetheme{iis} % - alpha
+%\newcommand\setslidetheme{iistui} % - alpha
+%\newcommand\setslidetheme{izfp} % - alpha
+\newcommand\setslidetheme{izfptui} % - alpha
+
+
+%
+% load header with all includes
+%
+\input{header_files/header_beamer}
+
+
+%
+% your settings and includes go here
+%
+%%%% bibliography %%%%%
+\usepackage{url}
+\usepackage{natbib} % required for the citation example
+\usepackage{bibentry} % required for the citation example
+%
+\nobibliography* % required for the citation example
+\bibliographystyle{plain}
+
+\input{header_files/newcommands.tex}
+\input{header_files/set_color.tex}
+\input{header_files/tikzstyles.tex}
+\input{header_files/mathoperators.tex}
+
+
+% PDF-options
+\title{Data Driven Hybrid Algorithms for Preprocessing of Manually Acquired Ultrasound NDT Data} 
+%\subtitle{CSP Advanced Research Project WS19/20}
+\institute{\foreignlanguage{german}{Technische Universität Ilmenau}}
+\author{Sayako Kodera}
+\date{July 28, 2021}
+
+% beamer goto-button setup
+\setbeamercolor{button}{fg=white,bg=blue}
+\renewcommand{\beamergotobutton}[1]{%
+    \begingroup% keep color changes local
+    \setbeamercolor{button}{fg=white, bg=tui_orange}%
+    \beamerbutton{\insertgotosymbol#1}% original definition
+    \endgroup
+    }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%================================= tips to use beamer ======%
+
+% \uncover<page-> = the text will be covered (so displayed in light colors) for the particular pages of the slide
+% \ony<page-> = the text/images will be hidden for the particular pages of the slide
+% \footnotetext[number] = text for footnote wirh the givien "number"
+% \footnotemark = displays the mark (i.e. nuber) of the footnote
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+% display only logos but no contact info in footline
+\setbeamertemplate{footline}[light]
+% print title slide
+\begin{frame}[noframenumbering] % noframenumbering prevents the framecounter from increasing for this single slide
+ 	\titlepage
+\end{frame}
+
+% small footline for more content
+\setbeamertemplate{footline}[shrunkplain]
+%\begin{frame}[noframenumbering] % noframenumbering prevents the %framecounter from increasing for this single slide
+%	\frametitle{Table of contents}
+%	\vfill
+% 	\tableofcontents[part=1]
+%\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part{content}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Sec. 1.1 %%%%%
+\section{Background}
+
+\subsection{Measurement Assistance System} 
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Assisted Manual Ultrasonic Testing}
+	%\fontsize{10pt}
+	%======================================== content =====%
+	\begin{columns}[t]
+		%========================%
+		% Image part
+		\begin{column}{0.6\textwidth}
+			\begin{overprint}
+				\centering
+				%
+				\only<1>{
+				\textbf{Conventional manual UT} \\ 
+				\vspace*{0.5cm}
+				\includegraphics[width= 0.85\textwidth]{images/pic_ut_ascan.jpg}\\
+				\vspace*{0.3cm}	
+				\hspace*{1.2cm} \cigray{Source: Quality Magazine}
+				}
+				\only<2>{
+					\textbf{3D SmartInspect} \footnotemark \\  \vspace*{0.1cm} 
+					\includegraphics[width= 0.7\textwidth]{images/si_labphoto.jpg}\\
+					\vspace*{-0.3cm}
+				}
+				\only<3->{
+					\textbf{3D SmartInspect} \footnotemark \\  \vspace*{0.1cm} 
+					\includegraphics[width= 0.7\textwidth]{images/si_cscan050219_4.PNG}\\	
+				}
+			\end{overprint}
+		\end{column}
+		%=======================%
+		% Text part
+		\begin{column}{0.4\textwidth}	
+		\begin{overprint}
+			Problem: reliability\\
+			\only<2->{
+				\vspace{\topsep}
+				\hspace*{-0.3cm} $\rightarrow$ Assistance system
+				%
+				\begin{itemize}
+					\item Position recognition
+					\item Data recording
+					\item Data visualization
+					\item Visual feedback
+					\item Post-processing
+				\end{itemize}
+				%
+				\hspace*{0.2cm}
+				\only<4->{
+					$\rightarrow$ Degraded resolution
+				}
+			}
+		\end{overprint}
+		\end{column}	
+	\end{columns}	
+
+	\vspace*{0.3cm}
+	% footnote
+	\only<2->{
+		\begin{overprint}
+			\footnotetext[1]{%
+				A. Omira, %
+				\textit{Real-time Reconstruction of Manually Measured Compressed Ultrasound Synthetic Aperture Measurement Data}, %
+				2021}
+		\end{overprint}
+	}
+	
+	%===================================================%
+\end{frame}
+
+\subsection{Motivation}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Motivation: Image Quality Improvement }
+	%======================================== content =====%
+	%%% autom = Muse %%%
+	\only<1>{
+		\textbf{Automatic measurement}\\
+		%
+		\vspace*{0.5cm}
+		\centering
+		\begin{columns}[c]	
+			% Data
+			\begin{column}{0.5\textwidth}
+				\centering
+				Measurement data\footnotemark \addtocounter{footnote}{-1} \\  \vspace*{0.1cm} 
+				\inputTikZ{0.8}{figures/Krieg_18SHMNDT/reference_reco_data.tex}
+			\end{column}	
+			% Reco
+			\begin{column}{0.5\textwidth}
+				\centering
+				SAFT Reconstruction\footnotemark \addtocounter{footnote}{-1} \\ \vspace*{0.1cm}
+				\inputTikZ{0.8}{figures/Krieg_18SHMNDT/reference_reco_reco.tex}
+			\end{column}	
+		\end{columns}	
+	}
+	
+	%%% manual = aciation SCAN 5-3 %%%
+	\only<2-3>{
+		\textbf{Manual measurement}%
+		\hspace*{0.2cm} \cihide<2>{ \cihighlight<3>{$\bm{\because}$ \textbf{accumulation of random factors}} }\\
+		%
+		\centering
+		\begin{columns}[t]	
+			% Data
+			\begin{column}{0.5\textwidth}
+				\centering
+				Measurement data\footnotemark \addtocounter{footnote}{-1} \\ \vspace*{0.3cm} %\hspace*{0.3cm}
+				\inputTikZ{0.75}{figures/Krieg_18SHMNDT/aviation_SCAN5_3_data_gauss_2.tex}
+			\end{column}
+			% Reco
+			\begin{column}{0.5\textwidth}
+				\centering
+				SAFT Reconstruction\footnotemark \\ \vspace*{0.3cm}
+				\inputTikZ{0.75}{figures/Krieg_18SHMNDT/aviation_SCAN5_3.tex}
+			\end{column}	
+		\end{columns}	
+	}
+	\vspace*{0.3cm}
+	% footnote
+	\only<1>{
+		\footnotetext[2]{F. Krieg et al., SAFT processing for manually acquired ultrasonic measurement data with 3D SmartInspect, \textsl{SHM-NDT}, 2018}
+	}
+	%===================================================%	
+\end{frame}
+
+
+\subsection{Motivation: Undersampling} 
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Impact of Missing Data} 
+%\fontsize{10pt}
+%======================================== content =====%
+	%%=======  Left: Raw measurement =======%%%
+	\begin{textblock}{50}(5, 17)
+		\centering
+		%
+		\begin{overprint}
+			\only<1>{
+				\centering
+				\textbf{ROI}\\
+				\vspace*{0.3cm}
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewMUSEroi{0.55}{\Large}{\Large}\\
+			}	
+			%% Automatic
+			\only<2>{
+				\textbf{Full sampling}\\
+				\vspace*{0.3cm}
+				%% C-Scan
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewylabel{0.55}{\Large}{\Large}{figures/tex_png/simulations_logscale/A_true.png}\\
+				%% B-Scan
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\sideviewbothlabels{0.45}{\LARGE}{\LARGE}{figures/tex_png/simulations/A_true_sideview.png}\\
+			}
+			%% Manual
+			\only<3>{
+				\textbf{Sparse sampling}\\
+				\vspace*{0.3cm}
+				%% C-Scan
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewylabel{0.55}{\Large}{\Large}{figures/tex_png/simulations_logscale/015/A_smp.png}\\
+				%% B-Scan
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\sideviewbothlabels{0.45}{\LARGE}{\LARGE}{figures/tex_png/simulations/015/A_smp_sideview.png}\\
+			}
+		\end{overprint}
+	\end{textblock}
+	%
+	%
+	%%======= Middle: Preprocessing =======%%%
+	\begin{textblock}{50}(55, 17)
+		\centering
+		%
+		\only<2->{$\bm{\rightarrow}$\\}
+		%
+		\begin{overprint}
+			%% Automatic
+			\only<2>{
+				%\imgzdefshallow{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/20mm_track_1lambda.png}\\
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+			}
+			%% Manual
+			\only<3>{
+				%\imgzdefmiddle{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/30mm_track_1lambda.png}\\
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+			}
+		\end{overprint}
+	\end{textblock}
+	%
+	%
+	%%======= Right: Reco =======%%%
+	\begin{textblock}{50}(105, 17)
+		\centering
+		%
+		\only<2->{\textbf{Reconstruction}\\}
+		%
+		\begin{overprint}
+			%% Automatic
+			\only<2>{
+				%% C-Scan
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewnolabelwithcmap{0.55}{\Large}{\Large}{figures/tex_png/simulations_logscale/R_true.png}\\
+				%% B-Scan
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\sideviewxlabelwithcmap{0.45}{\LARGE}{\LARGE}{figures/tex_png/simulations/R_true_sideview.png}\\
+			}
+			%% Manual
+			\only<3>{
+				%% C-Scan
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewnolabelwithcmap{0.55}{\Large}{\Large}{figures/tex_png/simulations_logscale/015/R_smp.png}\\
+				%% B-Scan
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\sideviewxlabelwithcmap{0.45}{\LARGE}{\LARGE}{figures/tex_png/simulations/015/R_smp_sideview.png}\\
+			}
+		\end{overprint}
+	\end{textblock}
+	
+%===================================================%
+\end{frame}
+
+
+\subsection{Solution: Interpolation} 
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Solution: Interpolation as Preprocessing} 
+	%\fontsize{10pt}
+	%======================================== content =====%
+	%========= Text: i.e. arrows =========%
+	% A_smp -> A_fk
+	\begin{textblock}{50}(32, 18)
+		\centering
+		$\bm{\rightarrow}$
+	\end{textblock}
+	% A_fk -> R_fk
+	\begin{textblock}{50}(78, 18)
+		\centering
+		\only<2>{$\bm{\rightarrow}$}
+	\end{textblock}
+	
+	%%=======  Left: Raw measurement =======%%%
+	\begin{textblock}{50}(5, 17)
+		\centering
+		%
+		\begin{overprint}
+			%% Initial scan positions
+			\only<1->{
+				\textbf{Sparse sampling}\\
+				\vspace*{0.3cm}
+				%% C-Scan
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewylabel{0.55}{\Large}{\Large}{figures/tex_png/simulations_logscale/015/A_smp.png}\\
+				%% B-Scan
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\sideviewbothlabels{0.45}{\LARGE}{\LARGE}{figures/tex_png/simulations/015/A_smp_sideview.png}\\
+			}
+%			%% Strategic resampling positions
+%			\only<2>{
+%				\textbf{Strategic resampling}\\
+%				\vspace*{0.3cm}
+%				%% C-Scan
+%				% <scale size>, <label font size>, <tick font size>, <png file name>
+%				\topviewylabel{0.55}{\Large}{\Large}{figures/tex_png/simulations_logscale/015/A_resmp.png}\\
+%				%% B-Scan
+%				% <scale size>, <label font size>, <tick font size>, <png file name>
+%				\sideviewbothlabels{0.45}{\LARGE}{\LARGE}{figures/tex_png/simulations/015/A_resmp_sideview.png}\\
+%			}
+		\end{overprint}
+	\end{textblock}
+	%
+	%
+	%%======= Middle: Preprocessing =======%%%
+	\begin{textblock}{50}(55, 17)
+		\centering
+		%
+		\textbf{Preprocessing}\\
+		\vspace*{0.3cm}
+		%
+		\begin{overprint}
+			%% A_fk
+			\only<1->{
+				%% C-Scan
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewnolabels{0.55}{\Large}{\Large}{figures/tex_png/simulations_logscale/015/A_fk_smt.png}\\
+				%% B-Scan
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\sideviewxlabel{0.45}{\LARGE}{\LARGE}{figures/tex_png/simulations/015/A_fk_smt_sideview.png}\\
+			}
+%			%% A_re_fk
+%			\only<2>{
+%				%% C-Scan
+%				% <scale size>, <label font size>, <tick font size>, <png file name>
+%				\topviewnolabels{0.55}{\Large}{\Large}{figures/tex_png/simulations_logscale/A_true.png}\\
+%				%% B-Scan
+%				% <scale size>, <label font size>, <tick font size>, <png file name>
+%				\sideviewxlabel{0.45}{\LARGE}{\LARGE}{figures/tex_png/simulations/A_true_sideview.png}\\
+%			}
+		\end{overprint}
+	\end{textblock}
+	%
+	%
+	%%======= Right: Reco =======%%%
+	\begin{textblock}{50}(105, 17)
+		\centering
+		%
+		\begin{overprint}
+			%% R_smp
+			\only<1>{
+				\textbf{Reconstruction}\\
+				%
+				%% C-Scan
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewnolabelwithcmap{0.55}{\Large}{\Large}{figures/tex_png/simulations_logscale/015/R_smp.png}\\
+				%% B-Scan
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\sideviewxlabelwithcmap{0.45}{\LARGE}{\LARGE}{figures/tex_png/simulations/015/R_smp_sideview.png}\\
+			}
+			%% R_fk
+			\only<2>{
+				\textbf{Reconstruction}\\
+				%
+				%% C-Scan
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewnolabelwithcmap{0.55}{\Large}{\Large}{figures/tex_png/simulations_logscale/015/R_fk.png}\\
+				%% B-Scan
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\sideviewxlabelwithcmap{0.45}{\LARGE}{\LARGE}{figures/tex_png/simulations/015/R_fk_sideview.png}\\
+			}
+%			%% R_re_fk
+%			\only<2>{
+%				%% C-Scan
+%				% <scale size>, <label font size>, <tick font size>, <png file name>
+%				\topviewnolabelwithcmap{0.55}{\Large}{\Large}{figures/tex_png/simulations_logscale/015/R_re_fk.png}\\
+%				%% B-Scan
+%				% <scale size>, <label font size>, <tick font size>, <png file name>
+%				\sideviewxlabelwithcmap{0.45}{\LARGE}{\LARGE}{figures/tex_png/simulations/015/R_re_fk_sideview.png}\\
+%			}
+		\end{overprint}
+	\end{textblock}
+	
+	%===================================================%
+\end{frame}
+
+
+\subsection{Objectives and Contributions}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Objectives and Contributions}
+%======================================== content =====%
+	%%========= Left: Text =========%%
+	\begin{textblock}{90}(10, 20) %-> using textblock avoid shifting of figures b/w slides
+	\only<1-3>{
+	\textbf{Objectives} 	
+	\begin{itemize}
+		\item Artefacts reduction in reconstructions\\
+					$\rightarrow$ Interpolate missing data as preprocessing\\
+					$\hat{=}$ Interpolation of nonlinear spatio-temporal data \\
+		\item Fast yet interpretable method
+	\end{itemize}
+	%\vspace*{0.2cm}
+	
+	\only<3>{
+	\textbf{Solutions}
+	\begin{itemize}
+		\item Spatial statistical interpolation 
+		\item Batch-wise interpolation
+		\item Perform in space-frequency domain
+		\item Incorporate DNN for fast on-site execution
+	\end{itemize}
+	}
+	}
+	\only<4->{
+	\textbf{Contributions}
+	\begin{itemize}
+		\item Spatial statistical modeling of UT data in space-frequency (SF) domain 
+		\item Develop a hybrid interpolation scheme in SF-domain\\
+					\hspace*{0.2cm} (i) Interpolation via a MMSE estimator \\
+					\hspace*{0.5cm} $\rightarrow$ \textbf{SF-Kriging} \\
+					\hspace*{0.2cm} (ii) Estimation of spatial statistics via DNN\\
+					\hspace*{0.5cm} $\hat{=}$ Vector-valued regression\\
+					\hspace*{0.5cm} $\rightarrow$ \textbf{FVnet}
+		\item Feedback feature for experimental design
+	\end{itemize}
+	}
+	\end{textblock}
+	
+	%%========= Right: Image =========%%
+	\begin{textblock}{50}(100, 13)
+		\centering
+		%% R_smp
+		\only<1>{
+			\textbf{Sparse sampling}
+			\vspace*{0.2cm}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+			\topviewbothlabels{0.55}{\Large}{\Large}{figures/tex_png/simulations_logscale/015/R_smp.png}\\
+		}
+		%% R_fk
+		\only<2-4>{
+			\textbf{Preprocessed}
+			\vspace*{0.2cm}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+			\topviewbothlabels{0.55}{\Large}{\Large}{figures/tex_png/simulations_logscale/015/R_fk.png}\\
+		}
+		%% Variance map 
+		\only<5>{
+			\textbf{Feedback}
+			\vspace*{0.2cm}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+			\topviewbothlabels{0.55}{\Large}{\Large}{figures/tex_png/simulations/015/rmse_fk.png}\\
+		}
+		%% R_re_fk
+		\only<6->{
+			\textbf{Resmpl. + preproc.}
+			\vspace*{0.2cm}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+			\topviewbothlabels{0.55}{\Large}{\Large}{figures/tex_png/simulations_logscale/015/R_re_fk.png}\\
+		}
+	\end{textblock}
+	%
+	% A-Scan
+	\begin{textblock}{50}(100, 60)
+		\centering
+		\only<2->{
+			% <scale size>, <label font size>,  <tick font size>, <fname>
+			\plotascan{0.8}{\large}{\large}{figures/coords_1D/ascan_example.tex}
+		}
+	\end{textblock}
+	
+%===================================================%	
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Method}
+
+\subsection{Method: Overview}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Preprocessing Scheme}
+	%======================================== content =====%
+	\begin{textblock}{140}(10, 25)
+		\centering
+		\inputTikZ{0.7}{figures/fig_diag_wholesystem.tex}
+	\end{textblock}
+	%===================================================%	
+\end{frame}
+
+
+%\subsection{Method: Lists}
+%% small footline with pagenumbers
+%\setbeamertemplate{footline}[shrunklight]
+%% full headline for sections in headline
+%\setbeamertemplate{frametitle}[full]
+%\begin{frame}[t]
+%	\frametitle{Method Lists}
+%	%======================================== content =====%
+%	\only<1>{
+%		\begin{itemize}
+%			\item Interpolation of nonlinear ST-data = difficult\\
+%						$\rightarrow$ Temporal correlation\\
+%						$\Rightarrow$ Vector-valued prediction
+%			\item SF-domain: orthogonal Fourier bases\\
+%						$\rightarrow$ prediction for single frequency possible\\
+%						$\Rightarrow$ scalar-valued prediction
+%			\item Linear MMSE predictor in SF-domain\\
+%						$\hat{=}$ Weights are determined based on the second-order spatial statistics
+%			\item Second-order spatial statistics = FV\\
+%						FV is defined based on intrinsic stationarity assuption\\
+%						 $\hat{=}$ A weaker assumption of spatial WSS\\
+%			\item Intrinsic stationarity $\rightarrow$ stationarity of the increments\\
+%						(1) Increments are zero mean\\
+%						(2) Variance of the increments is shift invariance\\
+%		\end{itemize}
+%	}
+%	\only<2>{
+%		\begin{itemize}
+%			\item Nonparametric FV estimation = method-of-moments estimate\\
+%						$(-)$ requires adequate samples $\because$ some lags may be missing\\
+%			\item Parametric FV estimation\\
+%						$\rightarrow$ for each lag and frequency\\
+%						$\Rightarrow$ not suitable for online application\\
+%			\item Data driven nonparametric FV estimation via DNN\\
+%						Property: lattice data within a small batch\\
+%						$\rightarrow$ Vector-valued lags \& FVs\\
+%						$\Rightarrow$ Vector-valued regression problem
+%		\end{itemize}
+%	}
+%	%===================================================%	
+%\end{frame}
+
+\subsection{ST-Interpolation}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{ST-Interpolation in SF-domain}
+	%======================================== content =====%
+	% Overview
+	\only<1>{
+		\begin{textblock}{140}(10, 25)
+			\centering
+			\inputTikZ{0.7}{figures/fig_diag_wholesystem_SFKrig.tex}
+		\end{textblock}
+	}
+	%
+	%====== Text ======%
+	%% ST-domain
+	\only<2-3>{
+		\begin{textblock}{90}(10, 20)
+			\textbf{ST-domain}: temp. correlation $\rightarrow$ vector-valued pred.\\
+			\vspace*{0.2cm}
+			\hspace*{0.3cm} Sought: %
+			\begin{equation*}
+				\bm{a}_{\pos{0}} \in \RR^{M}
+			\end{equation*}\\
+			
+			\hspace*{0.3cm} Given: %
+			\begin{equation*}
+				\bm{A}_{S} = 
+				\begin{bmatrix}
+					\bm{a}_{\pos{1}} & \bm{a}_{\pos{2}} & \cdots & \bm{a}_{\pos{N}} \\
+				\end{bmatrix}
+				\in \RR^{M \times N}
+			\end{equation*}\\
+		\end{textblock}
+	}
+	
+	% SF-Domain
+	\only<3>{
+		\begin{textblock}{90}(10, 60)
+			\textbf{SF-domain}: orthogonal Fourier bases\\
+			\vspace*{0.2cm}
+			\hspace*{0.3cm} $\Rightarrow$ individual prediction for a single frequency\\
+			\begin{equation*}
+				\bm{p}_{\pos{0}} = \bm{F}_{M}  \bm{a}_{\pos{0}} \text{ } \in \CC^{M}
+			\end{equation*}
+		\end{textblock}
+	}
+	
+	% Problem formulation in SF-domain
+	\only<4->{
+		\begin{textblock}{90}(10, 20)
+			\textbf{SF-domain}: $\rightarrow$ set of scalar-valued pred. $ \forall \omega_{m}$\\
+			\vspace*{0.2cm}
+			\hspace*{0.3cm} Sought: %
+			\begin{equation*}
+				p_{\pos{0}m} \in \CC
+			\end{equation*}\\
+			
+			\hspace*{0.3cm} Given: %
+			\begin{equation*}
+				\bm{\pi}_{m}^{S} = 
+				\begin{bmatrix}
+					p_{\pos{1}m} & p_{\pos{2}m} & \cdots & p_{\pos{N}m} \\ 
+				\end{bmatrix}^{\T}
+				\in \CC^{M}
+			\end{equation*}
+		\end{textblock}
+	}
+	
+	%====== Image ======%
+	\only<2->{
+		\begin{textblock}{50}(100, 20)
+			\centering
+			Samp. and pred. positions\\
+			\vspace*{0.1cm}
+			\plotbatchitppsmp{0.6}{\Large}{\Large}
+		\end{textblock}
+	}
+	
+	%===================================================%	
+\end{frame}
+
+\subsection{SF-Kriging}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Spatial Statistical Approach: SF-Kriging}
+	%======================================== content =====%
+	%======== Text =======%
+	%%% IS
+	\only<1-2>{
+		\begin{textblock}{90}(10, 18)
+			\textbf{Assumptions}: \textbf{intrinsic stationarity}\\
+			\vspace*{0.2cm} 
+			\hspace*{0.3cm} $\hat{=}$ Stationary assumptions for the increments \\
+		\end{textblock}
+		
+		% 1st assumption
+		\begin{textblock}{90}(10, 35)
+			(1) Mean of the increments is 0\\
+			\begin{equation*}
+				\Expect{ p (\bm{s} ) - p ( \bm{s} + \bm{h} ) } = 0 
+			\end{equation*}
+		\end{textblock}
+		
+		% 2nd assumption
+		\begin{textblock}{90}(10, 55)
+			(2) Variance of the increments is shift invariant\\
+			\hspace*{0.5cm} $\rightarrow$ function of the spatial lag\\
+			\begin{equation*}
+				\Var{ p (\bm{s} ) - p ( \bm{s} + \bm{h} ) }  \coloneqq  2 \gamma ( \bm{h} ) 
+			\end{equation*}
+			
+			\only<2>{
+				\hspace*{0.3cm} $2 \gamma ( \bm{h} ) = $ \cihighlight{ \textbf{Frequency variogram (FV)} }\\
+				\hspace*{1.2cm} (nonnegative, real-valued)
+			}
+		\end{textblock}
+	}
+	
+	% Kriging
+	\only<3->{
+		% Linear predictor
+		\begin{textblock}{90}(10, 18)
+			\textbf{Linear unbiased MMSE predictor (Kriging)}: \\
+			\vspace*{0.2cm}
+			\hspace*{2cm} $\hat{p}_{\pos{0}m} = \bm{w}_{m}^{\Hermit} \bm{\pi}_{m}^{S} $
+		\end{textblock}
+		%
+		% Weights
+		\begin{textblock}{90}(10, 32)
+			\only<4->{
+				\textbf{Weights}: 2nd order statistics \only<4-8>{= inc. variance}\only<9->{= FVs}\\
+				\vspace*{0.2cm}
+				\only<5->{\hspace*{2cm} $\bm{w}_{m} = \bm{\Gamma}_{m}^{-1} \bm{\upsilon}_{m} \in \RR^{N}$\\}
+			}
+		\end{textblock}
+		%
+		% FV matrix of samples
+		\begin{textblock}{80}(8, 48)
+			\begin{overprint}
+			\only<6-8>{%
+				Between the samples:
+				%
+				\vspace*{-0.2cm}
+				\begin{equation*}
+					\bm{\Gamma}_{m} = 
+					\begin{bmatrix}
+						\Var{p_{\pos{1}m} - p_{\pos{1}m}} & \cdots & \Var{p_{\pos{N}m} - p_{\pos{1}m}} \\
+						\vdots & \ddots & \vdots \\
+						\Var{p_{\pos{1}m} - p_{\pos{N}m}} & \cdots & \Var{p_{\pos{N}m} - p_{\pos{N}m}} \\
+					\end{bmatrix}
+					\in \RR^{N \times N}
+				\end{equation*}
+			}
+			%
+			\only<9->{%
+				Between the samples:
+				%
+				\vspace*{-0.2cm}
+				\begin{equation*}
+					\bm{\Gamma}_{m} = 
+					\begin{bmatrix}
+						\gamma (\pos{1} - \pos{1}) & \cdots & \gamma (\pos{N} - \pos{1}) \\
+						\vdots & \ddots & \vdots \\
+						\gamma (\pos{1} - \pos{N}) & \cdots & \gamma (\pos{N} - \pos{N}) \\
+					\end{bmatrix}
+					\in \RR^{N \times N}
+				\end{equation*}
+			}
+		\end{overprint}
+		\end{textblock}
+		%
+		% FV vector b/w pred. and samples
+		\begin{textblock}{80}(8, 74)
+			\begin{overprint}
+			\only<7-8>{%
+				Between $p_{\pos{0}m}$ and the samples: \only<8>{\cihighlight{$\rightarrow$ unknown}}
+				%
+				\vspace*{-0.3cm}
+				\begin{equation*}
+					\bm{\upsilon}_{m} = 
+					\begin{bmatrix}
+						\Var{p_{\pos{0}m} - p_{\pos{1}m}} & \cdots & \Var{p_{\pos{0}m} - p_{\pos{N}m}} \\
+					\end{bmatrix}
+					^{\T} \in \RR^{N}
+				\end{equation*}
+			}
+			\only<9->{%
+				Between $p_{\pos{0}m}$ and the samples:
+				%
+				\vspace*{-0.3cm}
+				\begin{equation*}
+					\bm{\upsilon}_{m} = 
+					\begin{bmatrix}
+						\gamma (\pos{0} - \pos{1}) & \cdots & \gamma (\pos{0} - \pos{N})\\ 
+					\end{bmatrix}
+					^{\T} \in \RR^{N}
+				\end{equation*}
+			}
+			%
+%			\only<7->{
+%				\hspace*{1.5cm} $\rightarrow$ unknown
+%			}
+			\end{overprint}
+		\end{textblock}
+	}
+	
+	%======== Image ========%
+	%====== Image ======%
+	\begin{textblock}{50}(100, 20)
+		\centering
+		$\left\lbrace p ( \pos{} ) : \pos{} \subset D \right\rbrace $\\
+		\vspace*{0.1cm}
+		\plotbatchitppsmp{0.6}{\Large}{\Large}
+	\end{textblock}
+	%
+	% For highlighting the FV estimation
+	\begin{textblock}{50}(105, 73)
+		\only<10->{
+			$\Rightarrow$ \cihighlight{ \textbf{Estimate of $\gamma_{m} ( \lagvec{} )$ } }
+		}
+	\end{textblock}
+	
+	%===================================================%	
+\end{frame}
+
+
+\subsection{Frequency Variogram Estimation}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Frequency Variogram Estimation}
+	%======================================== content =====%
+	% Overview
+	\only<1>{
+		\begin{textblock}{140}(10, 25)
+			\centering
+			\inputTikZ{0.7}{figures/fig_diag_wholesystem_FVnet.tex}
+		\end{textblock}
+	}
+	%
+	% FV estimation problems & solutions
+	\only<2->{
+		% Method of moments
+		\begin{textblock}{140}(10, 17)
+			(\rom{1}) \textbf{Nonparametric estimation}
+			%
+			\only<3->{
+				\begin{itemize}
+					\uncover<3-4>{\item Method-of-moments estimate}
+					\uncover<3-4>{\item $(-)$ requires adequate samples\\
+															$\because$ some lags may be missing}
+				\end{itemize}
+			}
+		\end{textblock}
+		%
+		% Parametric 
+		\begin{textblock}{140}(10, 39)
+			(\rom{2}) \textbf{Parametric estimation}
+			\only<4->{
+				\begin{itemize}
+					\uncover<4>{\item Modeling based on SPDEs}
+					\uncover<4>{\item Parameter estimation for each lag and frequency\\
+															$\rightarrow$ not suitable for online applications}
+				\end{itemize}%
+			}
+		\end{textblock}
+		%
+		% DNN
+		\begin{textblock}{140}(10, 62)
+			\only<5->{
+				(\rom{3}) \textbf{Data driven approach via DNN (FVnet)}
+				\begin{itemize}
+					\item Property: lattice data within a small batch\\
+								$\rightarrow$ Vector-valued lags and frequency variograms\\
+					\item Method-of-moments estimates are available\\
+								$\Rightarrow$ Vector-valued regression problem
+				\end{itemize}
+			}
+		\end{textblock}
+	}
+	%===================================================%	
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Simulations}
+\subsection{Setup}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Hybrid Preprocessing: Performance} 
+%======================================== content =====%
+	%%%% Text %%%%
+	%
+	\only<1-3>{
+		\begin{textblock}{130}(10, 18) 
+		\begin{overprint}
+			\textbf{Simulation studies}\\
+			\begin{itemize}
+				\item \cigray<2->{Batch interpolation}
+				\item\cihighlight<2->{Reconstruction of subsampled data}
+			\end{itemize}
+			%
+			\only<3>{
+				\textbf{Purpose}
+				\begin{itemize}
+					\item Resolution of reconstructed images
+					\item Effectiveness of experimental design
+				\end{itemize}
+			}
+		\end{overprint}
+		\end{textblock}
+	}
+	%
+	\only<4>{
+		\begin{textblock}{130}(10, 18)
+		\begin{overprint}
+			\textbf{Scenario and Assumptions}
+			\begin{itemize}
+				\item Base data = densely scanned measurements \\
+							(\SI{0.5}{\milli \metre} grids $\hat{=}$ 8.7 samples $/ \lambda^2$)
+				\item ROI = \SI{25}{\milli \metre} $\times$ \SI{25}{\milli \metre}
+				\item Subsampling in ROI: $5 \ldots 17\%$ \\
+							($\hat{=}$ 0.44 $\ldots$ 1.48 samples $/ \lambda^{2}$)
+				\item Moving window interpolation (50\% overlap)
+				\item Single batch = \SI{5}{\milli \metre} $\times$ \SI{5}{\milli \metre}
+			\end{itemize}
+			\vspace*{0.2cm}
+		\end{overprint}
+		\end{textblock}
+	}
+	%
+	\only<5->{
+		% Reference & IDW
+		\begin{textblock}{130}(10, 18)
+			\only<5->{
+				\textbf{Comparison}
+				\begin{itemize}
+					\item Reference \\
+								= Reconstruction of fully sampled data
+					\item Inverse Distance Weighting (IDW)
+				\end{itemize}
+			}
+		\end{textblock}
+		%
+		\begin{textblock}{90}(10, 43) 
+			\only<6->{
+				\textbf{Evaluation metrics}
+				\begin{itemize}
+					\item \cigray<7->{Normalized squared error}
+					\item \cihighlight<7->{\textit{Generalized Contrast-to-Noise Ratio} ($\GCNR$)}
+				\end{itemize}
+			}
+			\only<7->{
+				\hspace*{0.8cm} $\GCNR$ = 1 - $P$(false detection)\\
+				\hspace*{1.4cm} $\Rightarrow$ higher $\GCNR$ $\hat{=}$ better resolution
+			}
+		\end{textblock}
+		%
+	}
+	%
+	%%%%% Image %%%%%%
+	\begin{textblock}{90}(80, 22) 
+	\only<4->{
+		\centering
+		\textbf{ROI}\\
+		% <scale size>, <label font size>, <tick font size>, <png file name>
+		\topviewMUSEroi{0.55}{\Large}{\Large}\\
+	}	
+	\end{textblock}
+%===================================================%	
+\end{frame}
+
+\subsection{Results 1} 
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Performance Evaluation for Varying Coverage} 
+%\fontsize{10pt}
+%======================================== content =====%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%=========== Results: GCNR ==============%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\centering
+	%<scale size>, <font size>, <slide page for the mark>, <mark coordinates>
+	\resultsSmpStatic{1}{\large}%
+%===================================================%
+\end{frame}
+
+
+\subsection{Strategic Resampling}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Experimental Design: Strategic Resampling}
+	%======================================== content =====%
+	%%========= Left: Text =========%%
+	\begin{textblock}{70}(10, 22) %-> using textblock avoid shifting of figures b/w slides
+	\begin{overprint}
+		\textbf{Feedback for experimental design}
+		\begin{itemize}
+			\uncover<2->{\item (1) Initial sampling ($= N$)}
+			\uncover<3->{\item (2) Interpolation via SF-Kriging}
+			\uncover<4->{\item (3) Variance map as feedback}
+			\uncover<5->{\item (4) Prioritized resampling}\\
+			\uncover<6->{\hspace*{0.4cm} + random resampling\\
+										\hspace*{0.4cm} ($= 2N$)}
+		\end{itemize}
+	
+		\vspace*{0.3cm}
+		\only<7->{
+			$\rightarrow$ Effect on reconstruction resolution
+		}
+	\end{overprint}
+	\end{textblock}
+
+	%%========= Right: Image =========%%
+	\begin{textblock}{60}(85, 25) %-> using textblock avoid shifting of figures b/w slides
+		\centering
+		\only<2->{
+			\inputTikZ{0.8}{figures/strategic_resampling_animate.tex}
+		}
+	\end{textblock}
+	
+	
+	%===================================================%	
+\end{frame}
+
+
+\subsection{Results 2} 
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Effectiveness of Strategic Resampling} 
+	%\fontsize{10pt}
+	%======================================== content =====%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%=========== Animation: GCNR ==============%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% 5%
+	\only<1-2>{%
+		\centering
+		%<scale size>, <font size>, <slide page for the mark>, <mark coordinates>
+		\resultsanimateResmp{1}{\large}{2}{(5, 0.8557544375216948) (5, 0.9476274261491666) (5, 0.9452070720887681) }
+	}
+	% 10%
+	\only<4>{%
+		\centering
+		%<scale size>, <font size>, <slide page for the mark>, <mark coordinates>
+		\resultsanimateResmp{1}{\large}{4}{(10, 0.9508049534920663) (10, 0.9594028540162732) (10, 0.9678061257508634) }
+	}
+	% 15%
+	\only<6>{%
+		\centering
+		%<scale size>, <font size>, <slide page for the mark>, <mark coordinates>
+		\resultsanimateResmp{1}{\large}{6}{(15, 0.9661895999905868) (15, 0.9631637529343241) (15, 0.9725018532573202) }
+		%{ (12, 0.960993309152738) (12, 0.960977755028799) (12, 0.97133687511399) }
+	}
+	%%======= Coverage =========%%
+	\begin{textblock}{50}(10, 18)
+		\only<3>{$N$ = 0.44 samples $/ \lambda^2$}%
+		\only<5>{$N$ = 0.87 samples $/ \lambda^2$}%
+		\only<7>{$N$ = 1.31 samples $/ \lambda^2$}% 
+	\end{textblock}
+	
+	%%=======  Left: Reco true =======%%%
+	\begin{textblock}{35}(5, 25)
+		\centering
+		\begin{overprint}
+			%% R_true
+			\only<3, 5, 7>{
+				\textbf{Reference}\\
+				\vspace*{0.3cm}
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewbothlabels{0.5}{\Large}{\Large}{figures/tex_png/simulations_logscale/R_true.png}\\
+				%
+				\vspace*{0.3cm}
+				$\bm{1}$ % GCNR value
+			}
+		\end{overprint}
+	\end{textblock}
+	%
+	%
+	%%======= Center left: Reco smp or FK (for resampling) =======%%%
+	\begin{textblock}{35}(45, 25)
+		\centering
+		\begin{overprint}
+			%%%% Initial sampling positions %%%%
+			%% 5% 
+			\only<3>{
+				\textbf{SF-Krig.}\\
+				\vspace*{0.3cm}
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewxlabel{0.5}{\Large}{\Large}{figures/tex_png/simulations_logscale/005/R_fk.png}\\
+				%
+				\vspace*{0.3cm}
+				$\bm{0.893}$ % GCNR value
+			}
+			%% 10%
+			\only<5>{
+				\textbf{SF-Krig.}\\
+				\vspace*{0.3cm}
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewxlabel{0.5}{\Large}{\Large}{figures/tex_png/simulations_logscale/010/R_fk.png}\\
+				%
+				\vspace*{0.3cm}
+				$\bm{0.959}$ % GCNR value
+			}
+			%% 15%
+			\only<7>{
+				\textbf{SF-Krig.}\\
+				\vspace*{0.3cm}
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewxlabel{0.5}{\Large}{\Large}{figures/tex_png/simulations_logscale/015/R_fk.png}\\
+				%
+				\vspace*{0.3cm}
+				$\bm{0.978}$ % GCNR value
+			}
+		\end{overprint}
+	\end{textblock}
+	%
+	%
+	%%======= Center right: IDWs (both sampling and resampling) =======%%%
+	\begin{textblock}{35}(80, 25)
+		\centering
+		\begin{overprint}
+			%% 5%
+			\only<3>{
+				\textbf{Resmp. IDW}\\
+				\vspace*{0.3cm}
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewxlabel{0.5}{\Large}{\Large}{figures/tex_png/simulations_logscale/005/R_re_idw.png}\\
+				%
+				\vspace*{0.3cm}
+				$\bm{0.953}$ % GCNR value
+			}
+			%% 10%
+			\only<5>{
+				\textbf{Resmp. IDW}\\
+				\vspace*{0.3cm}
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewxlabel{0.5}{\Large}{\Large}{figures/tex_png/simulations_logscale/010/R_re_idw.png}\\
+				%
+				\vspace*{0.3cm}
+				$\bm{0.964}$ % GCNR value
+			}
+			%% 15%
+			\only<7>{
+				\textbf{Resmp. IDW}\\
+				\vspace*{0.3cm}
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewxlabel{0.5}{\Large}{\Large}{figures/tex_png/simulations_logscale/015/R_re_idw.png}\\
+				%
+				\vspace*{0.3cm}
+				$\bm{0.969}$ % GCNR value
+			}
+		\end{overprint}
+	\end{textblock}
+	
+	%%======= Right: FKs (both sampling and resampling) =======%%%
+	\begin{textblock}{35}(115, 25)
+		\centering
+		\begin{overprint}
+			%% 5%
+			\only<3>{
+				\textbf{Resmp. SF-Krig.}\\
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewxlabelwithcmap{0.5}{\Large}{\Large}{figures/tex_png/simulations_logscale/005/R_re_fk.png}\\
+				%
+				\vspace*{0.3cm}
+				$\bm{0.966}$ % GCNR value
+			}
+			%% 10%
+			\only<5>{
+				\textbf{Resmp. SF-Krig.}\\
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewxlabelwithcmap{0.5}{\Large}{\Large}{figures/tex_png/simulations_logscale/010/R_re_fk.png}\\
+				%
+				\vspace*{0.3cm}
+				$\bm{0.973}$ % GCNR value
+			}
+			%% 15%
+			\only<7>{
+				\textbf{Resmp. SF-Krig.}\\
+				% <scale size>, <label font size>, <tick font size>, <png file name>
+				\topviewxlabelwithcmap{0.5}{\Large}{\Large}{figures/tex_png/simulations_logscale/015/R_re_fk.png}\\
+				%
+				\vspace*{0.3cm}
+				$\bm{0.983}$ % GCNR value
+			}
+		\end{overprint}
+	\end{textblock}
+	
+	%===================================================%
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Summary} 
+
+\subsection{Conclusion (1)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	\frametitle{Conclusion (1)}
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	%%%% Motivation + objectives %%%%
+	\textbf{Research problem and objectives}
+	\begin{itemize}
+		\item Direct SAFT reconstruction of manaual UT data\\
+					$\rightarrow$ Degraded resolution \\
+					$\because$ Accumulation of random factors \\
+		\item Sparse and/or irregular spatial subsampling of UT data\\
+					$\rightarrow$ Spatial aliasing in SAFT reconstructions\\
+					$\Rightarrow$ Appearance of artefacts\\
+		\item Goal = artefacts reduction by preventing spatial aliasing\\
+					$\rightarrow$ Interpolate missing UT data\\
+					$\hat{=}$ Interpolation of nonlinear spatio-temporal data\\
+		\item Fast yet interpretable method
+	\end{itemize}
+	%===================================================%
+\end{frame}
+
+
+\subsection{Conclusion (2)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Conclusion (2)}
+	%======================================== content =====%
+	%%%% Achievements + contribution %%%%
+	\textbf{Achievements and contributions}
+	\begin{itemize}
+		\item Extensive study on spatial statistics
+		\item Spatial statistical modeling of UT data in space-frequency domain
+		\item Problem formulation for a hybrid approach\\
+		(i) Space-frequency domain Interpolation via SF-Kriging\\
+		(ii) Estimation of second order spatial statistics via FVnet\\
+		\hspace*{0.5cm} $\hat{=}$ Vector-valued regression\\ 
+		\hspace*{0.5cm} $\rightarrow$ Applicable to other types of spatio-temporal lattice data\\
+		\item Extension of point SF-Kriging to multi-point ones
+		\item Establishing a preprocessing scheme with a feedback feature
+	\end{itemize}
+	%===================================================%	
+\end{frame}
+
+
+\subsection{Conclusion (3)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Conclusion (3)}
+	%======================================== content =====%
+		\begin{overprint}
+		% Findings
+		\begin{textblock}{140}(10, 20)
+			\textbf{Findings}
+			\begin{table}
+				\centering
+				\inputTable{0.9 \textwidth}{tables/table_conclusion.tex}
+			\end{table}
+		\end{textblock}
+		
+		% Future work
+		\begin{textblock}{140}(10, 50)
+			\only<2>{
+				\textbf{Future work}
+				\begin{itemize}
+					\item Incorporate the neighboring batch information in FVnet
+					\item Parameteric estimation of frequency variogram via DNN
+					\item Extension to a progressive approach
+					%\item Optimal value of the hyper parameter for SF-Kriging
+				\end{itemize}
+			}
+		\end{textblock}
+	\end{overprint}
+	%===================================================%	
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Backup %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+\backupbegin
+\section{Backup}
+\subsection{Backup Start}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	%\frametitle{ } 
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	\centering
+	\huge Backup
+	%===================================================%
+\end{frame}
+
+\input{backup.tex} 
+
+\backupend
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

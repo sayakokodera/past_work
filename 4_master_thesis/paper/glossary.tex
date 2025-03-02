@@ -1,0 +1,48 @@
+\newglossaryentry{sis} { name={3D SmartInspect}, description={Measurement assisance system developed by Fraunhofer Institute for Nondestructive Testing IZFP \cite{Krieg18SHMNDT, Valeske20SmartNDE}} }
+
+\newglossaryentry{ascan} { name={A-Scan}, description={
+		The simplest form of presentation for \acrshort{ut} data, where the received signal is displayed over the time axis \cite{UTDataPresentation}
+	}, plural={A-Scans}}
+
+\newglossaryentry{bscan} { name={B-Scan}, description={eine Profildarstellung des Testkörpers, wobei die \acrshort{tof} der akustischen Energie entlang der vertikalen Achse dargestellt und die Prüfpositionen entlang der horizontalen Achse präsentiert sind \cite{UTDataPresentation}}, plural={B-Scans}}
+
+\newglossaryentry{cscan} { name={C-Scan}, description={
+		Top view of 3D data, where the absolut largest values of each position are illustrated as the intensity of color \cite{UTDataPresentation}. In this work, this way of presentation is employed for visualization, based on which the results are evaluated. 
+	}, plural={C-Scans}}
+
+\newglossaryentry{normal_transducer} {name={Normal-Prüfkopf}, description={ein Ultraschall Prüfkopf, der im Wesentlichen aus einem piezoelektrischen Schwinger, der infolge der elektrischen Anregung durch Spannungsimpulse mechanische Spannungswellen und damit Longitudinalwellen erzeugt, bestehet \cite{UTNormalPruefkopf}}, long={Normal-Prüfkopf}}
+
+\newglossaryentry{pulse_echo} {name={Puls-Echo-Verfahren}, description={Ein Prüfungsverfahren mit Ultraschall, wobei der in den Testkörper eingefügte Ultraschall von einem Prüfkopf gesendet und die reflektierte Welle vom gleichen Kopf empfangen wird. Die Welle wird oft senkrecht in das Testobjekt eingestrahlt (Siehe Teil \ref{sec:pulse_echo})}, long={Puls-Echo-Verfahren} }
+
+\newglossaryentry{das}{name=DAS, description={Delay and sum, Zeitbereich Rekonstruktions Algorithmus, (siehe Teil \ref{sec:saft_general})},    first={delay and sum (DAS)}, long={delay and sum}, short={DAS}}
+
+
+\newglossaryentry{tfm}{name=TFM, description={Total Focusing Method, eine Rekonstruktionsmethode, die auf dem gleichen Grundprinzip wie \acrshort{saft} basiert. TFM wird für Messdaten angewendet, die mit mehreren Transducerelementen auf einmal aufgenommen werden},    first={Total Focusing Method (TFM)},  long={Tofal Focusing Method}, short={TFM}}
+
+\newglossaryentry{autoencoder}{name=autoencoder, description={An unsupervised learning algotirhm to recover the significance in the inputs, such as extracting the clean underlying image structure from its noisy input.}}
+
+%\newglossaryentry{dnn}{
+%	name= deep neural network (DNN), 
+%	description={Artificial neural networks consisting of more than three layers between inputs and outputs.}, 
+%	plural = {DNNs}, 
+%	}
+
+\newglossaryentry{sos}{name=second-order stationarity, description={a stationarity assumption often made in geostatistics which is the equivalent notion of spatial \acrshort{wss} \cite{Cressie93SpatialStatisticsbook, Sherman10STstatistics}. This is called homogeneous \acrshort{srf} in \cite{Christakos92SRFbook}. See definition in \eqref{eq:SRFsos}.}, symbol={second-order stationary}}
+
+\newglossaryentry{is}{name=intrinsic stationarity, description={a weaker, thus more general, stationarity assumption than \gls{sos}. It states spatial \acrshort{wss} for the increments of an \acrshort{srf} \cite{Cressie93SpatialStatisticsbook, Sherman10STstatistics}. This is called \acrshort{srf} with homogeneous increments in \cite{Christakos92SRFbook}. See definition in \eqref{eq:SRFis}.}, symbol={intrinsic stationary}}
+
+\newglossaryentry{vario}{name= variogram, description={the crucial parameter of geostatistics, which is used to predict unknown values of an \acrshort{srf} via \gls{kriging} \cite{Christakos92SRFbook, Cressie93SpatialStatisticsbook, Sherman10STstatistics}. See definition in \ref{eq:SRFis} (ii).}}
+
+\newglossaryentry{kriging}{name= Kriging, description={one of the mostly used inference methods in geostatistics. Under proper setting, it derives a best linear unbiased estimator\cite{Christakos92SRFbook, Cressie93SpatialStatisticsbook, Sherman10STstatistics}.}}
+
+\newglossaryentry{FV}{
+	name= frequency variogram, 
+	description={
+			One possibility to express the second-order spatial statistics of a \acrshort{strf}. It is defined in space-frequency domain and can be used for obtaining \acrshort{mmse} estimate of frequency responses of the desired time series data.  \cite{Rao14FV, Rao17IntrinsicFV, Rao17StationaryFK}.
+		},
+	plural = frequency variograms,
+}
+
+\newglossaryentry{FVnet}{name= FVnet, description={Proposed data-driven approach to estimate a \gls{FV} for a single frequency (Chapter \ref{chap_FVnet})}}
+
+
