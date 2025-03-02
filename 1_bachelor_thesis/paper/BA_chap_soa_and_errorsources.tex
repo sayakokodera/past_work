@@ -1,0 +1,101 @@
+\chapter{Stand der Technik} \label{chap:soa}
+
+% automatisch vs manuell : short description
+In dieser Arbeit wird die Anwendungsmöglichkeit der \acrshort{saft} für die händisch aufgenommene Messdaten, besonders die von Metallköpern, evaluiert. Wie im Teil \ref{sec:undersampling} diskutiert wurde, wird \acrshort{saft} konventionell für die maschinell aufgenommene Daten verwendet. Bei der maschinellen Prüfung wird der Prüfkopf auf ein äquidistantes feines Raster gelegt, so dass der Ortsbereich vollständig abgetastet wird und dadurch die örtliche Unterabtastung vermieden werden kann. Währenddessen ist es bei einer händischen Messung sehr schwierig, den Abstand aufeinanderfolgenden Aufnahmen konstant zu halten oder den Ortsbereich vollständig abzutasten. Darüber hinaus existieren für die Anwendung, die in dieser Arbeit als Messmodell betrachtet wird, zusätzliche systematische Abweichungen, wie zum Beispiel die Positionsungenauigkeit durch das Tracking-System.  Dementsprechend ist bei diesem Anwendungsmodell eine Verschlechterung der Abbildungsqualität zu erwarten. \par
+
+% state of the art : SAFT with manual scan = Mayer
+Allerdings wurde die Anwendung der \acrshort{saft} für die handaufgenommene Messdaten bisher nur wenig erforscht (Anhang \ref{table:literature_search_manual}). Mit den synthetisch generierten Daten vom Betonmaterial wurde eine gute Möglichkeit der \acrshort{saft} Anwendung für die handaufgenommenen Daten im Zwischenbericht eines Forschungsprojektes gezeigt \cite{Mayer16SAFTwithSmallData}. \par
+Das Ziel des Forschungsprojektes von \cite{Mayer16SAFTwithSmallData} war die Echtzeitdarstellung der 3D \acrshort{saft} Rekonstruktion parallel zur Messung. In diesem Bericht wird ein möglicher Projektverlauf für die echtzeitige 3D-\acrshort{saft} Rekonstruktion der handaufgenommenen Messdaten vorgestellt. Dafür werden zuerst einzelne \gls{ascan}s für die Unterscheidung der unterschiedlichen Reflektionen entfaltet und dann wird die Information der aktuellen Prüfposition ermittelt bevor die 3D-\acrshort{saft} Rekonstruktion neu errechnet wird. \par
+Dennoch wurde in \cite{Mayer16SAFTwithSmallData} auch diskutiert, dass die Evaluierung der handaufgenommener Messdaten von Stahlkörpern allgemein sehr schwierig ist. Die Anwendungsmöglichkeit des in diesem Bericht vorgeschlagene Algorithmus auf Metallkörper wird in \cite{Mayer16SAFTwithSmallData} auch nicht erwähnt. Es ist von daher bisher noch nicht bekannt, ob \acrshort{saft} für die Rekonstruktion  handaufgenommener Metallkörpermessdaten geeignet ist.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Einflussfaktoren auf die Rekonstruktion handaufgenommener Daten} \label{chap:errorsource}
+%%%% intro %%%%
+In diesem Kapitel werden mögliche Fehlerquellen bei der \acrshort{saft} Rekonstruktion händisch aufgenommener Daten diskutiert. Im Teil \ref{sec:challenges} werden die bei der Rekonstruktion der handaufgenommenen Messdaten erwarteten Herausforderungen dargestellt. Diese Herausforderungen werden in zwei Kategorien unterteilt: eine bezüglich der Prüfpositionen und die andere bezüglich der Messungenauigkeiten unseres Messaufbaus. Diese Herausforderungen werden als die Fehlerquellen betrachtet und im nachfolgenden Teil \ref{sec:error_sources} auch in Bezug auf die Vorarbeiten genauer diskutiert. Am Ende dieses Kapitels, Teil \ref{sec:main_topic}, werden die Fehlerquellen, die in dieser Arbeit untersucht wurden, kurz erläutert.
+
+
+\section{Herausforderungen bei der Rekonstruktion handaufgenommener Daten} \label{sec:challenges}
+Wie bereits in Kapitel \ref{chap:soa} diskutiert, ist bisher unbekannt, ob \acrshort{saft} für die Rekonstruktion handaufgenommener Daten eines Metallobjektes tauglich ist. Um uns diesem Problem anzunähern, haben wir mögliche Fehlerquellen in folgende Kategorien, die sich auf den Vergleich von maschinellen und händischen Messungen beziehen, unterteilt. Die erste Kategorie beinhaltet die Herausforderungen bezüglich der  Prüfpositionen, die zweite Kategorie enthält die Herausforderungen bezüglich der Messungenauigkeiten. \par
+Die Abbildung \ref{fig:automatic_posscan} und \ref{fig:manual_posscan} zeigen die Prüfungspositionen der maschinellen und der händischen Messung, auf die im folgenden Bezug genommen wird. 
+%% FIG : autom vs manual %%
+\begin{figure}[h!]
+\begin{center}
+\input{figures/BA_fig_error_sources.tex}
+\caption[Unterschied zwischen automatischer und händischer Messung]{Prinzipskizze verschiedener Unterschiede zwischen handaufgenommenen und maschinell aufgenommenen Daten}
+\label{fig:error_sources}
+\end{center}
+\end{figure}
+%%
+
+% Beschreibung der Tabelle
+\subsection*{Herausforderungen bezüglich der Prüfpositionen}
+% Abstand
+Bei der maschinellen Messung befinden sich die Prüfpositionen auf dem äquidistanten Raster, wie in Abbildung \ref{fig:automatic_posscan} dargestellt. Unter der Äquidistanz versteht man, dass zwei benachbarte Punkte einen gleichen Abstand $d$ haben ($d = \dx = \dy$). Andererseits ist es bei der händischer Messung kaum möglich immer einen gleichen Abstand zwischen zwei Prüfpositionen beizubehalten. Dies kann zu einem größeren Abstand zwischen zwei benachbarten Prüfstellen führen, wie dargestellt in der Abbildung \ref{fig:err_distance}. \par
+% Verteilung 
+Wenn alle zwei benachbarten Prüfpositionen immer mit einem gleichen Abstand gelegt sind, werden die Positionen über den Ortsbereich gleichmäßig verteilt. Bei der händischen Messung hingegen wird der Bereich unter dem die Streuer liegen oft umfassender geprüft als die anderen Bereiche. Dargestellt wird dies in Abbildung \ref{fig:err_distribution}. Das hat zur Folge, dass die Prüfpositionen nicht mehr gleichmäßig verteilt sind. \par
+% Datenmenge 
+Darüber hinaus ist die Datenmenge der handaufgenommenen Messung erwartungsgemäß viel geringer als die von der maschinellen Messung, wie in die Abbildung \ref{fig:manual_posscan} und \ref{fig:automatic_posscan} dargestellt wird.
+
+
+\subsection*{Herausforderungen bezüglich der Messungenauigkeiten} 
+% Positionefehler
+Weiterhin ist der systematische oder menschliche Fehler besonders bei händischer Messungen sehr schwer zu vermeiden. Mit dem Messsystem, das wir in dieser Arbeit als Messmodell betrachten, ist eine gewisse Ungenauigkeit bei der Kameraerkennung der Prüfpositionen zu erwarten, wie in Abbildung \ref{fig:err_posscan} dargestellt wird. Dies kann zu Positionsfehlern führen, die so wohl die Messung als auch die Rekonstruktion beeinflussen könnten.  \par 
+% Laufzeitänderung
+Zudem wird oft bei der maschinellen Messung ein direkter Kontakt zwischen dem Prüfkopf und dem Testkörper vermieden, um die Kopplung zu optimieren. Dies geschieht beispielsweise durch eine Tauchbad-Wasserankopplung. Bei unserem Messmodell hingegen wird die Messung mit einem direktem Kontakt zwischen Prüfkopf und Testkörper durchgeführt. Um die durch Reflexionen an der Grenzfläche zwischen dem Prüfkopf und dem Testkörper verursachte Energie zu verringern, wird gewöhnlicherweise ein Kopplungsmittel, beispielsweise Öl oder Glycerin, verwendet. Allerdings könnte der Anpressdruck aufgrund des Kopplungsmittels nicht konstant gehalten werden. Dadurch wäre es möglich, dass sich der Abstand zwischen dem Prüfkopf und dem Testkörper ändert (Abbildung \ref{fig:err_zscan}). Als Folge dessen könnte die Laufzeit des Echos  von Prüfstelle zu Prüfstelle variieren (Abbildung \ref{fig:proptime_change}). \par
+
+%\input{figures/BA_fig_zscan_proptime_change.tex}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Mögliche Fehlerquellen} \label{sec:error_sources}
+Die obengenannten Einflussfaktoren sind als Fehlerquellen unseres händischen Messmodells zu betrachten und werden in der Tabelle \ref{table:autom_vs_manual} zusammengefasst. Im folgenden Teil werden bisherige Forschungen und deren aktueller Stand bezüglich dieser Fehlerquellen diskutiert. \par
+%% TABLE : automatic vs manual %%
+\begin{table}[ht]
+\begin{center}
+\input{tables/table_automatic_vs_manual.tex}
+\caption[Unterschieden zwischen einer automatischen und handaufgenommenen Messung]{Darstellung von Unterschieden zwischen einer automatisierten und einer handaufgenommenen Messung}
+\label{table:autom_vs_manual}
+\end{center}
+\end{table}
+%%
+
+\subsection*{(1) Grobe Abtastdichte}% spatial pitch (d)
+Wenn der Ortsbereich mit einem größeren Abstand, bzw. einer geringeren Abtastdichte abgetastet wird, kann es zu einer Unterabtastung führen, wie  im Teil \ref{sec:undersampling} diskutiert wird. Der Grenzwert der Abtastdichte bzw. des Abstandes zwischen zwei benachbarten Prüfpositionen wurde von \cite{Mooshofer16SAFTwithBiggerGridandArtifacts} bereits untersucht. Dabei wurde festgestellt, dass die Abtastdichte von einer Wellenlänge $\lambda$, im Gegensatz zur Abtasttheorie, unabhängig von den Messszenarien eine zufriedenstellende Abbildungsqualität liefert. Außerdem kann die Abtastdichte je nach Messszenario noch erweitert werden. Wenn sich zum Beispiel die Streuer sehr tief im Testkörper befinden oder der Öffnungswinkel des Prüfkopfes größer als $20^{\circ}$ ist, kann die Abtastdichte größer als $\lambda$ verwendet werden, während sich die durch Unterabtastung verursachten Artefakte im zulässigen Niveau halten \cite{Mooshofer16SAFTwithBiggerGridandArtifacts}. \par
+
+\subsection*{(2) Ungleichmäßige Verteilung} % unequal distribution of the data 
+Bei händischer Messungen wird ein Ortsbereich möglicherweise viel dichter als andere Bereiche abgetastet. Es kann bei der \acrshort{saft} Superposition zu einer Überbetonung dieses Bereiches führen \cite{Krieg18SAFTwithSmartInspect}. Dennoch kann es auch zur Unterabtastung im dünn abgetasteten Bereich führen. Solch eine ungleichmäßige Abtastung bzw. Verteilung der Prüfpositionen wird im Bericht von \cite{Mayer16SAFTwithSmallData} als eine der hauptsächlichen Herausforderungen bei der \acrshort{saft} Rekonstruktion der händischen Messdaten behandelt. \par
+Um uns diesem Problem anzunähern, wird in \cite{Mayer16SAFTwithSmallData} die Amplitudenwichtung als eine Maßnahme vorgeschlagen. Wenn ein \gls{ascan} bei einer Prüfposition aufgenommen wird, wird die Dichte aller bereits abgetasteten Prüfpositionen bestimmt. Nach dieser Prüfpositionsdichte wird die Wichtung der Amplitude einzelner \glspl{ascan} bestimmt, so dass die Überbetonung eines dicht abgetasteten Bereiches verhindert werden kann. Das bedeutet, dass die Amplitude jedes \gls{ascan}s durch die Wichtung reduziert wird, wenn mehrere \glspl{ascan} in einem Bereich vorhanden sind. Mit dieser Herangehensweise wird die Rekonstruktionspräzision durch die im entsprechenden Bereich erhöhte Abtastdichte verbessert \cite{Mayer16SAFTwithSmallData}. Darüber hinaus kann das Rauschen in diesem Bereich auch verringert werden \cite{Mayer16SAFTwithSmallData}. \par
+
+\subsection*{(3) Kleinere Datenmenge und niedrige Abdeckung} \label{sec:err_coverage} % coverage & data size 
+Da der \acrshort{saft} Algorithmus auf Superpositionen aller vorhandenen Daten basiert, hängt die Abbildungsqualität der \acrshort{saft} Rekonstruktion von der Abdeckung des Ortsbereiches ab. Das bedeutet, es wird eine Verschlechterung der Abbildungsqualität erwartet, wenn nicht ausreichende Daten für die Rekonstruktion vorhanden sind (Teil \ref{sec:undersampling}). Andererseits kann die Abbildungsqualität durch eine höhere Abdeckung verbessert werden, falls keine anderen Fehlerfaktoren existieren.\par
+Es ist allerdings noch nicht bekannt, welche Datenmenge für eine ausreichende Abbildungsqualität der \acrshort{saft} Rekonstruktion erforderlich ist (Anhang \ref{table:literature_search_errsrc}). Diese Frage ist  für die Rekonstruktion handaufgenommener Messdaten besonders relevant, da dies als ein Indikator für die Messung herangezogen werden kann. Daraus folgt, dass die Messzeiten und der -arbeitsaufwand durch solch einen Indikator verringert werden könnten. \par
+Darüber hinaus sollte auch diskutiert werden, ob die Einflüsse der anderen Fehlerfaktoren durch eine höheren Abdeckung reduziert werden können. \par
+
+
+\subsection*{(4) Positionsungenauigkeiten} 
+Der Effekt der Positionsungenauigkeit auf die \acrshort{saft} Rekonstruktion wurde bisher nicht viel erforscht (Anhang \ref{table:literature_search_errsrc}). Bei der händischen Messung im Bericht von \cite{Mayer16SAFTwithSmallData} werden die Messpositionen mit Hilfe der Abstandmessgeräte bestimmt und deren Ungenauigkeit wird nicht diskutiert. \par
+% investigation on positonal inaccuracy : Dobie10PhD
+In \cite{Dobie10PhD} andererseits wird der Effekt positioneller Ungenauigkeit der Messung auf die \acrshort{saft} Rekonstruktion berücksichtigt. Hier werden die Messdaten mit Hilfe mehrerer kleiner Messfahrzeugroboter, die eine gewisse Positionsungenauigkeit besitzen, auf dem äquidistanten Messraster aufgenommen. Die Messdaten werden danach mit \acrshort{saft} rekonstruiert. Dabei wurde präsentiert, dass \acrshort{saft} auf positionelle Ungenauigkeit sensibel reagiert \cite{Dobie10PhD}. Die positionelle Ungenauigkeit der Roboter wurde durch die Varianz der Drehabweichung des Rades analytisch bestimmt. Allerdings könnten die Werte des gegebenen Positionsfehlers von den eigentlichen Werten abweichen, da die Drehung des rechten und linken Rades nicht ganz identisch ist \cite[S.225]{Dobie10PhD}. Darüber hinaus weichen die Roboter durch die ungenaue Raddrehung vom gewollten Prüfpfad ab, was zum zusätzlichen Ausrichtungsfehler des Prüfkopfes führt \cite[S.226]{Dobie10PhD}. Deren Effekt muss bei den gewonnenen Rekonstruktionsergebnissen \cite[Abb. 7.25, 7.27]{Dobie10PhD} auch berücksichtigt werden. \par
+Aus diesem Grund sollte der Effekt der Positionsungenauigkeit anhand der händischen Messung noch untersucht werden.
+
+
+\subsection*{(5) Laufzeitänderung}
+% motivtaion
+Im Bericht von \cite{Mayer16SAFTwithSmallData} wurde der Prüfkopf durch ein Vakuum auf dem Testobjekt festgelegt, wodurch keine Anpressdruckänderung mehr vorkam. Allerdings wird bei unserem Anwendungsmodell eine gewisse Abweichung vom Anpressdruck erwartet. Wenn die Laufzeiten des eingestrahlten Ultraschalls durch den variierenden Anpressdruck über dem Ortsbereich nicht konstant sind, entspricht die Summation der Zeitverzögerung der aufgenommenen \glspl{ascan} nicht mehr der richtigen Signalantwort der Streuer. Aus diesem Grund sollte deren Effekt auf die Rekonstruktion auch untersucht werden. \par
+% non-planar surface approximation  (UT)
+Ein solches Verhalten kann als Prüfung eines Testobjektes mit einer rauhen Oberfläche betrachtet werden. Allgemein ist bei \acrshort{ut} Messungen der Effekt von Rauheit der Oberfläche bereits bekannt. Wenn ein Testobjekt eine raue Oberfläche besitzt, wird die Kopplung verringert und die zusätzliche Streuung wird an der Oberfläche verursacht. Dies führt zu einer Reduzierung der Signalamplitude und lässt die richtigen Streuer im Objekt schwer detektieren \cite{Wang18UTwithRoughSurface}. Dafür wurde festgestellt, dass die Rauheit von bis zu $\frac{\lambda}{10}$ vernachlässigt werden kann \cite{Ginzel99UTroughsurface}. Darüber hinaus verursacht die Oberflächenrauheit die durch Phasenschiebung verursachten Verzerrung der eingestrahlten Welle und deren Effekt muss auch berücksichtigt werden \cite{Wang18UTwithRoughSurface} \cite{Benstock14UTwithRoughSurface}. \par
+% non-planar surface approximation  (reco, TFM)
+Die Rekonstruktionsmöglichkeit solcher Messdaten wurde bisher kaum erforscht (Anhang \ref{table:literature_search_errsrc}). In \cite{Sutcliffe13TFMwithNonPlanarSurface} wird als eine erweiterte Anwendung der \gls{tfm} untersucht, ob Messdaten mit unterschiedlichen Zeitverzögerungen durch \gls{tfm} rekonstruiert werden können. Hier wurde die \gls{tfm} für die Tauchbad-Messdaten angewendet und es wurde gezeigt, dass die Prüfdaten mit einer unbekannten Oberflächengeometrie durch die Anpassung des Ausbreitungspfades erfolgreich rekonstruiert werden können. \par
+% our case : prop/time & phase
+Allerdings wird bei unserem Modell ein Testkörper mit einer flachen Oberfläche betrachtet und auch mit einem direkten Kontakt, also ohne Tauchbad, geprüft. Das bedeutet es werden keine Streuer an der Oberfläche erwartet und die Änderung des Ausbreitungspfades ist vernachlässigbar, da es keinen Vorlauf zwischen dem Prüfkopf und dem Testkörper gibt. Die vermutete Abstandsänderung ($\Delta z$) ist viel geringer als der Ausbreitungspfad ($l$) (bzw. $\Delta z \ll l$). Aus diesem Grund kann die Änderung des Anpressdrucks bei unserem Anwendungsfall als reine Laufzeitänderung des eingestrahlten Ultraschalls bzw. Zeitverschiebung des Signals betrachtet werden. Da die Korrelation von \acrshort{saft} und der variierenden Laufzeit bisher nicht bekannt ist (Anhang \ref{table:literature_search_errsrc}), sollte deren Effekt auch evaluiert werden.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Hauptaugenmerk der Arbeit} \label{sec:main_topic}
+Wie im vorherigen Teil \ref{sec:error_sources} gezeigt, wird der Einfluss einer gröberen Abtastdichte bereits von \cite{Mooshofer16SAFTwithBiggerGridandArtifacts} untersucht. Der Effekt von einer ungleichmäßigen Prüfpositionsverteilung auf die \acrshort{saft} Rekonstruktion wird auch in \cite{Mayer16SAFTwithSmallData} diskutiert und eine Maßnahme dafür wird vorgeschlagen \cite{Mayer16SAFTwithSmallData}. \par
+Die restlichen drei Faktoren für unser Anwendungsmodell wurden bisher nicht viel erforscht. Der Einfluss einer niedrigen Abdeckung des Ortsbereiches kann bei unserem Anwendungsmodell nicht vernachlässigt werden, jedoch haben wir auf sie keinen Einfluss. Währenddessen kann der Effekt der vom System abhängigen Ungenauigkeiten durch die angemessene Anpassung des Systems, sowie Verbesserung der Kameraerkennung oder Integration von Drucksensoren im Messsystem, möglichst gering gehalten werden. Da die Abdeckung des Ortsbereiches bei einer Simulation variiert und damit deren Effekt evaluiert werden kann, werden zwei Simulationen in dieser Arbeit durchgeführt: eine zur Evaluierung des Einfluss der Positionsungenauigkeit und die andere zur Untersuchung des Effektes der Laufzeitänderungen.

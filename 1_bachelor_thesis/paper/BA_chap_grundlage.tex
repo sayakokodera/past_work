@@ -1,0 +1,241 @@
+\chapter{Grundlagen} \label{chap:basic_ut_saft}
+
+%%%% intro %%%%
+In diesem Kapitel wird zunächst die Theorie der \acrfull{ut} kurz erläutert. Der nächste Teil \ref{sec:saft_general} beginnt mit der Grundidee und dem Grundprinzip von \acrshort{saft} woraufhin die zugrundeliegenden Annahmen der allgemeinen \acrshort{saft} Rekonstruktion beschrieben wird. Diese Annahmen werden gewöhnlicherweise bei der \acrshort{saft} Rekonstruktion verwendet, die allerdings für unseren Anwendungsfall, das heißt die Verarbeitung händisch aufgenommener Messdaten, nicht unbedingt gültig sind. Danach wird im Teil \ref{sec:Online3DSAFT} die mathematische Formulierung des verwendeten \acrshort{saft} Algorithmus dargestellt. Mit diesem Algorithmus wird eine Echtzeitrekonstruktion, die für unser Simulationsmodell erforderlich ist, ermöglicht. Schließlich wird im Teil \ref{sec:mse} die in dieser Arbeit verwendete Auswertungsmethode, \acrfull{mse} bzw. \acrfull{rmse}, und deren Modifizierung gezeigt.  
+ 
+
+\section{Grundlagen der Ultraschallprüfung} 
+\subsection{Ultraschallprüfung}
+Bei der \acrshort{ut} wird der im Prüfkopf mit Hilfe des elektroakustischen Wandlers unter Ausnutzung des piezoelektrischen oder magnetostriktiven Effektes erzeugte Ultraschall in den Prüfkörper eingestrahlt \cite{WSPraktikumUS1}. Der eingestrahlte Ultraschall wird an der Stelle, wo die Schallimpedanzen sich verändern, beispielsweise an der Rückwand oder bei Materialfehlern wie Lunker oder Gasblasen, reflektiert und die reflektierte Echowelle wird dann aufgenommen. \par
+
+
+\subsection{Das \gls{pulse_echo}} \label{sec:pulse_echo}
+Das Puls-Echo-Modell ist ein Prüfverfahren der \acrshort{ut}, wobei die Hin- und Rückausbreitung der akustischen Welle berücksichtigt werden. Mit dem Verfahren wird die akustische Welle von einem Prüfkopf in den Testkörper eingestrahlt und die Welle wird dann bis zum Streuer oder der Rückwand ausgebreitet. Wegen der Änderung der akustischenImpedanz wird der Ultraschall beim Streuer zur Quelle, dem Prüfkopf, reflektiert. Die reflektierte Welle wird mit dem gleichen Prüfkopf anschließend aufgezeichnet (Abbildung \ref{fig:pulse_echo}).\par
+Wegen seiner einfachen Durchführbarkeit und der hohen Aussagefähigkeit der Prüfergebnisse ist das \gls{pulse_echo} das am häufigsten zur Materialprüfung angewendete Ultraschallprüfverfahren \cite{WSPraktikumUS1}. \par
+
+%% FIG : pulse echo %%
+\begin{figure}[h!]
+\begin{center}
+\inputTikZ{0.9}{figures/BA_fig_pulse_echo.tex}
+\caption[Puls-Echo-Verfahren]{\gls{pulse_echo}}
+\label{fig:pulse_echo}
+\end{center}
+\end{figure}
+
+
+\subsection{Datendarstellung in der \acrfull{ut}} \label{sec:pulse_echo}
+Die aufgenommenen Messdaten können in unterschiedlichen Formaten dargestellt werden. Eine Datendarstellung ist der \gls{ascan}, welcher mit der Messdaten aus einer einzelnen Datenaufnahme dargestellt werden kann. Eine \gls{ascan}-Darstellung präsentiert die Amplitudenänderung des empfangenen Ultraschalls über die Zeit auf dem Bildschirm (Abbildung \ref{fig:ascan}) \cite{UTDataPresentation}. \par
+Wenn mehrere Messdaten an der äquidistanten Stellen entlang einer Linie aufgenommen werden, können mehrere \glspl{ascan} hintereinander gesetzt werden und die Abhängigkeit des Echowellenverhaltens von der Messstellen wird dargestellt (Abbildung \ref{fig:bscan}). Das ist eine \gls{bscan}-Darstellung.  Man kann aus dem \gls{bscan} auch die Stelle der Streuer bestimmen \cite{UTDataPresentation}. Allerdings ist die Abbildungsqualität des \gls{bscan}s oft nicht ausreichend um detaillierte Informationen über die inneren Strukturen zu gewinnen. Aus diesem Grund werden die Rohdaten, hier die gewonnenen \glspl{bscan}, oft nachverarbeitet um die Bildqualität zu verbessern.\par 
+
+%% FIG : A-scan , B-scan %%
+\begin{figure}[h!]
+\begin{center}
+\inputTikZ{0.7}{figures/BA_fig_ascan_bscan.tex}
+\caption[A-Scan undB-Scan Darstellung]{Beispiele für die \gls{ascan} und \gls{bscan} Darstellungen}
+\label{fig:ascan_bscan}
+\end{center}
+\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\acrfull{saft}}\label{sec:saft_general}% SAFT
+Nach der Datenaufnahme können die Rohdaten mit Hilfe der Rekonstruktionsalgorithmen nachverarbeitet werden, um die Abbildungsqualität zu verbessern. \acrfull{saft} ist ein etablierter Rekonstruktionsalgorithmus und dient zur Verbesserung der lateralen Auflösung der \acrshort{ut} Daten. \par
+Die \acrshort{saft} basiert auf \acrfull{sar}, welches aus der Radertechnik stammt. Die Grundidee von \acrshort{saft} ist, mehrere Rohdaten, die an den sequentiellen Prüfpositionen mit der echten Apertur aufgenommen werden, mit Hilfe der passenden Berechnung zu kombinieren. Damit kann das daraus resultierende Bild als Bild einer großen Apertur betrachtet werden (Abbildung \ref{fig:synthetic_aperture}) \cite{Lingvall04PhD}. \par
+%%%% DaS SAFT %%%%
+Für eine \acrshort{saft} Rekonstruktion existieren bereits verschiedene Algorithmen sowohl im Zeitbereich als auch im Frequenzbereich. Historisch wurde der erste \acrshort{saft} Algorithmus im Zeitbereich implementiert. Dieser kann als die heuristische Beschreibung der Rückausbreitung der mit der Green'schen Funktion approximierten ebenen Wellen betrachtet werden \cite{Krieg15MA}. Der Algorithmus ist als ein konventionelles \acrshort{saft} Verfahren bekannt und wird oft \acrfull{das} \acrshort{saft} genannt. \par
+%%%% Superposition %%%%
+Das Grundprinzip der \acrshort{das} basiert auf der Idee, dass die bei der Messung gewonnene Hyperbel dem Abstand bzw. der Verzögerung der Ausbreitung zwischen dem Prüfkopf und dem Streuer entspricht. Das bedeutet, es wird das Echo der Messdaten in der Rekonstruktion nachgeahmt \cite{Lingvall04PhD}. Durch die kohärente Summation dieser Hyperbel wird eine synthetische Fokussierung der Abbildung ermöglicht und es lässt sich eine wesentliche Verbesserung der lateralen Auflösung erreichen \cite{Lingvall04PhD} \cite{Lingvall03SAIwithDeconvolution} \cite{Stepinski10SAFTreview}. \par
+
+\begin{figure}[h!]
+\begin{center}
+\inputTikZ{1}{figures/BA_fig_synthetic_aperture.tex}
+\caption{Synthetische Aperture}
+\label{fig:synthetic_aperture}
+\end{center}
+\end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+\inputTikZ{1.3}{figures/BA_fig_saft_superposition.tex}
+\caption[SAFT Superposition]{\acrshort{saft} als Superpositionen mehrerer Messungen}
+\label{fig:superposition}
+\end{center}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Zugrundliegende Annahmen für \acrshort{saft}} \label{sec:SAFTassumption}
+Da der \acrshort{saft} Algorithmus auf der Methode für Radar und Sonar (\acrfull{sar}) basiert, funktioniert \acrshort{saft} sehr gut, wenn die theoretischen Annahmen, die meist für Radar und Sonar gelten, erfüllt sind \cite{Lingvall04PhD} \cite{Stepinski10SAFTreview}. Diese Annahmen sind folgende:
+\begin{enumerate} [label=(\alph*)]
+	\item \acrshort{roi} liegt im Fernfeld
+	\item Prüfkopf ist möglichst klein
+	\item Ortsbereich ist vollständig abgetastet
+\end{enumerate}
+
+\subsubsection*{(a) Fernfeldnäherung} \label{sec:farfield} %  -> beam pattern = FT{aperture}
+Bei dem \acrshort{saft} Algorithmus wird oft angenommen, dass die \acrshort{roi} im Fernfeld liegt, in dem der Effekt der spezifischen Diffraktion des Prüfkopfes vernachlässigt werden kann \cite{Stepinski10SAFTreview}.
+% far field & FT
+Darüber hinaus kann im Fernfeld die eingestrahlte Welle als Kugelwelle betrachtet werden und dafür gilt die Fraunhofer-Diffraktion. So ergibt sich, dass die Richtcharakteristik im Fernfeld (bzw. Fraunhofer Feld) direkt durch Fouriertransformation von der Aperturverteilung bestimmt werden kann\cite{Goodman68FourierOptics} \cite{Lu94MedBeamForming}. Unter dieser Annahme eignet sich die \acrshort{saft} sehr gut für die Rekonstruktion der \acrshort{ut} Messdaten. \par
+% far field & UT
+Allerdings liegt die \acrshort{roi} der \acrshort{ut} meistens im Nahfeld (bzw. Fresnel Feld), wo der Effekt der Diffraktion des Testkopfes nicht mehr vernachlässigt werden kann. Dementsprechend wird die Abbildungsqualität der \acrshort{saft} Rekonstruktion wesentlich verschlechtert \cite{Stepinski10SAFTreview}. Um die Fernfeldnäherung auf die \acrshort{ut} anzuwenden, muss die Breite bzw. der Durchmesser des für die Messung verwendeten Prüfkopfes, $D$,  so ausgewählt werden, dass sie relativ zum Abstand zur \acrshort{roi}, $z$, viel kleiner ist \cite{Stepinski10SAFTreview}. \par
+In dieser Arbeit wird angenommen, dass die \acrshort{roi} im Fernfeld liegt. \par
+
+
+\subsubsection*{(b) Kleiner Prüfkopf} \label{sec:oa}
+Wie im Kapitel \ref{sec:saft_general} diskutiert, basiert der \acrshort{saft} Algorithmus auf der Superposition der vorhandenen Daten. Daraus folgt, dass die Rekonstruktionsqualität der \acrshort{saft} Operation wesentlich von der Größe des resultierenden Bereiches der Superpositionen abhängt. Wenn der Bereich groß ist, sind mehr Daten für die Superposition vorhanden und deshalb ist die \acrshort{saft} Operation präziser. Da die \acrshort{roi} bei unserem Modell im Fernfeld liegt und deshalb die eingestrahlte Welle als Kugelwelle betrachtet werden kann, ist der Bereich der Superposition am größten, wenn der Öffnungswinkel des Prüfkopfes für die \acrshort{saft} Operation möglichst groß ausgewählt wird. \par
+Der Öffnungswinkel eines Prüfkopfes ist proportional zur Schallgeschwindigkeit und antiproportional zur Frequenz und zur Größe des verwendeten Prüfkopfes \cite{UTBeamDivergence}. Für kreisförmige Prüfköpfe kann der Öffnungswinkel durch 
+\begin{equation} \label{eq:oa}
+\theta = \arcsin \left ( \frac{1.22 \; c_0}{D f} \right )
+\end{equation}
+bestimmt werden, wobei die $c_0$ der Schallgeschwindigkeit, $D$ dem Durchmesser des Prüfkopfes und $f$ der Trägerfrequenz entspricht \cite{RajNDToaformula}. \par
+Allerdings wird die Schallgeschwindigkeit lediglich durch das Material des Testkörpers bestimmt und die Trägerfrequenz ist auch durch verschiedene Faktoren, wie z.B. Auflösung oder Frequenzabhängige Dämpfung, eingeschränkt. Aus diesem Grund spielt die Wahl der Größe des Prüfkopfes eine große Rolle auf die Qualität der \acrshort{saft} Rekonstruktion. Daraus folgend ergibt die Gleichung \ref{eq:oa}, dass die Verwendung von einem kleineren Prüfkopf die Rekonstruktionsqualität verbessert \cite{Lingvall04PhD}. \par
+
+
+\subsubsection*{(c) Vollständige Abtastung im Ortsbereich} \label{sec:undersampling}
+Wie in Teil \ref{sec:saft_general} bereits diskutiert, wird bei der \acrshort{saft} der synthetisch vergrößerte Bereich als ein Apertur berücksichtigt, anstatt einzelne Apertur bei jeder Prüfposition zu betrachten (Abbildung \ref{fig:synthetic_aperture}). \par
+In dieser Hinsicht können einzelne \glspl{ascan} als ein örtlich abgetastetes Signal der synthetischen Apertur betrachtet werden. Da die \acrshort{roi} in dieser Arbeit im Fernfeld angenommen wird, ist die Richtcharakteristik die Fourier-transformierte von der Aperturverteilung. Bei der \acrshort{saft} wird die Apertur örtlich abgetastet und deshalb gilt hier das Nyquist Theorem. 
+Dies bedeutet, dass das Aliasing nicht vermeidbar ist, wenn die Apertur unterabgetastet ist, bzw. das Interval für die örtliche Abtastung $d$ größer ist als $0.5 \lambda$ \cite{Lingvall04PhD}. \par
+Wenn $d$ größer ist als $0.5 \lambda$, also die synthetische Apertur unterabgetastet ist, kann die bestimmte Nebenkeule durch die periodische Charakteristik von der eingestrahlten Welle verstärkt und die sogenannten Grating Lobes, bzw. Artefakte, können beobachtet werden. Artefakte werden beispielsweise durch eine falsche Parametrisierung oder durch das Rekonstruktionssystem verursacht. Wenn Artefakte im Vergleich zu den richtigen Signalen zu groß sind, verschlechtert sich die Abbildungsqualität der \acrshort{saft} Rekonstruktion maßgeblich. \par
+Aus diesem Grund ist die Regel, dass die Messdaten, auf die die \acrshort{saft} berechnet werden, mit Hilfe von automatisierten Systemen und Prüfrobotern aufgenommen werden, um eine örtliche Unterabtastung und die daraus resultierenden Artefakte zu vermeiden. In dieser Arbeit wird eine solche Art der Messdaten als vollständig abgetastete Messdaten benannt. \par
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Mathematische Formulierung} \label{sec:Online3DSAFT}
+Für \acrshort{saft} Verfahren existieren bereits verschiedene Methoden. Allerdings gibt es bisher wenige Algorithmen, die nicht nur echtzeitfähig sind, sondern auch für die handaufgenommene Messdaten verwendet werden können. In diesem Teil wird die mathematische Formulierung des verwendeten \acrshort{saft} Algorithmus gezeigt. \par
+% Datenmoedell
+Sei $c_0$ die Schallgeschwindigkeit des untersuchten Testkörpers. Die Größe des Ortsbereiches wird mit $\N_x \times \N_y$ beschrieben und die Tiefe sei $\N_z$. Es wird angenommen, dass Messdaten, \gls{ascan} $\bm{a} \in \RR^{\N_t}$, auf dem äquidistanten Messraster mit Abstand $\dx, \dy$ zwischen den benachbarten Rasterpunkten mit der Abtastfrequenz $f_s$ aufgenommen werden. Damit kann man den Abstand zwischen den entlang der $z$-Achse aufeinanderliegenden Rasterebenen, $\dz$, durch $\dz = \frac{c_0}{2 f_s}$ bestimmen. \par
+Für die Rekonstruktion wird dasselbe Gitter angenommen. Nun kann der 3D Datentensor $\Data$ und der 3D Rekonstruktionstensor $\Reco$ als $\Data \in \RR^{\N_t \times \N_x \times \N_y}$ und $\Reco \in \RR^{\N_z \times \N_x \times \N_y}$ betrachtet werden, wobei $\N_t = \N_z$ ist. Der Datentensor $\Data$ enthält alle aufgenommenen \glspl{ascan} $\bm{a}$ des Ortsbereiches. Es wird angenommen, dass die Daten an den $\N_{\scan} \in \NN \cap [1, \N_x \N_y]$ Stellen aufgenommen werden. \par
+% Laufzeiten
+Seien die Positionen der $i$-ten Prüfstelle im Ortsbereich $P_{\trans i} = (x_{pi} \dx, y_{pi} \dy, 0)$ und ein Streuer im Testkörper $P_{0} = (x_0 \dx, y_0 \dy, z_0 \dz)$, wobei $i \in \NN \cap [0, \N_{\scan})$, $x_{pi} \in \NN \cap [0, \N_x)$, $y_{pi} \in \NN \cap [0, \N_y)$, $x_{0} \in \NN \cap [0, \N_x)$, $y_{0} \in \NN \cap [0, \N_y)$ und  $z_{0} \in \NN \cap [0, \N_z)$ sind. Damit kann die \acrfull{tof} zwischen $P_{\trans i}$ und $P_0$ mit 
+%% EQ : ToF %%
+\begin{equation} \label{eq:tof}
+t_{i0} =  \frac{2 \sqrt{(x_{pi} - x_0)^2 \cdot \dx^2 + (y_{pi} - y_0)^2 \cdot \dy^2 + (z_{0} \cdot \dz)^2 }}{c_0}
+\end{equation}
+bestimmt werden. \par
+% Superposition
+Bei der \acrshort{saft} Rekonstruktion wird die Superposition der aufgenommenen \glspl{ascan} bezüglich der  \acrshort{tof} Verzögerung durchgeführt und das ergibt die Annäherung der aufgenommenen Echos \cite{Krieg18ProgressiveOnline3DSAFT}. Wir nehmen an, dass die Rekonstruktion an einer Stelle $P_{\reco} = (x_{r} \dx, y_{r} \dy, z_{r} \dz)$ durchgeführt wird, wobei $x_{r} \in \NN \cap [0, \N_x)$, $y_{r} \in \NN \cap [0, \N_y)$ und $z_{r} \in \NN \cap [0, \N_z)$ sind. In diesem Fall kann das Superpositionsverfahren wie folgt beschrieben werden \cite{Krieg18ProgressiveOnline3DSAFT}:
+%% EQ : superposition %%
+\begin{equation} \label{eq:superposition}
+\Reco (x_{r}, y_{r}, z_{r}) = \sum_{i = 0}^{\N_{\scan} - 1} w(\phi) \cdot  \Data (x_{pi}, y_{pi}, \lfloor t_{ir} \cdot f_s \rfloor ),
+\end{equation}
+%%
+wobei $w(\phi)$ der von dem Öffnungswinkel abhängigen Apodizationfunktion, die in \cite[Gl. 2 und 3]{Krieg18ProgressiveOnline3DSAFT} genutzt wird, 
+entspricht und $\lfloor : \rfloor$ die Abrundungsfunktion ist. Die Gleichung \ref{eq:superposition} zeigt, dass die \acrshort{saft} Operation eine lineare Abbildung $\Data \mapsto \Reco$  ist \cite{Krieg18ProgressiveOnline3DSAFT}. Das bedeutet die Gleichung \ref{eq:superposition} kann als $ \Reco = \Mdict \cdot \Data$ ausgedrückt werden, wobei  $\Mdict \in \RR^{\N_z \times \N_x \times \N_y \times \N_t \times \N_x \times \N_y}$ dem 3D \acrshort{saft}-Tensor entspricht. Dieses Mappingdictionary kann aus der Gleichung \ref{eq:superposition} gewonnen werden. \par
+% Matrix-Vektor Modell
+In \cite{Krieg18ProgressiveOnline3DSAFT} wird eine Matrix-Vektor-Formulierung dieser linearen Abbildung präsentiert. Durch das Unfolding von $\Mdict$ können die Rekonstruktions- und Datenvektoren jeweils aus $\Reco$ und $\Data$ als das Matrix-Vektor-Produkt ausgedrückt werden \cite{Krieg18ProgressiveOnline3DSAFT}:
+%% EQ : Matrix-Vectore Product %%
+\begin{equation} \label{eq:matrix_vec_product}
+\bm{r} = \bm{M} \cdot \bm{d}.
+\end{equation}
+%%
+Hier repräsentieren $\bm{r} \in \RR^{\N_z \N_x \N_y}$ und $\bm{d} \in \RR^{\N_t \N_x \N_y}$  jeweils den unfolded Vektor vom Rekonstruktionstensor $\Reco$ und Datentensor $\Data$. $\bm{M}$ ist die 2D Mappingmatrix $\bm{M} \in \RR^{\N_z\N_x \N_y \times \N_t \N_x \N_y}$ und wird durch Unfolding vom 6D Mappingtensor $\Mdict$ gewonnen \cite{Krieg18ProgressiveOnline3DSAFT}. Der Datenvektor $\bm{d}$ entspricht den allen im Ortsbereich aufgenommene \glspl{ascan} $\bm{a}$. \par 
+% spaltenweise Multiplikation
+Um diese Operation parallel zur Messung durchzuführen, wird die Struktur der Mapppingmatrix $\bm{M}$ ausgenutzt \cite{Krieg18ProgressiveOnline3DSAFT}. Die Gleichungen \ref{eq:tof} und \ref{eq:superposition} zeigen, dass diese lineare Abbildung von $\Delta x = (x_{pi} - x_0)$ und $\Delta y = (y_{pi} - y_0)$ abhängig ist, und das ergibt die Bildung einer 2-Level Block-Toeplitz Struktur in $\bm{M}$ wie dargestellt in Abbildung \ref{fig:saft_dict_2D} \cite{Krieg18ProgressiveOnline3DSAFT}. Mit einer solchen symmetrischen Struktur kann die Gleichung \ref{eq:matrix_vec_product} als spaltenweise Multiplikation der Blockspalte der Mappingmatrix $\bm{M}$ und eines \gls{ascan}s $\bm{a}$ ausgedrückt werden \cite{Krieg18ProgressiveOnline3DSAFT}. \par
+Seien $k \in \NN \cap [0, \N_{\scan})$ und $\bm{a}_{k} \in \RR^{\N_t}$ der $k$-te \gls{ascan}. Das ergibt, dass das $k$-te Rekonstruktionsverfahren wie folgt beschrieben wird:
+%% EQ : column-wise multiplication %%
+\begin{equation} \label{eq:saft_online_update}
+\bm{r}_{k} = \bm{r}_{k-1} + [\bm{M}]_{k} \cdot \bm{a}_{k},
+\end{equation}
+%%
+wobei $[\bm{M}]_{k} \in \RR^{\N_z \N_x \N_y \times \N_t}$ und $\bm{r}_{k} \in \RR^{\N_z \N_x \N_y}$  jeweils die $k$-te Blockspalte der $\bm{M}$      und die $k$-te gewonnene Rekonstruktion sind. Das vereinfacht die Update Prozedur der Gleichung \ref{eq:matrix_vec_product} und ermöglicht eine Echtzeitrekonstruktion parallel zur Messung \cite{Krieg18ProgressiveOnline3DSAFT}. \par
+
+%% FIG : Mdict 2D %%
+\begin{figure}[h!]
+\begin{center}
+\inputTikZ{0.5}{figures/BA_fig_saft_dictionary.tex}
+%\includegraphics[scale=0.08]{images/saft_dict_2D.png}
+\caption[SAFT Matrix-Vektor Produkt]{\acrshort{saft} als Matrix-Vektor Produkt $\bm{r} = \bm{M} \cdot \bm{d}$  \cite{Krieg18ProgressiveOnline3DSAFT}}
+\label{fig:saft_dict_2D}
+\end{center}
+\end{figure}
+
+% Vorteile
+Da mit dieser Herangehensweise die Werte im 3D-\acrshort{saft} Tensor nur einmal errechnet werden müssen und danach in einer Look-up Tabelle nur nachgeschaut werden müssen, kann die Rechenzeit wesentlich reduziert werden \cite{Krieg18ProgressiveOnline3DSAFT}. Darüber hinaus wird durch die Struktur der Mappingmatrix $\bm{M}$ nicht nur die Update-Prozedur vereinfacht, sondern auch die Codewahrtbarkeit des Rekonstruktionsprogramms verbessert \cite{Krieg18ProgressiveOnline3DSAFT}. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Auswertungsmethode \acrfull{rmse}} \label{sec:mse}
+% definition of MSE & RMSE
+Eine Auswertungsmethode dieser Arbeit ist der \acrfull{mse} bzw. \acrfull{rmsenormal}, die bei der Signalverarbeitung oft für die Evaluierung eines Schätzers verwendet werden. Der \acrshort{mse} vergleicht zwei Daten und liefert den Mittelwert der quadratischen Abweichung. \acrshort{rmsenormal} ist die Wurzel aus der mittleren quadratischen Abweichung. Bei der Signalverarbeitung entspricht der \acrshort{mse} der erwarteten Signalleistung des Fehlers, während der \acrshort{rmsenormal} den erwarteten Betrag vom Fehler repräsentiert. Wenn Signaldaten mit \acrshort{mse} oder \acrshort{rmsenormal} evaluiert werden, wird eine Datenset von Referenzdaten zum Vergleich benötigt. Dementsprechend variieren die Werte von \acrshort{mse} oder \acrshort{rmsenormal} abhängig von der Referenzdaten.  \par
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{\acrshort{mse} und \acrshort{rmsenormal}}
+% MSE 
+Seien $\bm{C} \in \RR^{\M \times \K}$ die 2D Referenzdaten und $\hat{\bm{C}} \in \RR^{\M \times \K}$ die verglichenen (gegebenenfalls fehlerhaften) 2D Daten. Bei unserem Modell entspricht jeweils $\bm{C}$ der \acrshort{saft} Rekonstruktionsqualität, die man mit maschinell aufgenommenen Daten erreichen würde, und $\hat{\bm{C}}$ der durch Simulationen gewonnenen Rekonstruktionsqualität. Dann wird der \acrshort{mse} mit 
+%% EQ : mse def %%
+\begin{equation} \label{eq:mse_def}
+\begin{aligned}
+\mse {} & = \Expect \left \{ \sum_{i=1}^{\M} \sum_{j=1}^{\K} (\bm{C}_{ij} - \hat{\bm{C}}_{ij})^2 \right \}  \\
+& = \frac{1}{\M \cdot \K} \sum_{i=1}^{\M} \sum_{j=1}^{\K} (\bm{C}_{ij} - \hat{\bm{C}}_{ij})^2
+\end{aligned}
+\end{equation}
+%%
+bestimmt. Die Gleichung \ref{eq:mse_def} ergibt, dass der \acrshort{mse} $= 0$ auf eine perfekte Schätzung, also $\bm{C} == \hat{\bm{C}}$, hindeutet. Dementsprechend stellt sich auch dar, dass je größer der \acrshort{mse} Wert ist, desto größer ist dessen Abweichung. \par
+% RMSE
+Den \acrshort{rmsenormal} dagegen bekommt man mit 
+%% EQ : rmse def% 
+\begin{equation} \label{eq:rmse_def}
+\begin{aligned}
+\rmse {} & =    \sqrt{ \Expect \left \{ \sum_{i=1}^{\M} \sum_{j=1}^{\K} (\bm{C}_{ij} - \hat{\bm{C}}_{ij})^2 \right \} } \\
+& = \sqrt{ \frac{1}{\M \cdot \K} \sum_{i=1}^{\M} \sum_{j=1}^{\K} (\bm{C}_{ij} - \hat{\bm{C}}_{ij})^2 }
+\end{aligned}  .
+\end{equation}
+%%
+Da der $\rmse \geq 0$ ist und daraus folgend der \acrshort{rmsenormal} zur \acrshort{mse} proportional ist, ist der \acrshort{rmsenormal} auch ein gültiges Maß für die Evaluierung der Abweichung der Signale. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{$\ell_2$-Norm und \acrshort{rmsenormal}}
+% l2 norm
+Die Vektornorm ist auch ein Maß, das für die Beschreibung der Signalgröße oft verwendet wird. Die Vektornorm liefert die Größe eines Vektors und diese kann man durch 
+%% EQ : norm definition %%
+\begin{equation} \label{eq:vecnorm_def}
+\left \| \bm{u} \right \|_p =  \left( \sum_{i=1}^{\M} ( \mid \bm{u}_i \mid ^p) \right)^{\frac{1}{p}}
+\end{equation}
+%%
+gewinnen, wobei jeweils $\bm{u} \in \RR^{\M}$ und $p \in \NN \cap [1, \infty)$ sind. Für die Auswertung der Signalgröße wird die $\ell_2$ Norm oft benutzt, da diese dem Euklidischen Abstand entspricht. Mit $p = 2$ in der Gleichung \ref{eq:vecnorm_def} bekommt man die $\ell_2$ Norm durch
+%% EQ : l2 norm vec %%
+\begin{equation}
+\left \| \bm{u} \right \|_2 = \sqrt{ \sum_{i=1}^{\M} ( {\bm{u}_{i}} ^{2}) } .
+\end{equation}
+%%
+Diese kann mit der Frobeniusnorm auch für eine Matrix $\bm{U} \in \RR^{\M \times \K}$ erweitert werden: 
+%% EQ : ls norm matrix %%
+\begin{equation} \label{eq:matrix2norm}
+\left \| \bm{U} \right \|_{F} = \sqrt{ \sum_{i=1}^{\M} \sum_{j=1}^{K} ( {\bm{U}_{ij}} ^{2}) } .
+\end{equation}
+%%
+Durch den Vergleich von der Gleichung \ref{eq:matrix2norm} und \ref{eq:mse_def} wird gezeigt, dass die quadratische $\ell_2$-Norm $\left \| \bm{U} \right \|_{F}^{2}$ die Signalleistung der $\bm{U}$ repräsentiert. Wenn man die Gleichung \ref{eq:matrix2norm} in die Gleichung \ref{eq:rmse_def} einfügt, kann der \acrshort{rmsenormal} auch wie 
+%% EQ : RMSE l2 norm %%
+\begin{equation}
+\rmse = \frac{1}{\sqrt{\M \cdot \K}} \left \| \bm{C} - \hat{\bm{C}} \right \|_{F} 
+\end{equation}
+%% 
+beschrieben werden. Mit diesem Ausdruck kann man intuitiv wissen, welchen Abstand es zwischen den fehlerhaften Daten $\hat{\bm{C}}$ und den Referenzdaten $\bm{C}$ gibt. Aus diesem Grund wird in dieser Arbeit der \acrshort{rmsenormal} als das Maß für die Evaluierung der Simulationsergebnisse verwendet. \par
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{\acrfull{rmse}}
+% weighted RMSE
+Allerdings ist der \acrshort{rmsenormal} oder \acrshort{mse} kein absolutes Maß, da dieser einerseits von den Messdaten abhängig ist und anderseits nicht genau andeutet, wie gut oder schlecht eine Schätzung ist. Das bedeutet man kann dadurch wissen, dass die Schätzung mit einem größeren \acrshort{rmsenormal} schlechter als die mit einem kleineren ist. Man kann aber nicht aus dem \acrshort{rmsenormal} genau herleiten, wie viel schlechter eine Schätzung gegenüber der anderen ist.\par
+Aus diesem Grund wird der \acrshort{rmsenormal} in dieser Arbeit gewichtet und mit den Referenzdaten normiert, so dass der gewonnene Wert zwischen 0 und 1 liegt und der Vergleich zwischen unterschiedlichen Werten einfacher wird. Der gewichtete und normierte \acrshort{rmsenormal} wird als \acrshort{rmse} beschrieben. Hier wird die Hauptcharakteristik von \acrshort{rmsenormal} nicht verändert und es gilt auch, dass je größer der \acrshort{rmse} ist, desto fehlerhafter ist eine Schätzung. \par
+Der \acrshort{rmse} kann wie folgt ausgedrückt werden:
+%% EQ : wRMSE %%
+\begin{equation} \label{eq:GRMSE}
+\rmse^{\dagger} = \frac{\left \| \alpha \cdot \hat{\bm{C}} - \bm{C} \right \|_{F}}{\left \| \bm{C} \right \|_{F}}
+\end{equation}
+%%
+wobei $\alpha$ zur Normierung der $\hat{\bm{C}}$ dient und durch die folgende Gleichung bestimmt werden kann:
+%% EQ : rmase alpha %%
+\begin{equation} \
+\alpha = \frac{ \vectorize(\bm{C})^{\T} \cdot \vectorize(\hat{\bm{C}}) }{ \vectorize(\hat{\bm{C}})^{\T} \cdot \vectorize(\hat{\bm{C}})} .
+\end{equation}
+%%
+Der $\vectorize(:)$ Operator bedeutet, dass die Matrix vektorisiert werden muss. \par
+In dieser Arbeit werden die durch die Simulationen gewonnenen Daten mit dem modifizierten \acrshort{rmse} ($\rmse^{\dagger}$) evaluiert.
+
+
+
+
+
+

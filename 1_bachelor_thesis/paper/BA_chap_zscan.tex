@@ -1,0 +1,97 @@
+\chapter{Laufzeitänderung} \label{chap:zscan}
+
+In diesem Kapitel wird der Effekt der durch händische Ankopplung verursachten Laufzeitänderung auf die Rekonstruktionsqualität untersucht und diskutiert. \par
+Herkömmlicherweise werden Messdaten, die in weiteren Schritten mit SAFT verarbeitet werden, maschinell in Wasserankopplung aufgenommen. Damit ist der Abstand zwischen dem Prüfkopf und der Testkörperoberfläche überall innerhalb des Ortsbereiches gleich und die Phase der eingefügten Welle bleibt konstant. Bei unserem Simulationsmodell der händischen Messaufnahme hat der Prüfkopf einen direkten Kontakt mit dem Testkörper über das Kopplungsmittel, das allerdings den Anpressdruck variabel lässt. Wir nehmen an, das sich mit variierendem Anpressdruck oder Verkopplung des Prüfkopfs der Abstand zwischen dem Prüfkopf und der Oberfläche des Testkörpers ändert. Dieser Effekt wird hier als reine Laufzeitänderung bzw. Zeitverschiebung des Signals simuliert. Das bedeutet, dass die vertikale Abstandsänderung $\Delta z$ genau der Zeitverschiebung des Signals entspricht. \par
+In dieser Arbeit wurde eine Simulation für die Überprüfung dieses Effektes durchgeführt. Das Simulationsprinzip und der Simulationsaufbau sind im Teil \ref{sec:zscan_setup} zu finden. Die erhaltenen Rekonstruktionsergebnisse werden im Teil \ref{sec:zscan_recos} dargestellt. Schließlich wird im Teil \ref{sec:zscan_evaluation} das Ergebnis mit \acrshort{mse} ausgewertet und diskutiert. \par
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Simulationsprinzip und -aufbau} \label{sec:zscan_setup}
+Bei dieser Simulation wurden die Prüfpositionen auf den äquidistanten Messraster gelegt, so dass der Einfluss der Laufzeitänderung auf die Rekonstruktion abgekoppelt von anderen Fehlerquellen, wie der Unterabtastung, untersucht werden kann. Das in dieser Simulation verwendete Messraster beträgt \SI{0.5}{\milli \metre} für $x$ und $y$, wie bei der Referenzdatengenerierung \ref{sec:referece_data} (Tabelle \ref{table:const_params}). Die Laufzeitänderung kann in unserem Fall als Prüfung vom Testkörper mit einer nicht flachen Oberfläche betrachtet werden. Dementsprechend kann der Ablauf der Messung folgendermaßen beschrieben werden:
+%% simulations verlauf %% 
+\begin{enumerate}
+% (1)
+\item Der Prüfkopf wird auf eine Prüfposition $(k \cdot \dx, l \cdot \dy)$ gestellt und diese wird im System gespeichert ($k, l \in \NN$)
+% (2)
+\item An der Prüfstelle wird der Abstand zwischen Oberfläche des Testobjektes und dem Prüfkopf durch einen starken Anpressdruck um $ \mid \Delta z_{p_{kl}} \mid$ verkürzt, d.h. die eigentliche Prüfstelle ist $ (k \cdot \dx, l \cdot \dy, \Delta z_{p_{kl}}) = (k \cdot \dx, l \cdot \dy, - \mid \Delta z_{p_{kl}} \mid)$
+% (3)
+\item \gls{ascan} $\bm{a}_{kl}$ wird an der Stelle $(k \cdot \dx, l \cdot \dy, \Delta z_{p_{kl}})$ aufgenommen
+%(4)
+\item Das System betrachtet allerdings die Prüfposition als $(k \cdot \dx, l \cdot \dy, 0)$ und speichert diese Information 
+% (5)
+\item Mit der Ortsinformation $(k \cdot \dx, l \cdot \dy, 0)$ und $\bm{a}_{kl}$ wird die Rekonstruktion durchgeführt
+% (6)
+\item Rekonstruktion wird aktualisiert 
+\end{enumerate}
+%%
+Dieser Verlauf wurde in Abbildung \ref{fig:zscan_blockdiagram} dargestellt. \par
+%% FIG : block diagram %%
+\begin{figure}
+\begin{center}
+\inputTikZ{0.8}{figures/BA_fig_zscan_block_diagram.tex}
+\caption{Blockdiagramm des Simulationsverlaufes}
+\label{fig:zscan_blockdiagram}
+\end{center}
+\end{figure}
+%%
+
+Die Manipulation der Oberflächenhöhe wurde durch die Datengenerierung mit der zusätzlichen Positionsinformation des Prüfkopfes $\Delta z_p$ ermöglicht. Das bedeutet, dass in dieser Simulation jede Prüfposition die Information der $x$, $y$ und $z$ Achse als $(x_{pi}, y_{pi}, \Delta z_{pi})$ mit $0 \leq i < \N_x \N_y = 1600$ besitzt. Die Variable $\Delta z_p$ wird normalverteilt generiert und die Standartabweichung $\sigma$ wird als Parameter für die Simulationen verwendet. Bei unserem Modell wird die Tiefe des Fokusbereiches von \acrshort{saft} lediglich durch den Öffnungswinkel entschieden. Es wird erwartet, dass die Laufzeitänderung die longitudinale Auflösung beeinflusst, von daher wurde der Öffnungswinkel des Prüfkopfs auch in dieser Simulation variiert. Die Werte dieser Parameter sind in der Tabelle \ref{table:zscan_params} zu finden. \par
+
+%% TAB : posscan params %%
+\input{tables/table_zscan_params.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Exemplarische Rekonstruktionsergebnisse} \label{sec:zscan_recos}
+Einige Beispiele \glspl{cscan} für die Darstellung der gewonnenen Rekonstruktionsdaten werden in der Abbildung \ref{fig:zscan_cimgs} präsentiert. Mit der größeren Abweichung des Abstandes zwischen dem Prüfkopf und dem Testkörper wird die laterale Auflösung der gewonnenen Rekonstruktion erheblich verschlechtert, so dass die Trennung der Streuer kaum möglich ist.\par
+\begin{figure}[h!]
+\centering
+\input{figures/BA_fig_zscan_cimgs.tex}
+\caption[C-Scan-Darstellung mit Laufzeitänderungen]{
+\gls{cscan}-Darstellung der Rekonstruktionsergebnisse bei Variation der Laufzeit, dargestellt als Abhängigkeit von der Standartabweichung $\sigma$ des Abstands vom Prüfkopf zur Oberfläche des Testkörpers, sowie Variation des Öffnungswinkels des Prüfkopfes}
+\label{fig:zscan_cimgs}
+\end{figure}
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Auswertung} \label{sec:zscan_evaluation}
+Die Abbildung \ref{fig:zscan_mse} präsentiert die modifizierten \acrshort{rmse} Werte der Rekonstruktionsergebnisse mit der Abhängigkeit von der Standardabweichung $\sigma$ des Abstandes zwischen dem Prüfkopf und dem Testkörper sowie dem Öffnungswinkel des Prüfkopfes. Auch hier können die genauen Werte in der Tabelle \ref{table:zscan_mse} gefunden werden. \par
+% description on the graph : general
+Der allgemeine Verlauf des modifizierten \acrshort{rmse}s ist folgender: der modifizierte \acrshort{rmse} Wert nimmt langsam zu bevor die Steigung zwischen $\sigma =$ ca. 0.04...\SI{0.08}{\milli\metre} (entspricht $0.032 \lambda$ bis $0.063 \lambda$) steiler wird. Der \acrshort{rmse} wächst stetig weiter bis $\sigma \approx$ \SI{0.2}{\milli\metre}, wo der \acrshort{rmse} den kritischen Punkt (\acrshort{rmsekrit} $= 0.5$) erreicht. Danach wird die Steigung langsamer mit der Andeutung, dass die Kennlinie bald die Sättigung erreichen wird. \par
+% on sigma = 0
+Da diese Messsimulation auf dem äquidistanten Raster durchgeführt wurde, wurde bei $\sigma = 0$, das bedeutet ohne Laufzeitänderung, die gleichen Ergebnisse wie bei den Referenzdaten gewonnen \ref{fig:grid_cimgs}. Daraus lässt sich schließen, dass die \acrshort{rmse} Werte hier die numerische Evaluierung vom Einfluss des Öffnungswinkels auf die Rekonstruktion sind. Da der Öffnungswinkel von $20^{\circ}$ für unser Simulationsmodell die beste Abbildungsqualität liefert, sind deren Anfangswerte am kleinsten. \par
+% on sigma = 0...2dz
+Bis ungefähr $\sigma \approx 0.063 \lambda$ bleibt der \acrshort{rmse} Verlauf bei dem Öffnungswinkel von $15^{\circ}$ und $10^{\circ}$ unverändert und ab dann fängt die Steigung an. Währenddessen nimmt der \acrshort{rmse} bei einem Öffnungswinkel von $20^{\circ}$ bis $\sigma = 0.032 \lambda$  langsam zu und ab $\sigma = 0.032 \lambda$ ist die Steigung steiler. Wie allerdings in den Abbildungen \ref{fig:zscan_cimgs} dargestellt wird, gibt es bezüglich der Abbildungsqualität kaum Unterschiede zwischen den Rekonstruktionsergebnissen bei einem Öffnungswinkel von $20^{\circ}$ mit $\sigma =$ \SI{0}{\milli\metre} und $\sigma = 0.063 \lambda$. Das bedeutet die Änderung des \acrshort{rmse} ist so gering, dass die Abstandsänderung im Bereich von 0 bis $2 \dz$ bezüglich der Abbildungsqualität vernachlässigt werden kann. \par 
+% on sigma = 2dz ... 0.2
+Im Bereich von $\sigma = 0.032 \lambda$ bis \SI{0.2}{\milli\metre} steigt die Kennlinie bei allen Öffnungswinkeln. Allerdings ist die Steigung vom $20^{\circ}$ Öffnungswinkel am größten und bei $\sigma \approx$ \SI{0.15}{\milli\metre} erreicht sie den gleichen \acrshort{rmse} Wert von $15^{\circ}$. Die beiden \acrshort{rmse} nehmen mit einem ähnlichen Verlauf weiter zu, bevor die \acrshort{rmse} Werte von allen Öffnungswinkeln bei $\sigma \approx $ \SI{0.2}{\milli\metre} ($\hat{=} \ 0.16 \lambda$) den \acrshort{rmsekrit} erreichen. Allerdings wird die Abbildungsqualität bei dem Öffnungswinkel von $10^{\circ}$ vergleichsweise stärker beeinträchtigt als bei den anderen Öffnungswinkeln. Daraus lässt sich schließen, dass eine vertikale Abweichung von $0.16 \lambda$ toleriert werden kann, solange ein passender Öffnungswinkel bzw. eine angemessene Größe des Prüfkopfes ausgewählt wird. \par
+% on simga > 0.2
+Nachdem die \acrshort{rmse} aller Öffnungswinkeln den \acrshort{rmsekrit} erreicht haben, werden die Kennlinien der kleineren Öffnungswinkeln von den Linien der größeren Winkel überholt. Danach wird bei allen die Steigungen flacher. Das kann am Rauschen des Außenbereiches der \acrshort{roi} liegen. Wie die Abbildungen \ref{fig:zscan_cimgs} darstellen, wird der gewonnene \gls{cscan} vom $20^{\circ}$ Öffnungswinkel mit steigenden $\sigma$ immer mehr verrauscht, während der \gls{cscan} von $10^{\circ}$ noch den Kontrast zwischen der \acrshort{roi} und dem Bereich außerhalb erhält. Dieses Rauschen im Außenbereich der \acrshort{roi} ist bei größeren Winkeln eindeutiger (Abbildung \ref{fig:zscan_histograms}). Das führt zu höheren \acrshort{rmse} bei größeren Öffnungswinkeln am Ende der Kennlinien. \par
+% vs posscan
+Allerdings ist auch zu beobachten, dass die \gls{cscan}-Darstellungen mit dem gleichen \acrshort{rmse} bei Positions- und Laufzeitabweichung nicht unbedingt gleiche Abbildungsqualitäten liefern. Beispielsweise hat die Abbildung \ref{fig:posscan_cimgs} bei $\N_{\point} = 160$ und $\sigma =$ \SI{1}{\milli\metre} den \acrshort{rmse} Wert von ca. 0.6, trotzdem kann man alle vier Streuer erkennen. Währenddessen beträgt der \acrshort{rmse} von der Abbildung \ref{fig:zscan_cimgs} beim Öffnungswinkel von $10^{\circ}$ und $\sigma =$ \SI{0.3}{\milli\metre} 0.593, aber die Trennung der Streuer ist in diesem Bild kaum möglich. Das deutet an, dass die Laufzeitabweichung den gesamten Ortsbereich verrauscht und die laterale Auflösung der \acrshort{saft} Rekonstruktion verschlechtert wird. Aus diesem Grund muss ein anderes Fehlermaß gefunden werden. \par
+
+\hspace{1cm}
+
+%% FIG : zscan MSE %%
+\begin{figure}[h!]
+\begin{center}
+\inputTikZ{1.2}{figures/pytikz/1D/mse_zscan.tex}
+\caption[RMSE$^{\dagger}_{\krit}$ Auswertung der Laufzeitänderung]{\acrshort{rmse} in Abhängigkeit von der Standartabweichung $\sigma$ des Abstandes des Prüfkopfes und der Oberfläche sowie des Öffnungswinkels des Prüfkopfes}
+\label{fig:zscan_mse}
+\end{center}
+\end{figure}
+
+%% TAB : zscan MSE %%
+\input{tables/table_zscan_mse.tex}
+
+
+%% FIG : zscan histogram %%
+\begin{figure}[h!]
+\begin{center}
+\input{figures/BA_fig_zscan_histograms.tex}
+\caption[Histogrammen im Außenbereich der ROI]{
+Histogramme der Signalamplituden der \glspl{cscan} der Rekonstruktion für $\sigma = $ \SI{0.2}{\milli\metre} und $x = 0$}
+\label{fig:zscan_histograms}
+\end{center}
+\end{figure}

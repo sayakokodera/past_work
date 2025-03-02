@@ -1,0 +1,278 @@
+% "newcommand" collections
+
+\newcommand{\conv}{\ast}
+
+% some special characters
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\ee}{\mathrm{e}}
+\newcommand{\dirac}{\delta}
+
+\newcommand{\RR}{{\mathbb{R}}}
+\newcommand{\NN}{{\mathbb{N}}}
+\newcommand{\CC}{{\mathbb{C}}}
+\newcommand{\OO}{{\mathcal{O}}}
+
+% some math convenience definitions
+%\newcommand{\vf}[1]{\bm{#1}}
+%\newcommand{\tf}[1]{\bm{\mathcal{{#1}}}}
+%\newcommand{\ind}[1]{\mathsf{#1} }
+%
+%\newcommand{\cint}[2]{\int\! #1 \,\dd#2 }
+%\newcommand{\cintl}[4]{\int_{#3}^{#4}\! #1 \,\dd#2 }
+%
+%\newcommand{\mat}[1]{\begin{bmatrix}#1\end{bmatrix}}
+%
+%\newcommand{\F}[2]{\mathcal{F}_{#1}\left\{#2\right\}}
+%\newcommand{\iF}[2]{\mathcal{F}_{#1}^{-1}\left\{#2\right\}}
+%
+%\newcommand{\vel}[2]{\vf{#1}[#2]}
+% for two norms (NEW 01.12.18 cf. https://tex.stackexchange.com/questions/107186/how-to-write-norm-which-adjusts-its-size)
+\newcommand\norm[1]{\left\lVert#1\right\rVert}
+
+%=====================  for TikZ =======================%
+\newcommand{\inputTikZ}[2]{%  
+     \scalebox{#1}{\input{#2}}  
+}
+
+\newcommand{\Nx}{3}
+\newcommand{\Ny}{2}
+\newcommand{\ddx}{1.5cm}
+\newcommand{\ddy}{\ddx}
+\newcommand{\ddz}{1.5cm}
+\newcommand{\rCircle}{0.07cm}
+
+%%% draw transducer %%%
+\newcommand{\drawTransducer}[4]{ % scale,scaley, x, y in axis
+	\draw[draw = none, fill = white] (axis cs: #3 - #1, #4 - #2, 0) -- (axis cs: #3 + #1, #4 - #2, 0) -- (axis cs: #3 + #1, #4 + #2, 0) --  (axis cs: #3 + #1, #4 + #2, -#1) -- (axis cs: #3 - #1, #4 + #2, -#1) -- (axis cs: #3 - #1, #4 - #2, -#1) -- (axis cs: #3 - #1, #4 - #2, 0);
+	\draw[] (axis cs: #3 - #1, #4 - #2, 0) -- (axis cs: #3 + #1, #4 - #2, 0) -- (axis cs: #3 + #1, #4 - #2, -#1) -- (axis cs: #3 - #1, #4 - #2, -#1) -- (axis cs: #3 - #1, #4 - #2, 0);
+	\draw[] (axis cs: #3 + #1, #4 - #2, 0) -- (axis cs: #3 + #1, #4 + #2, 0) -- (axis cs: #3 + #1, #4 +  #2, -#1) -- (axis cs: #3 - #1, #4 +  #2, -#1) -- (axis cs: #3 - #1, #4 - #2, -#1);
+	\draw[] (axis cs: #3 + #1, #4 - #2, -#1) -- (axis cs: #3 + #1, #4 +  #2, -#1);
+}
+
+%%% draw video camera %%%
+\newcommand{\drawCamera}[6]{ %<rotation origin (x, y, z)>, <start x>, <start y>, <start z> in axis, <camera width [dx]>, <camera height [dz]>
+	% base
+	\draw[rotate around = {30 : (axis cs: #1)}] (axis cs: #2, #3, #4) rectangle (axis cs: #2 + #5, #3, #4 - #6) ;
+	% origin of rotation
+	\node[campoint] (rotationorg) at (axis cs: #1) {};
+	% "trapezoid" part (tip of the camera)
+	\draw[rotate around = {30 : (axis cs: #1)}] (axis cs: #2, #3, #4 - 0.25*#6) -- (axis cs: #2 - 0.5* #6, #3, #4) -- (axis cs: #2 - 0.5* #6, #3, #4-#6) -- (axis cs: #2, #3, #4 - 0.75*#6);	
+	% cable
+	\draw[rotate around = {30 : (axis cs: #1)}] (axis cs: #2 + #5, #3, #4 - 0.5*  #6) .. controls (axis cs: #2 + 1.5* #5, #3, #4 - 0.5*  #6) and (axis cs: #2 + #5, #3, - 0.5*  #6) .. (axis cs: #2 + 1.5* #5, #3, - #6);	
+}
+
+%%%	 SAFT dictionary %%%
+% matrix separations
+\newcommand{\linewidththick}{0.1}
+\newcommand{\linewidththin}{0.1}
+\newcommand{\matrixspacesmall}{0.2}
+\newcommand{\matrixspacebig}{0.35}
+% single element
+\newcommand{\matrixwidth}{2}
+\newcommand{\matrixheight}{1.5}
+\newcommand{\vectorwidth}{0.5}
+
+% result vector
+\newcommand{\resultcolorone}{orange}
+\newcommand{\resultcolortwo}{green}
+
+% matrix -1
+\newcommand{\matrixonecolorone}{cyan}
+\newcommand{\matrixonecolortwo}{yellow}
+
+% matrix 0
+\newcommand{\matrixtwocolorone}{violet}
+\newcommand{\matrixtwocolortwo}{orange}
+
+% matrix 1
+\newcommand{\matrixthreecolorone}{blue}
+\newcommand{\matrixthreecolortwo}{green}
+
+% data vector
+\newcommand{\datacolorone}{black}
+\newcommand{\datacolortwo}{white}
+
+
+%%% image macro %%%
+% cimg with both x- & y-labels
+\newcommand{\cimgbothlabels}[4]{% <scale size>, <label font size>, <tick font size>, <png file name>
+\scalebox{#1}{
+	\begin{tikzpicture}
+            \begin{axis}[
+                enlargelimits = false,
+                axis on top = true,
+                axis equal image,
+                point meta min = -1,   
+                point meta max = 1,
+                xlabel = {$x / \dx$},
+                ylabel = {$y / \dy$},
+                label style = {font = #2},
+                tick label style = {font = #3},
+                %y dir = reverse,
+                %xtick = {0, 20, ..., 100} to customize the axis
+                %xticklabel = {0, 20, 40, 60, 80, 100}
+                ]
+                \addplot graphics [
+                    xmin = 0,
+                    xmax = 39,
+                    ymin = 0,
+                    ymax = 39
+                ]{#4};
+            \end{axis}
+	\end{tikzpicture}
+	}
+}
+            
+% cimg with only x-label
+\newcommand{\cimgxlabel}[4]{% <scale size>, <label font size>, <tick font size>, <png file name>
+\scalebox{#1}{
+	\begin{tikzpicture}
+            \begin{axis}[
+                enlargelimits = false,
+                axis on top = true,
+                axis equal image,
+                point meta min = -1,   
+                point meta max = 1,
+                xlabel = {$x / \dx$},
+                %ylabel = {$y / \dy$},
+                label style = {font = #2},
+                tick label style = {font = #3},
+                ytick = \empty,
+                %y dir = reverse,
+                ]
+                \addplot graphics [
+                    xmin = 0,
+                    xmax = 39,
+                    ymin = 0,
+                    ymax = 39
+                ]{#4};
+            \end{axis}
+	\end{tikzpicture}
+	}
+}
+
+% cimg with only y-label
+\newcommand{\cimgylabel}[4]{% <scale size>, <label font size>, <tick font size>, <png file name>
+\scalebox{#1}{
+	\begin{tikzpicture}
+            \begin{axis}[
+                enlargelimits = false,
+                axis on top = true,
+                axis equal image,
+                point meta min = -1,   
+                point meta max = 1,
+                %xlabel = {$x / \dx$},
+                ylabel = {$y / \dy$},
+                label style = {font = #2},
+                tick label style = {font = #3},
+                xtick = \empty,
+                %y dir = reverse,
+                ]
+                \addplot graphics [
+                    xmin = 0,
+                    xmax = 39,
+                    ymin = 0,
+                    ymax = 39
+                ]{#4};
+            \end{axis}
+	\end{tikzpicture}
+	}
+}
+
+% cimg without labels
+\newcommand{\cimgnolabel}[2]{% <scale size>, <label font size>, <tick font size>, <png file name>
+\scalebox{#1}{
+	\begin{tikzpicture}
+            \begin{axis}[
+                enlargelimits = false,
+                axis on top = true,
+                axis equal image,
+                point meta min = -1,   
+                point meta max = 1,
+                %xlabel = {$x / \dx$},
+                %ylabel = {$y / \dy$},
+                %label style = {font = #2},
+                %tick label style = {font = #3},
+                xtick = \empty,
+                ytick = \empty,
+                %y dir = reverse,
+                ]
+                \addplot graphics [
+                    xmin = 0,
+                    xmax = 39,
+                    ymin = 0,
+                    ymax = 39
+                ]{#2};
+            \end{axis}
+	\end{tikzpicture}
+	}
+}
+
+
+% simgs with both labels and cmaps
+\newcommand{\cimgbothlabelswithcmap}[4]{% <scale size>, <aspect ratio x>, <aspect ratio y>, <label font size>, <tick font size>, <png file name>
+\scalebox{#1}{
+\begin{tikzpicture}
+            \begin{axis}[
+            	  enlargelimits = false,
+                axis on top = true,
+                axis equal image,
+                point meta min = 0,   
+                point meta max = 1,
+                colorbar,
+                colormap = {mymap}{rgb(0.0pt) = (0.97, 0.97, 0.98) ; rgb(0.45pt) = (0.51, 0.87, 0.78) ; rgb(0.75pt) = (0.94, 0.49, 0) ; rgb(1.0pt) = (0.75, 0.12, 0.06) ; },
+                xlabel = {$x / \dx$},
+                ylabel = {$y / \dy$},
+                label style = {font = #2},
+                tick label style = {font = #3},
+                ]
+                %\addplot[tui_red, thick, mark = x] coordinates{
+                %};
+                \addplot graphics [
+                    xmin = 0,
+                    xmax = 39,
+                    ymin = 0,
+                    ymax = 39
+                ]{#4};
+            \end{axis}
+            \end{tikzpicture}
+            
+	}
+}
+
+% bscan presentation reflecting the aspect ratio of axis
+\newcommand{\bscanwithaspectratio}[6]{% <scale size>, <aspect ratio x>, <aspect ratio y>, <label font size>, <tick font size>, <png file name>
+\scalebox{#1}{
+\begin{tikzpicture}
+            \begin{axis}[
+                enlargelimits = false,
+                axis on top = true,
+                axis equal image,
+                unit vector ratio= #2 #3, % change aspect ratio, one of them should be 1
+                point meta min = -1,   
+                point meta max = 1,
+                colorbar,
+                colormap = {mymap}{rgb(0.0pt) = (0, 0.22, 0.39) ; rgb(0.47pt) = (0.91, 0.93, 0.96) ; rgb(0.5pt) = (0.97, 0.97, 0.98) ; rgb(0.53pt) = (0.99, 0.93, 0.87) ; rgb(0.6pt) = (0.99, 0.93, 0.87) ; rgb(1.0pt) = (0.75, 0.12, 0.06) ; },
+                xlabel = {$x / \dx$},
+                ylabel = {$t / \dt$},
+                label style = {font = #4},
+                tick label style = {font = #5},
+                y dir = reverse,
+                ytick = {450, 550, 650}, %to customize the axis
+                %yticklabel = {450, 550, 650}
+                ]
+                %\addplot[tui_red, thick, mark = x] coordinates{
+                %};
+                \addplot graphics [
+                    xmin = 0,
+                    xmax = 39,
+                    ymin = 450,
+                    ymax = 700
+                ]{#6};
+            \end{axis}
+            \end{tikzpicture}
+            
+	}
+}
+

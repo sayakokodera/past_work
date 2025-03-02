@@ -1,0 +1,88 @@
+\chapter{Simulationsszenario} \label{chap:scenario}
+%%%% intro %%%%
+In diesem Kapitel wird das Simulationsszenario dieser Arbeit präsentiert. Zuerst wird im Teil \ref{sec:smartinspect} der Messaufbau, auf dem die Simulationen dieser Arbeit basieren, zusammen mit deren Annahmen beschrieben. Im nächsten Teil \ref{sec:params} werden die bei der Simulationen verwendeten Parameterwerte dargestellt. Am Ende dieses Kapitels, Teil \ref{sec:referece_data}, werden die Referenzdaten für die Simulationen gezeigt, um die gewonnenen Ergebnisse besser evaluieren zu können.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Messaufbau} \label{sec:smartinspect}
+
+Die Simulationen basieren auf einem Messaufbau, in dem Ultraschallmessdaten mit einem Handprüfkopf mittels Kontakttechnik aufgenommen werden (Abbildung \ref{fig:smart_inspect}). \par
+Wenn der Prüfkopf auf eine Prüfposition gestellt wird, wird ein \gls{ascan} an der Stelle aufgenommen und im System gespeichert. Während der Messung wird die Position des Prüfkopfs auch durch eine Kamera aufgenommen, bevor die Ortsinformationen ins System gesendet werden. In dieser Arbeit wurde betrachtet, dass die \glspl{ascan} durch einen Prüfkopf mit dem \gls{pulse_echo} aufgenommen werden. \par 
+Mit den aufgenommenen \glspl{ascan} und deren Ortsinformationen wird eine Rekonstruktion errechnet und simultan zur Messung dem Prüfer angezeigt. Durch diese sofortige Visualisierung der Rekonstruktion soll die Abdeckung des Prüfobjektes durch den Prüfer verbessert werden. Außerdem kann der Prüfer so schon während der Messung mögliche Problemstellen, die sich in der Rekonstruktion zeigen, genauer untersuchen.
+
+
+\subsection*{Annahmen für den Messaufbau} \label{sec:UTassumption}
+Für die Implementierung unseres Modells wurden einige Annahmen bezüglich des Testkörpers, des Prüfkopfes und der Wellenausbreitung genommen. Damit können wir ein einfaches Modell beschreiben und deshalb kann das Modell für komplexe Fälle mit einer passenden Berücksichtigung erweitert werden (Tabellendarstellung in \ref{table:ut_assumptions}). \par
+Für den Testkörper wird angenommen, dass er eine flache Oberfläche besitzt und homogene und isotropische Eigenschaften hat. Das bedeutet, dass sich nur bei den Streuern, beispielsweise Materialfehler wie Lunker, die Wellenimpedanzen ändern. Die Streuer im Testkörper werden als Punktstreuer angenommen, so dass die eingefügte Welle immer in Richtung der Quelle, in diesem Fall der Prüfkopf, zurück reflektiert wird \cite{Krieg15MA}. Allerdings wird nur ein Teil des unendlich gedehnten Testkörpers berücksichtigt, so dass der Effekt von dem Rückwand- oder dem Seitenwandecho vernachlässigt werden kann. Die Signale im Testkörper wurden als rauschfrei betrachtet.\par
+Darüber hinaus wird betrachtet, dass ein Senkrecht-Prüfkopf sowohl als Sender und auch als Empfänger des Ultraschalls verwendet wird. Mit der \gls{pulse_echo}s Messung wird überwiegend der longitudinale Wellenanteil genutzt \cite{WSPraktikumUS1}. In dieser Arbeit wird die longitudinale Welle als die Wellenmode betrachtet, da die Transversalwellen infolge des längeren Schallweges ausgeblendet werden können \cite{WSPraktikumUS1}. \par
+Für die Implementierung der eingefügten Welle wird das Gabor Modell, das heißt ein Gauss-moduliertr Sinus, der oft als eine realistische Approximation der Ultraschallwelle betrachtet wird \cite{GaborAsymmChirp}, verwendet. Das Gabor Modell kann wie folgt beschrieben werden:
+%% EQ : Gabor %%
+\begin{equation}\label{eq:gabor_pulse}
+s(t) = \begin{cases}
+				e^{-\alpha \cdot (t - \frac{T}{2})^2} \cdot \cos(2 \pi f_c (t - \frac{T}{2}) + \phi),  & \text{if } \mid t \mid \leq \frac{T}{2} \\
+				0, & \text{else}
+           \end{cases}
+\end{equation}
+%%
+%% TAB : UT assumptions %%
+\begin{table}[h!]
+\begin{center}
+\input{tables/table_ut_assumptions.tex}
+\caption[\acrshort{ut} Modellannahmen in den Simulationen]{Übersicht über die für die Simulation der \acrshort{ut} genutzten Modellannahmen}
+\label{table:ut_assumptions}
+\end{center}
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Simulationsszenario} \label{sec:params}
+
+\subsection*{Konstante Parameter} % const params
+Zusätzliche zu den Annahmen aus dem Teil \ref{sec:SAFTassumption} wird ein gleiches Simulationsszenario in dieser Arbeit verwendet, um die kohärenten Ergebnisse für die unterschiedlichen Simulationen zu erzeugen. \par
+Das Material des Testkörpers wird als Aluminium betrachtet, in dem Schallgeschwindigkeit $c_{0}$ \SI{6300}{\metre \per \second} beträgt. Bei der Messung wird angenommen, dass sie durch eine zeitdiskrete Aufnahme mit der Abtastfrequenz $f_S$ durchgeführt wird. Der in dieser Arbeit betrachtete Bereich beinhaltet eine Dimension von \SI{20}{\milli \metre} Breite ($x$), \SI{20}{\milli \metre} Länge ($y$) und \SI{35}{\milli \metre} Tiefe. Wenn die Daten auf dem äquidistanten Messraster gerechnet werden, werden sie im Ortsbereich in einem Intervall von $\dx = \dy = $ \SI{0.5}{\milli \metre} abgetastet. Das gleiche gilt auch für die Rekonstruktion. \par
+Außerdem wird davon ausgegangen, dass sich vier Punktstreuer im betrachteten Bereich des Testkörpers, wie in Abbildung \ref{fig:defmap}, befinden. Die vier Streuer liegen aus der Draufsicht, hier die $xy$-Ebene (Abbildung \ref{fig:defmap_xy}) quasi diagonal im Testkörper. Aus der Seitenansicht, hier die $xz$- bzw. $yz$-Ebene (Abbildung \ref{fig:defmap_xz}), liegen die mittleren zwei Streuer fast nebeneinander. Dadurch kann man die Trennbarkeit dieser zwei nebeneinander liegenden Streuer bewerten. Die zwei Streuer, die außen liegen, werden in eine unterschiedliche Tiefe gelegt, um den Fokus bestimmter Öffnungswinkel bzw. deren Effekt darzustellen. \par
+Für die Generierung des Pulses wird das Gabor-Modell mit der Trägerfrequenz $f_C$ von \SI{5}{\mega \hertz}, der Pulslänge von $20 \dt$  und der relativen Bandbreite von 0.5, das entspricht einer Bandbreite von \SI{2.5}{\mega \hertz}, verwendet. \par
+In der Tabelle \ref{table:const_params} werden die Werte der oben genannten Parameter und des verwendeten Pulses zusammengefasst. \par
+%% TAB : param const %%
+\input{tables/table_constant_params.tex}
+%% FIG : defmap %%
+\begin{figure}[h!]
+\begin{center}
+\input{figures/BA_fig_defmaps.tex}
+\caption{Lage der simulierten Punktstreuer}
+\label{fig:defmap}
+\end{center}
+\end{figure}
+%%
+
+%% FIG : pulse %%
+\begin{figure}[h!]
+\begin{center}
+\inputTikZ{0.6}{figures/BA_fig_Gabor_pulse.tex}
+\caption{Pulsform des Gabor Modells}
+\label{fig:gabor_pulse}
+\end{center}
+\end{figure}
+
+\subsection*{Variablen}% var params
+Es gibt auch zwei frei wählbare Parameter in den Simulationen. Wie bereits im Kapitel \ref{sec:oa} diskutiert, kann der Öffnungswinkel des Prüfkopfes unabhängig von dem Messszenario variiert werden. Allerdings sind die Öffnungswinkel antiproportional zur Größe bzw. dem Durchmesser des Prüfkopfes \ref{sec:oa} und deren Bereich ist dementsprechend begrenzt.\par Üblicherweise ist ein Ultraschall-Prüfkopf mit einem Durchmesser zwischen $5$ bis \SI{25}{\milli \metre} verfügbar \cite{TransducerCatalogue}. Das entspricht, mit der Gleichung \ref{eq:oa}, den Öffnungswinkeln von $4^{\circ}$ bis $22^{\circ}$. Da wir für die \acrshort{saft} Rekonstruktion die Öffnungswinkel möglichst groß auswählen wollen \cite{Lingvall04PhD}, wurden sie in dieser Arbeit im Bereich von $10^{\circ}$ und $20^{\circ}$ variiert.  $20^{\circ}$ ist als der Defaultwert für den Öffnungswinkel eingesetzt und es wurde dieser verwendet, wenn es keine andere Angabe dafür gibt. \par 
+Der zweite Parameter ist die Anzahl der Prüfpositionen. Um den Effekt der Abdeckung des Ortsbereiches auf die Rekonstruktionsqualität zu untersuchen, wurde die Anzahl der Prüfpositionen variiert. Da es insgesamt 1600 Pixel in der $x$-$y$-Ebene gibt, beträgt der Variationsbereich zwischen 10\% und 100\% aller Pixel. Existieren keine weitere Angaben wurden 1600 Prüfpositionen simuliert und in der Verarbeitungskette verwendet. \par
+Genaue Werte für beide Variablen sind in den Tabellen \ref{table:posscan_params} und \ref{table:zscan_params} zu finden. \par
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Referenzdaten} \label{sec:referece_data}
+Als Referenz fungiert eine simulierte quasi-maschinell aufgenommene Messung, das bedeutet es wurde eine vollständige Abtastung im Ortsbereich auf einem äquidistanten Messraster simuliert. Daraus folgt, dass die Daten an jedem Abtastpunkt im Ortsbereich mit $\dx = \dy = $ \SI{0.5}{\milli \metre} generiert wurden. Diese Daten können als die maschinell aufgenommenen Messdaten betrachtet werden. Die Rekonstruktionsdaten sind in der Abbildung \ref{fig:grid_cimgs} zu finden. Die Annahmen, die in Kapitel \ref{sec:UTassumption} dargestellt werden, werden auch für die Generierung der Referenzdaten genommen. \par
+Mit diesen Referenzdaten wurden die optimalen Öffnungswinkel für unser Simulationsszenario bestimmt. Obwohl der Öffnungswinkel von $20^{\circ}$ 
+für eine fokussierte Abbildung der Messdaten eigentlich zu breit ist (Abbildung \ref{fig:reference_cimgmeasurement}) und die \acrshort{roi} damit nicht im Fokus liegt, liefert dieser Öffnungswinkel die beste Abbildungsqualität der \acrshort{saft} Rekonstruktion bei unserem Messszenario (\ref{fig:reference_data}). Denn \acrshort{saft} profitiert von großen Öffnungswinkeln. Da $20^{\circ}$ der größte Öffnungswinkel ist, der in den Simulationen verwendet wird, wird es als der Ausgangspunkt der Simulationen betrachtet und die Rekonstruktionsdaten von Abbildung \ref{fig:reference_data} als fReferenz dieser Arbeit verwendet. 
+
+%% FIG : ref data %%
+\begin{figure}[h!]
+\begin{center}
+\input{figures/BA_fig_grid_cimgs.tex}
+\caption[Referenzdaten]{\gls{bscan}-Darstellung der simulierten maschinellen Datenaufnahme bei $y = 19 \dy$ (links),  \gls{cscan}-Darstellung der Messdaten der simulierten maschinellen Datenaufnahme (Mitte) sowie \gls{cscan}-Darstellung der Rekonstruktion (rechts) für unterschiedliche Öffnungswinkel. Alle Darstellungen sind mit dem Betragsmaxima normiert}
+\label{fig:grid_cimgs}
+\end{center}
+\end{figure}

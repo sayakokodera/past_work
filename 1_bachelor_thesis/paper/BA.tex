@@ -1,0 +1,72 @@
+% !TeX spellcheck = de_DE
+
+\documentclass[bibliography=totocnumbered, % so that the bibliography appears in the contents 
+								a4paper,
+								oneside,
+								%twoside,
+								11pt,
+								DIV15,
+								headinclude,
+								BCOR=17mm,        % Bindekorrektur: Innen 17mm Platz lassen. Copyshop-getestet.
+								headsepline,     % Unter Kopfzeile Trennlinie (aus: headnosepline)
+								footsepline,
+								%listof=totoc,
+								%bibliography=totoc,
+								%abstracton,
+								%openright
+								]{scrreprt}%{scrbook}%{scrreprt}
+
+
+\input{BA_header.tex}
+
+\begin{document}
+
+\input{BA_titlepage.tex}
+
+ 
+\pagenumbering{gobble} % for switching off the numbering
+\input{BA_abstract.tex}
+
+% table of contents
+\tableofcontents 
+
+% math notation
+\newpage
+\input{BA_mathnotation.tex}
+
+\newpage % don't forget this! otherwise the page before will be also garbled
+\pagenumbering{arabic} % switch on the numbering
+\setcounter{page}{1} 
+
+\input{BA_chap_intro.tex}
+\input{BA_chap_grundlage.tex}
+\input{BA_chap_soa_and_errorsources.tex}
+\input{BA_chap_scenario.tex}
+\input{BA_chap_posscan.tex}
+\input{BA_chap_zscan.tex}
+\input{BA_chap_conclusion.tex}
+
+% bibliography
+\bibliography{BA}
+
+% list of figures / tables
+\appendix
+  \listoffigures
+  \addcontentsline{toc}{chapter}{Abbildungsverzeichnis}
+  
+  \listoftables
+  \addcontentsline{toc}{chapter}{Tabellenverzeichnis}
+  
+  \printglossaries
+  \addcontentsline{toc}{chapter}{Glossar} 
+  \addcontentsline{toc}{chapter}{Akronyme}
+  
+  \input{BA_appendix.tex}
+  \addcontentsline{toc}{chapter}{Anhang}
+
+\newpage
+\pagenumbering{gobble} % to switch off the page numbering
+\input{BA_statutory_declaration.tex}
+
+
+\end{document}

@@ -1,0 +1,1681 @@
+\documentclass[12pt,compress,aspectratio=169]{beamer} % selection of font size = 9, 10, 11, 12pt
+
+
+% specify the language of the document here
+%
+\newcommand\setslidelanguage{english}
+%\newcommand\setslidelanguage{german}
+
+%
+% this flag turns on a basic Fraunhofer CI overwrite
+% this just changes colors atm, types and more convenient
+% theme handling have to be added
+%
+%\newcommand\setslidetheme{tui} % - alpha
+%\newcommand\setslidetheme{tuiiis} % - alpha
+\newcommand\setslidetheme{tuiizfp} % - alpha
+%\newcommand\setslidetheme{iis} % - alpha
+%\newcommand\setslidetheme{iistui} % - alpha
+%\newcommand\setslidetheme{izfp} % - alpha
+%\newcommand\setslidetheme{izfptui} % - alpha
+
+
+%
+% load header with all includes
+%
+\input{header_files/header_beamer}
+
+
+%
+% your settings and includes go here
+%
+%%%% bibliography %%%%%
+\usepackage{url}
+\usepackage{natbib} % required for the citation example
+\usepackage{bibentry} % required for the citation example
+%
+\nobibliography* % required for the citation example
+\bibliographystyle{plain}
+
+\input{header_files/newcommands.tex}
+\input{header_files/set_color.tex}
+\input{header_files/tikzstyles.tex}
+\input{header_files/mathoperators.tex}
+
+
+% PDF-options
+\title{\foreignlanguage{german}{Identifizierung von Fehlereinflüssen auf die SAFT-Rekonstruktion händisch aufgenommener Ultraschallmessdaten}} \subtitle{Jan.29.2019}
+\institute{\foreignlanguage{german}{Technische Universität Ilmenau}}
+\author{Sayako Kodera}
+\date{Jan.29.2019}
+
+% beamer goto-button setup
+\setbeamercolor{button}{fg=white,bg=blue}
+\renewcommand{\beamergotobutton}[1]{%
+    \begingroup% keep color changes local
+    \setbeamercolor{button}{fg=white, bg=tui_orange}%
+    \beamerbutton{\insertgotosymbol#1}% original definition
+    \endgroup
+    }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%================================= tips to use beamer ======%
+
+% \uncover<page-> = the text will be covered (so displayed in light colors) for the particular pages of the slide
+% \ony<page-> = the text/images will be hidden for the particular pages of the slide
+% \footnotetext[number] = text for footnote wirh the givien "number"
+% \footnotemark = displays the mark (i.e. nuber) of the footnote
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+% display only logos but no contact info in footline
+\setbeamertemplate{footline}[light]
+% print title slide
+\begin{frame}[noframenumbering] % noframenumbering prevents the framecounter from increasing for this single slide
+ 	\titlepage
+\end{frame}
+
+% small footline for more content
+\setbeamertemplate{footline}[shrunkplain]
+%\begin{frame}[noframenumbering] % noframenumbering prevents the %framecounter from increasing for this single slide
+%	\frametitle{Table of contents}
+%	\vfill
+% 	\tableofcontents[part=1]
+%\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part{content}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Sec. 1.1 %%%%%
+\section{Background}
+
+\subsection{Ultrasonic Testing}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[c]
+	\frametitle{Ultrasonic Testing}
+	%======================================== content =====%
+	\centering	
+	% NDT
+	\only<1>{
+	\includegraphics[width= 0.65\textwidth]{images/pic_ut_ascan.jpg}\\	
+	\cigray{Source: Quality Magazine}
+	}
+	% UT
+	%\only<2>{
+	%\includegraphics[width=0.9\textwidth]{Krieg_18_SHMNDT/Slides/figures/3D-SmartInspect_HoloLens_01.jpg}\\	
+	%\cigray{\textcopyright Uwe Bellhäuser}
+	%}	
+		
+	%===================================================%			 	
+\end{frame}
+
+
+
+\subsection{Motivation}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Motivation: Image Quality Improvement }
+	%======================================== content =====%
+	%%% autom = Muse %%%
+	\only<1>{
+	Automatic measurement\\
+	
+	\vspace*{0.5cm}
+	\centering
+	\begin{columns}[c]	
+	% Data
+	\begin{column}{0.5\textwidth}
+		\centering
+		Measurement data\footnotemark \addtocounter{footnote}{-1} \\  \vspace*{0.1cm} 
+		\inputTikZ{0.8}{Krieg_18_SHMNDT/Paper/figures/Data/reference_reco/reference_reco_data.tex}
+	\end{column}	
+	% Reco
+	\begin{column}{0.5\textwidth}
+		\centering
+		 SAFT Reconstruction\footnotemark \addtocounter{footnote}{-1} \\ \vspace*{0.1cm}
+		\inputTikZ{0.8}{Krieg_18_SHMNDT/Paper/figures/Data/reference_reco/reference_reco_reco.tex}
+	\end{column}	
+	\end{columns}	
+	}
+	
+	%%% manual = aciation SCAN 5-3 %%%
+	\only<2>{
+	Manual measurement\\
+	
+	\centering
+	\begin{columns}[t]	
+	% Data
+	\begin{column}{0.5\textwidth}
+		\centering
+		Measurement data\footnotemark \addtocounter{footnote}{-1} \\ \vspace*{0.3cm} %\hspace*{0.3cm}
+		\inputTikZ{0.75}{Krieg_18_SHMNDT/Measurement/Aviation_test_LINE1/tex/aviation_SCAN5_3_data_gauss_2.tex}
+	\end{column}
+	% Reco
+	\begin{column}{0.5\textwidth}
+		\centering
+		SAFT Reconstruction\footnotemark \\ \vspace*{0.3cm}
+		\inputTikZ{0.75}{Krieg_18_SHMNDT/Paper/figures/Data/Aviation_test_LINE1/tex/aviation_SCAN5_3.tex}
+	\end{column}	
+	\end{columns}	
+	}
+	\vspace*{0.3cm}
+	% footnote
+	\only<1>{
+	\footnotetext[1]{F. Krieg et al., SAFT processing for manually acquired ultrasonic measurement data with 3D SmartInspect, \textsl{SHM-NDT}, 2018}
+	}
+	%===================================================%	
+\end{frame}
+
+
+\subsection{Objectives and Contribution}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Objectives and Contribution}
+	%======================================== content =====%	
+	Problem
+	\begin{itemize}
+		\item Degraded image quality when manual data is reconstructed 
+	\end{itemize}
+	\vspace*{0.3cm}
+	
+	Objectives 	
+	\begin{itemize}
+		\item Identification of possible error sources
+		\item Evaluation of their impact
+		\item Determination of the error tolerance 
+	\end{itemize}
+	\vspace*{0.3cm}
+	
+	Contribution
+	\begin{itemize}
+		\item Provide indicators for developing measurement assistance systems
+	\end{itemize}
+	%===================================================%	
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Sec. 1.2 %%%%%
+
+\subsection{Simulation Scenario}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Simulation Scenario}
+	%\fontsize{10pt}
+	%======================================== content =====%
+	\centering
+	\begin{columns}[t]	
+	% image part
+	\begin{column}{0.52\textwidth}
+	\begin{center}
+		\inputTikZ{0.6}{figures/BA_fig_SmartInspect.tex}
+	\end{center}
+	\end{column}
+	
+	% text part
+	\begin{column}{0.48\textwidth}	
+	\vspace*{0.3cm}
+	
+	Assumptions\\
+	\begin{itemize}
+	\item Handheld transducer
+	\item Contact testing
+	\item Scan positions recognized by a camera
+	\item Simultaneous reconstruction during the measurement 
+	\end{itemize}
+	%		
+	\end{column}	
+	\end{columns}	
+	%===================================================%
+\end{frame}
+
+
+\subsection{SAFT}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Reconstruction Method} 
+	%======================================== content =====%
+	Synthetic Aperture Focusing Technique (SAFT)
+	\begin{columns}[t]	
+	% image part
+	\begin{column}{0.52\textwidth}
+	\begin{center}
+		\only<1>{\inputTikZ{1.1}{figures/BA_fig_saft_superposition.tex}}
+		\only<2>{\inputTikZ{0.9}{figures/BA_fig_synthetic_aperture.tex}}
+	\end{center}
+	\end{column}
+	
+	% text part
+	\begin{column}{0.48\textwidth}
+	\begin{center}
+		\begin{itemize}
+		\item Superposition according to propagation time delay
+		\item Undersampling should be avoided\\					 
+				$\rightarrow$ Spatial sampling interval $\leq 0.5 \lambda$\\
+		\end{itemize}
+	\end{center}
+	\end{column}	
+	\end{columns}	
+		
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Sec. 2 %%%%
+\section{Error Sources}
+
+\subsection{Comparison}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Identification of Error Sources}
+	%======================================== content =====%
+	\centering
+	%%%% Upper caption %%%%
+	\begin{columns}[c]
+	\begin{column}{1\textwidth}
+		\centering
+		% caption on differences
+		\hspace*{5cm}
+		\only<1>{\large Example scan positions}
+		\only<2>{\large Scan distribution} 
+		\only<3>{\large Sampling interval}
+		\only<4>{\large Spatial coverage}
+		\only<5>{\large Positional inaccuracy}
+		\only<6>{\large Contact pressure}
+		\only<7-8>{\large $\rightarrow$ Propagation time change}
+	\end{column}	
+	\end{columns}	
+			
+	\begin{columns}[t]
+	%%%% Text %%%%
+	% 5 factors
+	\begin{column}{0.4\textwidth}
+	\vspace*{-1cm}
+	
+	Path selection
+	\begin{itemize}
+		\uncover<2->{\item Unequal scan distribution}
+		\uncover<3->{\item Larger sampling interval}
+		\uncover<4->{\item Incomplete spatial coverage}
+	\end{itemize}
+	System inaccuracy
+	\begin{itemize}
+		\uncover<5->{\item Positional inaccuracy}
+		\uncover<6->{\item Propagation time change}
+	\end{itemize}
+	\end{column}	
+	
+	%%% image %%%
+	% grided	
+	\begin{column}{0.3\textwidth}
+		%\vspace*{0.5cm}
+		%\hspace*{2cm}
+		\begin{figure}
+			\begin{center}
+				\inputTikZ{0.4}{figures/BA_mp_grided_setup.tex}
+			\end{center}			
+		\end{figure}
+		
+		% caption
+		\begin{center}
+			\only<1>{\large Automatic}
+			\only<2>{\large Equal}
+			\only<3>{\large Small}
+			\only<4>{\large Full}
+			\only<5>{\large Accurate}
+			\only<6->{\large Constant}
+		\end{center}	
+	\end{column}
+	
+	% manual
+	\begin{column}{0.3\textwidth}
+		\begin{figure}
+			\begin{center}
+				\only<1-6>{
+				\inputTikZ{0.4}{figures/BA_mp_manual_setup.tex}
+				}
+				\only<7->{
+				\inputTikZ{0.5}{figures/BA_mp_propagation_time_change.tex}			
+				}
+			\end{center}			
+		\end{figure}	
+		
+		% caption
+		\begin{center}
+			\only<1>{\large Manual}
+			\only<2>{\large Unequal}
+			\only<3>{\large Large}
+			\only<4>{\large Incomplete}
+			\only<5>{\large Inaccurate}
+			\only<6->{\large Inconsistent}
+		\end{center}
+	\end{column}
+	\end{columns}
+	%===================================================%
+\end{frame}
+
+
+\subsection{Main Theme}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Error Sources and Simulations}
+	%======================================== content =====%
+	\centering
+	\begin{columns}[t]
+	%%%% Text %%%%
+	% 5 factors
+	\begin{column}{0.4\textwidth}
+	%\vspace*{-2.5cm}
+	\uncover<1-2>{Path selection}
+	\begin{itemize}
+		\uncover<1-2>{\item Unequal scan distribution \footnotemark}
+		\uncover<1-2>{\item Larger sampling interval \footnotemark}
+		\uncover<2->{\item Incomplete spatial coverage}
+	\end{itemize}
+	\uncover<3->{System inaccuracy}
+	\begin{itemize}
+		\uncover<3->{\item Positional inaccuracy}
+		\uncover<3->{\item Propagation time change}
+	\end{itemize}
+	\end{column}
+	%
+	%%% dummy %%%
+	\begin{column}{0.1\textwidth}
+	\end{column}
+	%
+	%%% classification %%%
+	\begin{column}{0.5\textwidth}
+	\only<3->{
+	\vspace*{0.3cm}
+	
+	$\rightarrow$ 2 Simulation studies, 3 factors\\\vspace*{0.2cm}
+	\cihighlight<4>{(1) Positional inaccuracy with\\ \hspace*{0.6cm} different spatial coverage}\\ \vspace*{0.2cm}
+	(2) Propagation time change
+	}
+	\end{column}
+	\end{columns}	
+	
+	% footnote
+	\footnotetext[2]{K. Mayer et al., \textsl{19th World Conference
+on Non-Destructive Testing}, 2016}
+	\footnotetext[3]{H. Mooshofer et al., \textsl{19th World Conference on Non-Destructive Testing}, 2016}
+	%===================================================%
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Sec. 5 %%%%
+\section{Simulation} 
+
+\subsection{Simulation Setup}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Simulation Setup}
+	%======================================== content =====%
+	%%% image part = defect map %%%
+	Defect positions (part of a large object)
+	% xy
+	\begin{columns}[t]	
+	\begin{column}{0.7\textwidth}
+	\begin{center}
+		\only<1>{\inputTikZ{0.55}{figures/tikz/defmap_xy.tex}}	
+		\only<1>{\inputTikZ{0.55}{figures/tikz/defmap_xz.tex}}
+	\end{center}
+	\end{column}		
+	
+	%%% text part = assumption %%%
+	\begin{column}{0.3\textwidth}
+	\begin{center}
+	\vspace*{-1.2cm}
+	Assumptions
+	\begin{itemize}
+		\item Pulse-echo setup 
+		\item Single transducer
+		\item Aluminium
+		\item Planar surface
+		\item Point scatterers
+		\item Noise free
+	\end{itemize}
+	\end{center}
+	\end{column}	
+	\end{columns}	
+	%===================================================%
+\end{frame}
+
+
+\subsection{Simulation Flow}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Simulation Flow}
+	%======================================== content =====%
+	\centering
+	%%% image part %%%
+	\inputTikZ{0.8}{figures/tikz/posscan_block_digram_simulation_flow.tex}
+	
+	\only<2>{
+	%%% text part %%%
+	\begin{columns}[t]
+	% dummy 1
+	\begin{column}{0.15\textwidth}
+		%dummy
+	\end{column}
+	
+	% text
+	\begin{column}{0.7\textwidth}
+		\vspace*{0.2cm}
+		\begin{itemize}
+			\item How many scans should be taken?\\
+					 $\rightarrow$ Variation of number of scans $\N_{\point}$
+			\item How big can the distance error be?\\
+				     $\rightarrow$ Variation of position error $\hat{=} \sigma$
+		\end{itemize}
+	\end{column}
+	
+	% dummy 2
+	\begin{column}{0.15\textwidth}
+		%dummy
+	\end{column}
+	
+	\end{columns}
+	}
+	\only<1>{\footnotetext[4]{F. Krieg et al., Progressive online 3-D SAFT processing by matrix structure exploitation, \textsl{IEEE IUS}, 2018}}
+	%===================================================%
+\end{frame}
+
+
+\subsection{Scan Positions}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Scan Position Selection}
+	%======================================== content =====%
+	% block diagram --> how to avoid yshift of the figure??????
+	\only<1>{
+	\centering		
+	\inputTikZ{0.8}{figures/tikz/posscan_block_diagram_npoint.tex}
+	
+	\vspace*{0.3cm}
+	$\rightarrow$ number of scans $\N_{\point}$ variation
+	\vfill
+	}
+	% content
+	\only<2->{
+	\begin{columns}%[t]
+	\begin{column}{0.5\textwidth}
+	\scalebox{0.6}{
+	\begin{tikzpicture}[]
+	% axis
+	\draw[help lines] (-4, -4) grid (4, 4);
+	\input{figures/tikz/posscan_scan_positions_random.tex}
+	
+	% dummy to avoid figure shift
+	\node[] at (-4.5, 0) {\huge $y$};
+	\node[white] at (4.5, 0) {D};
+	\node[] at (0, -4.5) {\huge $x$};
+	\node[white] at (0, 4.5) {D};
+	\end{tikzpicture}
+	}	
+	\end{column}
+	
+	\begin{column}{0.5\textwidth}
+	Scan position selection:
+	\begin{itemize}
+		\item Set the number of total scans $\N_{\point}$
+		\item Select $\N_{\point}$ random positions 
+		\item $\N_{\point} =$ variable
+	\end{itemize}
+	\end{column}
+	\end{columns}
+	}
+		% delete rounded positions! 
+		% instead add manipulation formula
+	%===================================================%
+\end{frame}
+
+\subsection{Position Manipulation}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Position Manipulation}
+	%======================================== content =====%
+	% block diagram --> how to avoid yshift of the figure??????
+	\only<1>{
+	\centering		
+	\inputTikZ{0.8}{figures/tikz/posscan_block_diagram_manipulation.tex}
+	
+	\vspace*{0.3cm}
+	Equivalent to the recognition error\\
+	$\rightarrow$ $\sigma$ variation
+	\vfill
+	}
+	% content
+	\only<2>{
+	\centering
+	\inputTikZ{1.1}{figures/tikz/posscan_position_manipulation.tex}
+	}
+	\only<3-4>{
+	\begin{columns}
+	\begin{column}{0.5\textwidth}
+	\scalebox{0.6}{
+	\begin{tikzpicture}[]
+	% axis
+	\draw[help lines] (-4, -4) grid (4, 4);
+	\only<3>{\input{figures/tikz/posscan_scan_positions_random.tex}}
+	\only<4>{
+	\input{figures/tikz/posscan_scan_positions_random_light.tex}
+	\input{figures/tikz/posscan_scan_positions_manipulated.tex}
+	}
+	% dummy to avoid figure shift
+	\node[] at (-4.5, 0) {\huge $y$};
+	\node[white] at (4.5, 0) {D};
+	\node[] at (0, -4.5) {\huge $x$};
+	\node[white] at (0, 4.5) {D};
+	\end{tikzpicture}
+	}
+	\end{column}
+	% Text part
+	\begin{column}{0.5\textwidth}
+	Position manipulation
+	\begin{itemize}
+		\item Using the polar coordinate
+		\item Radius variation with $\sigma$
+		\item $\sigma =$ variable
+	\end{itemize}
+	\end{column}
+	\end{columns}
+	}
+	
+	%===================================================%
+\end{frame}
+
+
+\subsection{Data Adjustment}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Data Adjustment}
+	%======================================== content =====%
+	% block diagram
+	\only<1>{
+	\centering
+	\inputTikZ{0.8}{figures/tikz/posscan_block_diagram_rounding.tex}
+	
+	\vspace*{0.3cm}
+	Adjustment to the required format\\
+	$\rightarrow$ Scan positions on the reconstruction grid\\
+	}	
+	%
+	% content
+	\only<2->{
+	\begin{columns}% no top alignment here! this makes thing worse!!!
+	%% image part %%
+	\begin{column}{0.5\textwidth}
+	\vspace*{-0.5cm}\\
+	\scalebox{0.6}{
+	\begin{tikzpicture}[]
+	% axis
+	\draw[help lines] (-4, -4) grid (4, 4);
+	% manipulated positions
+	\only<2>{
+	\input{figures/tikz/posscan_scan_positions_manipulated.tex}
+	}
+	% quantization
+	\only<3->{
+	\input{figures/tikz/posscan_scan_positions_manipulated_light.tex}
+	\input{figures/tikz/posscan_scan_positions_quantized.tex}
+	}
+	\only<4->{
+	% overemphasis circle 
+	\draw[dashed, tui_red, line width=6pt] (-2, 2) circle [radius=0.8];
+	}
+	% dummy to avoid figure shift
+	\node[] at (-4.5, 0) {\huge $y$};
+	\node[white] at (4.5, 0) {D};
+	\only<1-3>{\node[] at (0, -4.5) {\huge $x$};}
+	\node[white] at (0, 4.5) {D};
+	\end{tikzpicture}
+	}
+	\end{column}
+	%
+	%% text part %%
+	\begin{column}{0.5\textwidth}
+	Data adjustment\\
+	\begin{itemize}
+		\item Quantize scan positions
+		\uncover<4->{\item Avoid overemphasis\\
+	$\rightarrow$ Take only the first A-Scan\addtocounter{footnote}{-3} \footnotemark\\}
+	\end{itemize}
+	\end{column}	
+	\end{columns}
+	}
+	% footnote
+	\only<1>{\footnotetext[4]{F. Krieg et al., Progressive online 3-D SAFT processing by matrix structure exploitation, \textsl{IEEE IUS}, 2018}}
+	\only<4->{\vspace*{0.3cm}
+	\footnotetext[1]{F. Krieg et al., SAFT processing for manually acquired ultrasonic measurement data with 3D SmartInspect, \textsl{SHM-NDT}, 2018}}
+	%===================================================%
+\end{frame}
+
+\section{Results}
+\subsection{Visual Results and Evaluation}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Visual Results and Evaluation}
+	%======================================== content =====%
+	%%%% block diagram %%%%
+	\only<1>{
+	\centering
+	\inputTikZ{0.8}{figures/tikz/posscan_block_diagram_results.tex}
+	
+	\vspace*{0.3cm}
+	RMSE$^\dagger$-Evaluation\\
+	Corresponding visual results\\
+	\vspace*{0.3cm}
+	
+	\begin{columns}
+	%mRMSE
+	\begin{column}{0.5\textwidth}
+	%% EQ : wRMSE %%
+		\begin{equation*} 
+		\rmse^{\dagger} = \frac{\left \| \alpha \cdot \hat{\bm{C}} - \bm{C} \right 		\|_{F}}{\left \| \bm{C} \right \|_{F}}
+		\end{equation*}\\
+	\end{column}
+	
+	\begin{column}{0.5\textwidth}
+	 	$\bm{C} = $ reference \\
+	 	$\hat{\bm{C}} = $ obtained result\\
+	\end{column}
+	
+	\end{columns}
+	}
+	%
+	%%%% Reference %%%%
+	\only<2>{
+	Reference (C-Scan)\\
+	\vspace*{0.2cm}
+	\begin{columns}[t]
+	%% image part
+	\begin{column}{0.55\textwidth}
+	%\vspace*{0.5cm}	
+	% reference
+	\cimgbothlabelswithcmap{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/grid/cimg_reco_max_oa_0.png}
+	\end{column}
+	%
+	%% text part
+	\begin{column}{0.45\textwidth}
+	\vspace*{-6cm}
+	
+	SAFT reconstruction of a simulated automatic measurement data\\
+	\vspace*{0.2cm}  
+	\begin{itemize}
+		\item Scan positions on fine grid
+		\item 100\% coverage (1600 grid points)
+		\item No positional error
+	\end{itemize}
+	\end{column}	
+	\end{columns}
+	}
+	%
+	%%%% RMSE %%%%
+	\only<3>{
+	\centering
+	\vspace*{0.2cm}
+	\scalebox{0.85}{
+	\begin{tikzpicture}
+		\input{figures/pytikz/1D/mse_posscan.tex} 
+		\end{axis}
+	\end{tikzpicture}	
+	}}
+	
+%===================================================%
+\end{frame}
+
+
+\subsection{Result (1)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Result (1) Coverage}
+	%======================================== content =====%	
+	% RMSE	
+	\only<1-2>{
+	\centering
+	\scalebox{0.85}{
+	\tikzset{every mark/.append style={scale=2}}
+	\begin{tikzpicture}
+		\input{figures/pytikz/1D/mse_posscan.tex} 
+	 		% np2, sigma = 0
+              \only<2>{
+              \addplot[tui_red, mark=asterisk, mark size = 6pt, very thick] coordinates{
+            			 (0.005, 0.43397317256111106)
+              };
+              % np5, sigma = 0
+              \addplot[tui_blue, mark=asterisk, mark size = 6pt, very thick] coordinates{
+            			(0.005, 0.12625346213361452)
+              };
+              }
+         \end{axis}
+	\end{tikzpicture}	
+	}}
+	% cimgs
+	\only<3->{
+	\centering
+	\begin{columns}
+	%% % Left %%%
+	\begin{column}{0.5\textwidth}
+	\centering
+	\hspace*{-0.4cm}
+	$\N_{\point} = 160$, $\sigma = 0$\\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_2_cimg_max_sigma_0_00.png}
+	\end{column}
+	
+	%%% Right %%%
+	\begin{column}{0.5\textwidth}
+	\centering
+	%\vspace*{0.5cm}
+	$\N_{\point} = 1600$, $\sigma = 0$\\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_5_cimg_max_sigma_0_00.png}
+	\end{column}	
+	\end{columns}
+	}
+	%===================================================%
+\end{frame}
+
+
+\subsection{Result (2)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Result (2) $0.1 \lambda$ Error}
+	%======================================== content =====%	
+	% RMSE	
+	\only<1-2>{
+	\centering
+	\scalebox{0.85}{
+	\tikzset{every mark/.append style={scale=2}}
+	\begin{tikzpicture}
+		\input{figures/pytikz/1D/mse_posscan.tex} 
+			\only<2>{
+	 		% np2, sigma = 0
+              \addplot[tui_red, mark=asterisk, mark size = 6pt, very thick] coordinates{
+            			 (0.005, 0.43397317256111106)
+              };
+              % np2, for RMSE = 0.5
+              \addplot[tui_red, mark=asterisk, mark size = 6pt, very thick] coordinates{
+            			(0.125, 0.443862453347254)
+              };
+              }
+         \end{axis}
+	\end{tikzpicture}	
+	}}
+	% cimgs
+	\only<3>{
+	\vspace*{-0.5cm}
+	\centering
+	$\N_{\point} = 160$ \\
+	\begin{columns}
+	%% % Left %%%
+	\begin{column}{0.5\textwidth}
+	\centering
+	%\hspace*{-0.4cm}
+	$\sigma = 0$, RMSE$^{\dagger} = 0.43$\\
+	\vspace*{0.1cm}
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_2_cimg_max_sigma_0_00.png}
+	\end{column}	
+	%%% Right %%%
+	\begin{column}{0.5\textwidth}
+	\centering
+	$\sigma = 0.1 \lambda$, RMSE$^{\dagger} = 0.44$\\
+	\vspace*{0.1cm}
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_2_cimg_max_sigma_025_00.png}
+	\end{column}	
+	\end{columns}
+	}
+	% Difference
+	\only<4>{
+	\centering
+	\vspace*{-0.5cm}
+	
+	Difference between $\sigma = 0$ and $0.1 \lambda$\\
+	\vspace*{0.1cm}
+	\cimgfortenthlambda{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/difference_tenth_lambda.png}
+	}
+	\only<5>{
+	\vspace*{-0.5cm}
+	\centering
+	$\N_{\point} = 160$ \\
+	\begin{columns}
+	%% % Left %%%
+	\begin{column}{0.5\textwidth}
+	\centering
+	%\hspace*{-0.4cm}
+	$\sigma = 0$, RMSE$^{\dagger} = 0.43$\\
+	\vspace*{0.1cm}
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_2_cimg_max_sigma_0_00.png}
+	\end{column}	
+	%%% Right %%%
+	\begin{column}{0.5\textwidth}
+	\centering
+	$\sigma = 0.1 \lambda$, RMSE$^{\dagger} = 0.44$\\
+	\vspace*{0.1cm}
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_2_cimg_max_sigma_025_00.png}
+	\end{column}	
+	\end{columns}
+	}
+	%===================================================%
+\end{frame}
+
+
+\subsection{Result (3)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Result (3) RMSE$^{\dagger}_{\krit}$}
+	%======================================== content =====%	
+	% RMSE	
+	\only<1-2>{
+	\centering
+	\scalebox{0.85}{
+	\tikzset{every mark/.append style={scale=2}}
+	\begin{tikzpicture}
+		\input{figures/pytikz/1D/mse_posscan.tex} 
+			\only<2>{
+	 		% np2, sigma = 0.48mm, RMSE = 0.5
+              \addplot[tui_red, mark=asterisk, mark size = 6pt, very thick] coordinates{
+            			 (0.48, 0.500904563252353)
+              };
+              % np2, sigma = 1.05mm,  RMSE = 0.6
+              \addplot[tui_red, mark=asterisk, mark size = 6pt, very thick] coordinates{
+            			(1.1, 0.6109550170807517)
+              };
+              % np2, sigma = lambda,  RMSE = 0.65
+              \addplot[tui_red, mark=asterisk, mark size = 6pt, very thick] coordinates{
+            			(1.26, 0.6483432219245108)
+              };
+              }
+         \end{axis}
+	\end{tikzpicture}	
+	}}
+	%
+	% cimgs
+	\only<3-4>{
+	\vspace*{-0.5cm}
+	\centering
+	$\N_{\point} = 160$ \\
+	\vspace*{0.1cm}
+	\begin{columns}
+	%% % Left %%%
+	\begin{column}{0.5\textwidth}
+	\centering
+	$\sigma = $ \SI{0.5}{\milli\metre}, RMSE$^{\dagger} = 0.5$ \\
+	\vspace*{0.1cm}
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_2_cimg_max_sigma_100_00.png}
+	\end{column}
+	
+	%%% Right %%%
+	\begin{column}{0.5\textwidth}
+	\centering
+	%\vspace*{0.5cm}
+	\only<3>{
+	$\sigma = $ \SI{1.1}{\milli\metre},  RMSE$^{\dagger} = 0.61$ \\
+	\vspace*{0.1cm}
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_2_cimg_max_sigma_220_00.png}
+	\end{column}	
+	\end{columns}
+	}
+	\only<4>{
+	$\sigma =$ \SI{1.26}{\milli\metre}($\lambda$),  RMSE$^{\dagger} = 0.65$    \\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_2_cimg_max_sigma_252_00.png}
+	\end{column}	
+	\end{columns}
+	}
+	}
+	%
+	% RMSE 2
+	\only<5>{
+	\centering
+	\scalebox{0.85}{
+	\tikzset{every mark/.append style={scale=2}}
+	\begin{tikzpicture}
+		\input{figures/pytikz/1D/mse_posscan.tex} 
+	 		% np2, for RMSE = 0.5
+              \addplot[tui_red, mark=asterisk, mark size = 6pt, very thick] coordinates{
+            			 (0.48, 0.500904563252353)
+              };
+              % np3 for RMSE = 0.5
+              \addplot[fri_green, mark=asterisk, mark size = 6pt, very thick] coordinates{
+            			(1.02, 0.5011940816503992)
+              };
+              % x = 0.48 line (RMSEcrit for np2)
+            	\addplot[gray, dashed, line width = 3pt, mark = ] coordinates{
+            			(0.48, 0)
+            			(0.48, 0.7)
+            	};
+            	% x = 1 line (RMSEcrit for np3)
+            	\addplot[gray, dashed, line width = 3pt, mark = ] coordinates{
+            			(1.02, 0)
+            			(1.02, 0.7)
+            	};
+         \end{axis}
+	\end{tikzpicture}	
+	}}
+	%===================================================%
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Sec. 6 %%%%
+\section{Summary} 
+
+\subsection{Conclusion}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	\frametitle{Conclusion}
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	Identified 5 factors as error sources, 3 were investigated\\	
+	\centering
+	\begin{table}
+	\begin{center}
+		\inputTable{0.9\textwidth}{tables/table_conclusion_simulation1.tex}
+	\end{center}
+	\end{table}
+	%===================================================%
+\end{frame}
+
+
+\subsection{Future Work}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Future Work}
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	\begin{itemize}
+		\item Measurement of the system error
+		\item Other evaluation methods
+		\item Development of measurement assistance systems 
+	\end{itemize}
+	
+	% UT
+	\only<2>{
+	\centering
+	\includegraphics[width=0.55\textwidth]{Krieg_18_SHMNDT/Slides/figures/3D-SmartInspect_HoloLens_01.jpg}\\	
+	\cigray{\textcopyright Uwe Bellhäuser}
+	}	
+	
+	%===================================================%
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Bibliography %%%%%
+\bibliography{BA}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Backup %%%%%
+\appendix
+\backupbegin
+\section{Appendix}
+
+\subsection{Appendix Start}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	%\frametitle{ } 
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	\centering
+	\huge Appendix
+	%===================================================%
+\end{frame}
+
+\subsection{Parameters (1)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	\frametitle{Parameters w.r.t. Test Object}
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	\centering
+	\begin{table}
+	\begin{center}
+		\inputTable{0.95\textwidth}{tables/table_constant_params_EN.tex}
+	\end{center}
+	\end{table}
+	%===================================================%
+\end{frame}
+
+
+\subsection{Parameters (2)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	\frametitle{Parameters w.r.t. Pulse}
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	\centering
+	\begin{columns}
+	% table
+	\begin{column}{0.5\textwidth}
+	\begin{table}
+	\begin{center}
+		\inputTable{1\textwidth}{tables/table_constant_params_pulse_EN.tex}
+	\end{center}
+	\end{table}
+	\end{column}
+	% FIG : Gabot
+	\begin{column}{0.5\textwidth}
+	\inputTikZ{0.6}{figures/BA_fig_Gabor_pulse.tex}
+	\end{column}
+	\end{columns}	
+	%===================================================%
+\end{frame}
+
+
+\subsection{Parameters (3)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	\frametitle{Parameters w.r.t. Simulation}
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	\centering
+	\begin{table}
+	\begin{center}
+		\inputTable{0.8\textwidth}{tables/table_posscan_params_EN.tex}
+	\end{center}
+	\end{table}
+	%===================================================%
+\end{frame}
+
+
+\subsection{SoA}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{State of the Art}
+	%======================================== content =====%
+	SAFT application to the manual measurement data 	
+	\begin{itemize}
+		\item Little investigated 
+		\begin{itemize}
+			\item Potential
+			\item Implementation 
+			\item Challenges
+		\end{itemize}
+		\item Application to concrete objects is proven \footnotemark
+		\begin{itemize}
+			\item Validity to metal objects is questionable
+		\end{itemize}
+	\end{itemize}
+	
+	% footnote
+	\footnotetext[1]{K. Mayer, M. Ibrahim, M. Krause, M. Schubert, Requirements for a small size ultrasonic imaging system for inspection of concrete elements, \textsl{19th World Conference
+on Non-Destructive Testing}, 2016}
+\end{frame}
+
+
+\subsection{Literature Search (1)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	\frametitle{Results of Literature Search (1)}
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	\centering
+	\begin{table}
+	\begin{center}
+		\inputTable{0.9\textwidth}{tables/table_literature_search_manual_EN.tex}
+	\end{center}
+	\end{table}
+	%===================================================%
+\end{frame}
+
+\subsection{Literature Search (2)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	\frametitle{Results of Literature Search (2)}
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	\centering
+	\begin{table}
+	\begin{center}
+		\inputTable{0.9\textwidth}{tables/table_literature_search_errorsources_EN.tex}
+	\end{center}
+	\end{table}
+	%===================================================%
+\end{frame}
+
+
+\subsection{Automatic vs Manual Data}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Automatic vs Manual Data}
+	%======================================== content =====%
+	\centering
+	%%% autom = Muse %%%
+	\only<1>{
+	\begin{columns}[t]	
+	% Left
+	\begin{column}{0.5\textwidth}
+		\centering
+		Test object\footnotemark \addtocounter{footnote}{-1} \\ \vspace*{0.1cm}
+		\inputTikZ{0.68}{Krieg_18_SHMNDT/Paper/figures/reference_muse.tex}
+		%
+		\centering
+		Measurement data\footnotemark \addtocounter{footnote}{-1} \\ \vspace*{0.1cm} \hspace*{0.3cm}
+		\inputTikZ{0.68}{Krieg_18_SHMNDT/Paper/figures/Data/reference_reco/reference_reco_data.tex}
+	\end{column}
+	
+	% Right
+	\begin{column}{0.5\textwidth}
+		\centering
+		Scan positions\footnotemark \addtocounter{footnote}{-1} \\ \vspace*{0.1cm}
+		\inputTikZ{0.68}{Krieg_18_SHMNDT/Slides/figures/Data/reference_reco/reference_reco_scatter_explicit.tex}
+		%
+		\centering
+		 SAFT Reconstruction\footnotemark \addtocounter{footnote}{-1} \\ \vspace*{0.1cm}
+		\inputTikZ{0.68}{Krieg_18_SHMNDT/Paper/figures/Data/reference_reco/reference_reco_reco.tex}
+	\end{column}	
+	\end{columns}	
+	}
+	
+	%%% manual = aciation SCAN 5-3 %%%
+	\only<2>{
+	\begin{columns}[t]	
+	% Object
+	\begin{column}{0.15\textwidth}
+		\centering
+		Test object\footnotemark \addtocounter{footnote}{-1} \\ %\vspace*{0.07cm}
+		\includegraphics[width= 1.85\textwidth, angle=270]{Krieg_18_SHMNDT/Paper/figures/smart_inspect_specimen.png}
+	\end{column}
+	% Scan map
+	\begin{column}{0.25\textwidth}
+		\centering
+		Scan positions\footnotemark \addtocounter{footnote}{-1} \\ \vspace*{0.7cm}
+		\inputTikZ{0.5}{Krieg_18_SHMNDT/Paper/figures/Data/Aviation_test_LINE1/tex/aviation_SCAN5_3_scatter.tex}
+	\end{column}
+	% Data
+	\begin{column}{0.25\textwidth}
+		\centering
+		Measurement data\footnotemark \addtocounter{footnote}{-1} \\ \vspace*{0.7cm} %\hspace*{0.3cm}
+		%\inputTikZ{0.5}{Krieg_18_SHMNDT/Measurement/Aviation_test_LINE1/tex/aviation_SCAN5_3_data_gauss_2.tex}
+		\cimgAviationScanBothlabels{0.5}{\Large}{\Large}{Krieg_18_SHMNDT/Measurement/Aviation_test_LINE1/tex/aviation_SCAN5_3_data_gauss_2.png}
+	\end{column}
+	% Reco
+	\begin{column}{0.25\textwidth}
+		\centering
+		SAFT Reconstruction\footnotemark \addtocounter{footnote}{-1} \\ \vspace*{0.3cm}
+		\cimgAviationScanBothlabels{0.5}{\Large}{\Large}{Krieg_18_SHMNDT/Paper/figures/Data/Aviation_test_LINE1/tex/aviation_SCAN5_3.png}
+	\end{column}	
+	\end{columns}	
+	}
+	% manual : Data vs Reco
+	\only<3>{
+	\begin{columns}[t]	
+	% Data
+	\begin{column}{0.5\textwidth}
+		\centering
+		Measurement data\footnotemark \addtocounter{footnote}{-1} \\ \vspace*{0.3cm} %\hspace*{0.3cm}
+		\inputTikZ{0.8}{Krieg_18_SHMNDT/Measurement/Aviation_test_LINE1/tex/aviation_SCAN5_3_data_gauss_2.tex}
+	\end{column}
+	% Reco
+	\begin{column}{0.5\textwidth}
+		\centering
+		SAFT Reconstruction\footnotemark \\ \vspace*{0.3cm}
+		\inputTikZ{0.8}{Krieg_18_SHMNDT/Paper/figures/Data/Aviation_test_LINE1/tex/aviation_SCAN5_3.tex}
+	\end{column}	
+	\end{columns}	
+	}
+	\vspace*{0.3cm}
+	% footnote
+	\only<2>{
+	\footnotetext[1]{F. Krieg et al., SAFT processing for manually acquired ultrasonic measurement data with 3D SmartInspect, \textsl{SHM-NDT}, 2018}
+	}
+	%===================================================%	
+\end{frame}
+
+
+\subsection{Position Manipulation}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Position Manipulation}
+	%======================================== content =====%
+	\centering	
+	\begin{center}
+	\vspace{-0.5cm} %\setlength{\voffset}{-0.5cm}
+	\inputTikZ{1.1}{figures/tikz/posscan_recognition_rounding_error.tex}
+	\end{center}
+	%===================================================%
+\end{frame}
+
+
+\subsection{Recognition and Rounding Error}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Recognition and Rounding Error}
+	%======================================== content =====%
+	\vspace{-0.5cm} %\setlength{\voffset}{-0.5cm}	
+	\begin{columns}[t]
+	
+	% formula
+	\begin{column}{0.3\textwidth}
+	% P_k
+	\begin{equation*}
+	\Point_k = (x_k, y_k)
+	\end{equation*}
+	% \hat{P}_k
+	\begin{equation*}
+	\begin{aligned}
+	\hat{\Point}_k {} & = (\hat{x}_k, \hat{y}_k) \\
+	 & = \left( 
+	     \begin{matrix} 
+	 			x_k + r \cdot \cos (\theta) \\
+	             y_k +  r \cdot \sin (\theta) 
+	     \end{matrix} 
+	    \right)
+	\end{aligned}
+	\end{equation*}
+	\end{column}
+	
+	% gauss distribution
+	\begin{column}{0.7\textwidth}
+	\begin{center}
+	\vspace*{-0.3cm}
+	 \inputTikZ{0.8}{figures/tikz/posscan_sigma_distribution.tex}
+	\end{center}
+	\end{column}
+	
+	\end{columns}
+% footnote : https://tex.stackexchange.com/questions/31708/draw-a-bivariate-normal-distribution-in-tikz	
+\end{frame}
+
+
+\subsection{RMSE}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{RMSE$^{\dagger}$}
+	%======================================== content =====%
+	\begin{equation*} 
+		\rmse^{\dagger} = \frac{\left \| \alpha \cdot \hat{\bm{C}} - \bm{C} \right 		\|_{F}}{\left \| \bm{C} \right \|_{F}}
+	\end{equation*}\\
+	
+	\begin{equation*} 
+		\alpha = \frac{ \vectorize(\bm{C})^{\T} \cdot \vectorize(\hat{\bm{C}}) }{ \vectorize(\hat{\bm{C}})^{\T} \cdot \vectorize(\hat{\bm{C}})} .
+	\end{equation*}
+	
+	\centering
+	where \\
+	$\bm{C} =$ reference data\\ 
+	$\hat{\bm{C}} =$ obtained results to compare
+	%===================================================%
+\end{frame}
+
+
+\subsection{DR vs TA}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full] 
+\begin{frame}[t]
+	\frametitle{Effect of Rounding Methods}
+	%======================================== content =====%	
+	% cimgs
+	$\N_{\point} = 1600$ for both
+	\begin{columns}
+	%% % Left %%%
+	\begin{column}{0.5\textwidth}
+	\centering
+	\hspace*{-0.4cm}
+	Take only one and discard the others\\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_5_cimg_max_sigma_0_00.png}
+	\end{column}
+	
+	%%% Right %%%
+	\begin{column}{0.5\textwidth}
+	\centering
+	%\vspace*{0.5cm}
+	Take the average\\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/ta_np_5_cimg_max_sigma_0.png}
+	\end{column}	
+	\end{columns}
+	%===================================================%
+\end{frame}
+
+
+\subsection{Scan Positions}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Scan Positions}
+	%======================================== content =====%
+	\begin{columns}
+	
+	\begin{column}{0.5\textwidth}
+	\scalebox{0.9}{
+		\begin{tikzpicture}
+			\node[] at (0, 0) {\input{figures/pytikz/1D/scanmap_np5.tex}};
+			\node[] at (1.5, 3.5) {\Large $\N_{\point} = 1600$};
+		\end{tikzpicture}
+	}
+	%\inputTikZ{0.7}{figures/pytikz/1D/scanmap_np5.tex}
+	\end{column}
+	
+	
+	\begin{column}{0.5\textwidth}
+	\scalebox{0.9}{
+		\begin{tikzpicture}
+			\node[] at (0, 0) {\input{figures/pytikz/1D/scanmap_np2.tex}};
+			\node[] at (1.5, 3.5) {\Large $\N_{\point} = 160$};
+		\end{tikzpicture}
+	}
+	\end{column}
+	\end{columns}
+%===================================================%
+\end{frame}	
+
+
+\subsection{Coverage Change}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight] 
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Coverage Change with Number of Scans}
+	%======================================== content =====%
+	\centering	
+	\begin{center}
+	\vspace{-0.5cm} %\setlength{\voffset}{-0.5cm}
+	\inputTikZ{0.9}{figures/pytikz/1D/coverage_all_np.tex}
+	\end{center}
+	
+	Note: spatial coverage (\%) decreases with increasing $\sigma$ by approx. 2\% per \SI{}{\milli\metre} relative to the number of scan positions ($\N_{\point}$)
+	%===================================================%
+\end{frame}
+
+
+\subsection{Coverage Results}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Effect of Varying Coverage}
+	%======================================== content =====%
+	\centering
+	\begin{columns}[t]
+	%% image part
+	\begin{column}{0.5\textwidth}
+	\centering
+	%\vspace*{-0.5cm}
+	%\hspace*{-0.4cm}
+	Reference data\\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/grid/cimg_reco_max_oa_0.png}
+	\end{column}
+	
+	%% text part
+	\begin{column}{0.5\textwidth}
+	\centering
+	%\vspace*{0.5cm}
+	% np5
+	\only<2>{
+	1600 scan positions\\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_5_cimg_max_sigma_0_00.png}
+	}
+%	% np4
+%	\only<3>{
+%	800 scan positions\\
+%	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_4_cimg_max_sigma_0_00.png}
+%	}
+%	% np3
+%	\only<4>{
+%	400 scan positions\\
+%	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_3_cimg_max_sigma_0_00.png}
+%	}
+	% np2
+	\only<3>{
+	160 scan positions\\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_2_cimg_max_sigma_0_00.png}}
+	\end{column}	
+	\end{columns}
+	%===================================================%
+\end{frame}
+
+
+\subsection{Position Inaccuracy C-Scan Results}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Results in C-Scan Presentation}
+	%======================================== content =====%
+	\centering
+	\begin{columns}[t]
+	%% image part
+	\begin{column}{0.5\textwidth}
+	\centering
+	\hspace*{-0.4cm}
+	% np5
+	\only<1>{
+	1600 scan positions without error\\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_5_cimg_max_sigma_0_00.png}
+	}
+	% np4
+	\only<2>{
+	800 scan positions without error\\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_4_cimg_max_sigma_0_00.png}
+	}
+	% np3
+	\only<3>{
+	400 scan positions without error\\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_3_cimg_max_sigma_0_00.png}
+	}
+	% np2
+	\only<4>{
+	160 scan positions without error\\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_2_cimg_max_sigma_0_00.png}}
+	\end{column}
+	
+	%% text part
+	\begin{column}{0.5\textwidth}
+	\centering
+	%\vspace*{0.5cm}
+	% np5
+	\only<1>{
+	$\sigma = $ \SI{2}{\milli\metre}\\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_5_cimg_max_sigma_400_00.png}
+	}
+	% np4
+	\only<2>{
+	$\sigma = $ \SI{2}{\milli\metre}\\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_4_cimg_max_sigma_400_00.png}
+	}
+	% np3
+	\only<3>{
+	$\sigma = $ \SI{2}{\milli\metre}\\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_3_cimg_max_sigma_400_00.png}
+	}
+	% np2
+	\only<4>{
+	$\sigma = $ \SI{2}{\milli\metre}\\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_2_cimg_max_sigma_400_00.png}}
+	\end{column}	
+	\end{columns}
+	%===================================================%
+\end{frame}
+
+
+\subsection{Simulation 2 (1)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	\frametitle{Simulation 2 Setups and Parameters}
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	\centering
+	\begin{table}
+	\begin{center}
+		\inputTable{0.8\textwidth}{tables/table_zscan_params_EN.tex}
+	\end{center}
+	\end{table}
+	%===================================================%
+\end{frame}
+
+
+\subsection{Simulation 2 (2)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	\frametitle{Simulation 2 Flow}
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	\centering
+	Simulation flow
+	\vspace*{0.5cm}
+	
+	\inputTikZ{0.8}{figures/tikz/zscan_block_diagram_EN.tex}
+	%===================================================%
+\end{frame}
+
+
+\subsection{Simulation 2 (3)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	\frametitle{Simulation 2 RMSE$^{\dagger}$ Results}
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	\centering
+	\vspace*{0.2cm}
+	
+	\inputTikZ{0.85}{figures/pytikz/1D/mse_zscan.tex}
+	%===================================================%
+\end{frame}
+
+
+\subsection{Simulation 2 (4)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+	\frametitle{Simulation 2 RMSE$^{\dagger}_{\krit}$}
+	%======================================== content =====%	
+	% cimgs
+	\centering
+	\begin{columns}
+	%% % Left %%%
+	\begin{column}{0.5\textwidth}
+	\centering
+	\hspace*{-0.4cm}
+	Simulation 1: $\N_{\point} = 160$, RMSE$^{\dagger}_{\krit}$\\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/posscan/dr_np_2_cimg_max_sigma_100_00.png}
+	\end{column}
+	
+	%%% Right %%%
+	\begin{column}{0.5\textwidth}
+	\centering
+	%\vspace*{0.5cm}
+	Simulation 2: Angle = $10^{\circ}$, RMSE$^{\dagger}_{\krit}$\\
+	\cimgbothlabels{0.75}{\Large}{\Large}{figures/pytikz/2D/texpngs/zscan/oa_2_cimg_reco_max_016.png}
+	\end{column}	
+	\end{columns}
+	%===================================================%
+\end{frame}
+
+
+\backupend
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

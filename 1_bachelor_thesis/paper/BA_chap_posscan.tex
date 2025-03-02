@@ -1,0 +1,181 @@
+\chapter{Positionsungenauigkeit} \label{chap:posscan}
+
+In diesem Kapitel wird der Einfluss der Positionsungenauigkeiten auf die Rekonstruktion handaufgenommener Messdaten untersucht und diskutiert. Wie bereits in Kapitel \ref{sec:smartinspect} dargestellt wird, werden bei unseren händischen Messungen die Positionen des Prüfkopfes mit Hilfe des Kameraerkennungssystems bestimmt. Bei diesem Anwendungsfall ist ein gewisser Fehler bei der Positionsschätzung zu erwarten: dieser kann einerseits durch das Messsystem und andererseits durch die Quantisierung der Prüfpositionen, die bei der verwendeten \acrshort{saft}, die wie in Kapitel \ref{sec:Online3DSAFT} bereits dargestellt wird und erforderlich ist, verursacht werden. \par
+Für die Untersuchung von deren Auswirkungen wird in dieser Arbeit eine Simulation durchgeführt. Das Simulationsprinzip und der Simulationsaufbau wird zunächst im Teil \ref{sec:posscan_setup} dargestellt. Der dazu zugehörige Quantisierungsfehler und die Abdeckung des Ortsbereiches werden im Teil \ref{sec:quantization} und \ref{sec:posscan_coverage} diskutiert. Im Teil \ref{sec:posscan_recos} werden die gewonnenen Daten als exemplarische Ergebnisse gezeigt. Schließich werden im Teil \ref{sec:posscan_evaluation} die Daten mit Hilfe der  modifizierten\acrshort{rmse} ausgewertet und deren Ergebnis wird diskutiert.  
+
+\section{Simulationsprinzip und -aufbau} \label{sec:posscan_setup}
+\subsection{Simulationsaufbau} % random scan positions & Npoint
+Für die synthetische Datengenerierung wird angenommen, dass die Prüfpositionen auf zufälligen Stellen im Ortsbereich, hier $xy$-Ebene (Abbildung \ref{fig:defmap_xy}), verteilt sind, so dass die Simulation nicht nur die Quantisierungsfehler untersucht sondern auch die Fehlerschätzung der Positionen berücksichtigt. Das bedeutet, dass die Prüfpositionen nicht mehr gleichmäßig auf dem Raster verteilt sind, im gegensatz zu den Referenzdaten \ref{fig:reference_data}. \par
+Außerdem spielt die Anzahl der Prüfpositionen, $\N_{\point}$ eine wesentliche Rolle, dennoch ist bisher unbekannt, wie viele Prüfpositionen für eine zufriedenstellende Rekonstruktion erforderlich sind. Von daher wurden 4 verschiedene Werte von $\N_{\point}$ bei dieser Simulation verwendet. Der Variationsbereich der Anzahl simulierter Messungen ($\N_{\point}$) liegt zwischen 10\% und 100\% aller Pixel und die jeweiligen Werte sind in der Tabelle \ref{table:posscan_params} zu finden. Für die kohärente Simulation, wurde für jede $\N_{\point}$ ein gleiches Datenset der Prüfpositionen, die in Abbildung \ref{fig:scanmaps} dargestellt werden, verwendet. \par
+%% FIG : scan map
+\input{figures/BA_fig_posscan_scanmaps.tex}
+%%
+
+%%%% workflow %%%%
+Bei unserem Anwendungsfall kann man sich den Simulationsverlauf wie folgt vorstellen: 
+%% Simulationsverlauf %%
+\begin{enumerate}
+% (1)
+\item Der Prüfkopf wird auf eine Position $(x_0, y_0)$ gestellt 
+% (2)
+\item Es wird eine Puls-Echo Messung, den \gls{ascan} $\bm{a}_0$, aufgenommen
+% (3)
+\item Die Kamera schätzt deren Position als $(\hat{x}_0, \hat{y}_0)$, gegebenenfalls mit Fehler, und sendet diese Positionsinformation ins System
+% (4)
+\item Das System speichert die $\bm{a}_0$ und die zugehörige Positionsinformation $(\hat{x}_0, \hat{y}_0)$
+% (5)
+\item Die Position $(\hat{x}_0, \hat{y}_0)$ wird auf den nächstgelegenen Abtastpunkt  $(\bar{x}_0, \bar{y}_0)$ quantisiert
+% (6)
+\item Der aufgenommene \gls{ascan} $\bm{a}_0$ wird nach der Quantisierungsmethode angepasst $\bar{\bm{a}}_0$ (Siehe Teil \ref{sec:quantization})
+% (7)
+\item An der Stelle $(\bar{x}_0, \bar{y}_0)$ wird die Rekonstruktion mit $\bar{\bm{a}}_0$ durchgeführt
+% (8)
+\item Die Rekonstruktionsdaten werden aktualisiert (nach der Gleichung \ref{eq:saft_online_update})
+\end{enumerate}
+%%
+Dieser Verlauf wurde wie Abbildung \ref{fig:posscan_blockdiagram} implementiert. Die bei dieser Simulation spezifischen Parameter (sowohl die Konstante als auch die Variable) sind in der Tabelle \ref{table:posscan_params} zu finden. \par
+%% FIG : pos_scan block diagram
+\begin{figure}[h!]
+\begin{center}
+\inputTikZ{0.8}{figures/BA_fig_posscan_block_diagram.tex}
+\caption{Blockdiagramm des Simulationsverlaufes}
+\label{fig:posscan_blockdiagram}
+\end{center}
+\end{figure}
+%%
+%% TAB : posscan variations %%
+\input{tables/table_posscan_variations.tex}
+%%
+%% TAB : posscan params %%
+\input{tables/table_posscan_params.tex}
+%%
+
+%%%% position manipulation %%%%
+\subsection{Manipulation der Positionen}
+Für die Manipulation der Prüfpositionen in der Abbildung \ref{fig:posscan_blockdiagram} wurden die Polarkoordinaten verwendet, so dass sich die Positionsfehler innerhalb eines gleichen Abstandes von der richtigen Stelle $(x_{0}, y_{0})$ verteilen können. Das bedeutet, dass die manipulierten bzw. von der Kamera falsch geschätzten Positionen $(\hat{x}_0, \hat{y}_0)$ mit 
+%% EQ : position manipulation %%
+\begin{equation}
+(\hat{x}_{0}, \hat{y}_{0}) = (x_{0}, y_{0}) + r \cdot (\cos \theta, \sin \theta)
+\end{equation}
+%%
+ausgedrückt werden können. Die Parameter $r$ und $\theta$ wurden zufällig ausgewählt, allerdings wurde für $r$ die Normalverteilung mit der variierenden Standardabweichung $\sigma$ [\SI{}{\milli\metre}] verwendet, während $\theta$ mit der Gleichverteilung im Bereich von $[0^{\circ}, 360^{\circ})$ bestimmt wurde. Für jeden $\sigma$ Wert wurden jeweils 10 Simulationen durchgeführt. \par
+
+%%%% quantization %%%%
+\subsection{Quantisierung der Prüfpositionen auf dem Abtastraster} \label{sec:quantization}
+Diese manipulierten Positionen wurden danach quantisiert, da der in dieser Arbeit verwendete \acrshort{saft} Algorithmus momentan nur auf die auf dem äquidistanten Raster liegenden Prüfpositionen anwendbar ist, wie in Kapitel \ref{sec:Online3DSAFT} erklärt wird. Die quantisierte Position $(\bar{x}_0, \bar{y}_0)$ kann wie folgt ausgedrückt werden:
+%% EQ : quantization %%
+\begin{equation}
+(\bar{x}_{0}, \bar{y}_{0}) = \left (\dx \cdot \round \left ( \frac{\hat{x}_0}{\dx} \right ), \dy \cdot \round \left ( \frac{\hat{y}_0}{\dy} \right ) \right ) .
+\end{equation}
+Durch die Quantisierung der Prüfpositionen auf dem Raster kann sich mehr als ein \gls{ascan} für einen Rasterpunkt ergeben. Dies verursacht eine Überbetonung der betroffenen Rasterpunkte und dementsprechend verschlechtert sich die Abbildungsqualität \cite{Krieg18SAFTwithSmartInspect}. Aus diesem Grund muss entweder nur ein \gls{ascan} pro Rasterpunkt für die Rekonstruktion berücksichtigt werden\cite{Krieg18SAFTwithSmartInspect} oder alle betroffenen \glspl{ascan} müssen gewichtet werden \cite{Mayer16SAFTwithSmallData}. \par
+
+% discard repetitions (DR)
+\subparagraph*{\gls{dr}}
+Für eine Echtzeitrekonstruktion wäre es schneller und weniger rechenaufwendig, wenn nur der erste aufgenommene \gls{ascan} für jeden Rasterpunkt gespeichert wird und alle anderen \glspl{ascan} für den gleichen Rasterpunkt vernachlässigt bzw. im System nicht mehr gespeichert werden \cite{Krieg18SAFTwithSmartInspect}. Diese Strategie wird in \cite{Krieg18SAFTwithSmartInspect} favorisiert. \par
+Seien $\bm{a}_k$ der $k$-te \gls{ascan}, $(\hat{x}_k, \hat{y}_k)$ deren Prüfposition und $(\bar{x}_h, \bar{y}_h)$ die quantisierte Prüfposition, wobei $k, h \in \NN \cap [0, \N_{\scan})$ sind. Wenn die quantisierte Position $(\bar{x}_h, \bar{y}_h)$ im System noch nicht gespeichert wurde, wird $\bm{a}_k$ als der zur quantisierten Position $(\bar{x}_h, \bar{y}_h)$ zugehörige \gls{ascan} $\bar{\bm{a}}_h$ betrachtet. Wenn die Position $(\bar{x}_h, \bar{y}_h)$ im System bereits vorhanden ist, wird $\bm{a}_k$ verworfen. In dieser Arbeit wird diese Quantisierungsmethode als \gls{dr} bezeichnet.\par
+Allerdings wird bei dem Quantisierungsverfahren \gls{dr} ein größerer Einfluss des Quantisierungsfehlers erwartet, da hier nur der erste aufgenommene \gls{ascan} für jeden Punkt auf dem Rekonstruktionsgitter im System gespeichert wird und für die Rekonstruktion verwendet wird. Allgemein lässt sich mit dem \acrshort{saft}-Algorithmus mit einer höheren Abdeckung des Ortsbereiches eine bessere Abbildungsqualität erreichen (Teil \ref{sec:err_coverage}). Das bedeutet, dass die Überbetonung eines bestimmten Bereiches nicht unbedingt zur Verbesserung der Abbildungssqualität führt. Stattdessen spielt eine vollständige Abtastung des Ortsbereiches bei der \acrshort{saft} Rekonstruktion eine wichtigere Rolle \cite{Krieg18SAFTwithSmartInspect}. \par
+Eine höhere Abdeckung kann bei unserem Fall erreicht werden, wenn der Prüfer vom System eine Rückmeldung über die bisherige Abdeckung bekommt und damit länger die Messung durchführt. Dadurch nähert sich die Messung mehr einer vollständig äqudistant abgetasteten Messung an, was den Einfluss des Quantisierungsfehlers kompensieren kann \cite{Krieg18SAFTwithSmartInspect}.
+
+
+% take average (TA)
+\subparagraph*{\gls{ta}}
+Als eine andere Herangehensweise der Datenanpassung bei der Rundung der Prüfpositionen wurde eine Wichtung der Beiträge der einzelnen \glspl{ascan} in der \acrshort{saft} Rekonstruktion von \cite{Mayer16SAFTwithSmallData} vorgeschlagen. Dabei wird aus der Publikation nicht klar, wie die Wichtung genau vorgenommen wird. In Anlehnung an die grundsätzliche Herangehensweise soll hier der arithmetische Mittelwert der \glspl{ascan}, die auf einem Rasterpunkt zusammenfallen, verwendet werden. In dieser Arbeit wird diese Quantisierungsmethode als \gls{ta} bezeichnet.\par
+Seien $\N_{\same}$ die Anzahl der auf einer gleichen Position $(\bar{x}_h, \bar{y}_h)$ quantisierten \glspl{ascan}. Wenn die betroffenen \glspl{ascan} bei der $k$-ten bis $k + \N_{\same} - 1$-ten Datenaufnahme bzw. -generierung erscheinen, kann der zur quantisierten Position $(\bar{x}_h, \bar{y}_h)$ zugehörige \gls{ascan} $\bm{a}_h$ wie folgt beschrieben werden:
+%% EQ : TA %%
+\begin{equation}
+\bar{\bm{a}}_h = \frac{1}{\N_{\same}} \sum_{i = k}^{\N_{\same} - 1} \bm{a}_i .
+\end{equation}
+%%
+
+Mit der Quantisierungsmethode \gls{ta} wird eine Reduzierung des Einflusses des Quantisierungsfehlers erwartet, allerdings muss die Anzahl der auf einem gleichen Rasterpunkt gerundeten \glspl{ascan} gezählt werden. Dies ist möglich in dem entweder das System bis zum Ende aller Datenaufnahmen im betroffenen Bereich wartet, oder die Rekonstruktion bei jeder Datenaufnahme erneut gerechnet wird. Bei beiden Fällen erhöht sich der Aufwand für die Rekonstruktion erheblich und dadurch wird eine langsamere Rekonstruktion erwartet. \par
+
+% comparison : DR vs TA
+\subparagraph*{}
+Die Abbildungen \ref{fig:posscan_dr} und \ref{fig:posscan_ta} zeigen jeweils ein Beispiel für die mit den oben genannten zwei Quantisierungsmethoden rekonstruierten Daten in \gls{cscan} Form. Hier wurden keine Positionsfehler betrachtet, das bedeutet die Positionen wurden nicht manipuliert, und die Anzahl der Prüfstellen $\N_{\point}$ wurde auf 1600 gestellt. Wie sich zeigt, gibt es optisch keinen großen Unterschied zwischen beiden Quantisierungsmethoden zu erkennen. Da sich die \gls{dr} besser für die Echtzeitrekonstruktion eignet, wurde die \gls{dr} als Quantisierungsmethode für die Simulationen dieser Arbeit verwendet. \par
+%% FIG : DR vs TA %%
+\begin{figure}[h!]
+\begin{center}
+\input{figures/BA_fig_posscan_DR_vs_TA.tex}
+\caption[C-Scan Darstellung mit 2 Quantisierungsmethoden]{Vergleich der Quantisierungsstrategien \glsfirst{dr} und \glsfirst{ta} anhand einer \gls{cscan}-Darstellung: Simulation auf $\N_{\point} = 1600$ zufällig gewählten Messpositionen ohne zusätzlichen Positionsfehler ($\sigma = 0$)
+}
+\label{fig:posscan_dr_vs_ta}
+\end{center}
+\end{figure}
+
+%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Abdeckung des Ortsbereiches} \label{sec:posscan_coverage}
+Wie in Kapitel \ref{sec:err_coverage} diskutiert wird, spielt die Anzahl der für die \acrshort{saft} Superpositionen vorhandene \glspl{ascan}, bzw. Abdeckung des Ortsbereiches, bei der Rekonstruktion eine große Rolle. Je mehr Daten für die Rekonstruktion verwendet werden, desto besser wird die Abbildungsqualität, wenn eine gleichmäßige Abtastung vorausgesetzt  ist. Diese Abhängigkeit der Abbildungsqualität von der Anzahl der Prüfstellen, $\N_{\point}$, wird in der Abbildung \ref{fig:cimg_cov_np_all} dargestellt. Bei den Abbildungen in \ref{fig:cimg_cov_np_all} wurden keine Positionsfehler betrachtet, bzw. die Positionen wurden nicht manipuliert ($\sigma = 0$). \par
+% limit of the Npoint for our case 
+Bei einer kleineren $\N_{\point}$, beispielsweise 160 Prüfpositionen (Abbildung \ref{fig:cimg_cov_np2}), sind die Artefakte im Bild deutlicher als bei der Rekonstruktion mit 1600 Prüfpositionen (Abbildung \ref{fig:cimg_cov_np5}). Allerdings sind die Artefakte bei $\N_{\point} =$ 160 noch tolerierbar und alle Streuer im Bild sind noch zu erkennen. Bei den gegebenen Simulationsparametern in unserem Modell, mit den zufällig auf den Ortsbereich verteilten Prüfpositionen wird festgestellt, dass 10\% der Abdeckung noch eine zufriedenstellende Abbildungsqualität liefern kann. \par
+%% FIG : cimge coverage : np2...5 %%
+\begin{figure}[h!]
+\begin{center}
+\input{figures/BA_fig_posscan_coverage_cimgs.tex}
+\caption[Abhängigkeit der Abbildungsqualität von der Anzahl der Prüfstellen]{\gls{cscan}-Darstellung der Rekonstruktion in Abhängigkeit von der Anzahl der einfließenden Messwerte $\N_{\point}$ ohne zusätzlichen Positionsfehler}
+\label{fig:cimg_cov_np_all}
+\end{center}
+\end{figure}
+%%
+% position error & coverge
+Nun wird bei der Simulation gezeigt, dass der Positionsfehler dennoch auch auf die Abdeckung des Ortsbereiches einen Einfluss hat. Abdeckung bedeutet hier, wie viele Rasterpositionen nach der Quantisierung der Prüfpositionen, die beliebig auf dem Ortsbereich liegen bzw. nicht mehr auf dem Raster liegen, noch abgedeckt sind. Die Abbildung \ref{fig:coverage} stellt die Beziehung zwischen der Abdeckung und der Positionsabweichung bei unterschiedlicher Anzahl der Prüfstellen $\N_{\point}$ dar. 100\% entspricht einer Anzahl von $\N_{x} \cdot \N_{y} = 1600$ Messpunkten im Ortsbereich, die zur Rekonstruktion beitragen. \par 
+Die Kennlinie in Abbildung \ref{fig:coverage} zeigt, dass die Abdeckung des Ortsbereiches mit der steigenden Abweichung $\sigma$ um ungefähr 2\% pro \SI{}{\milli\metre} relativ zu jeder $\N_{\point}$ sinkt. Mit einer größeren Abweichung können viele von den manipulierten Positionen $(\hat{x}, \hat{y})$ außerhalb des Bildbereiches liegen, was zur Reduzierung der Abdeckung führt. \par
+% the effect of the coverage on the results
+Da der Effekt der mit der Positionsabweichung reduzierenden Abdeckung  vom Positionsfehler nicht abgekoppelt werden kann, muss dieser Effekt auch bei der Rekonstruktion handaufgenommener Messdaten berücksichtigt werden. \par
+%% FIG : coverage %%
+\begin{figure}[h!]
+\begin{center}
+\input{figures/BA_fig_posscan_coverage.tex}
+\caption[Abdeckung des Ortsbereiches]{Relative Anzahl der Messungen (hier als Abdeckung bezeichnet), die, in Abhängigkeit von der Standartabweichung $\sigma$ des Positionsfehlers und der Anzahl der Prüfstellen $\N_{\point}$, zur Rekonstruktion beitragen}
+\label{fig:coverage}
+\end{center}
+\end{figure}
+
+%%
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Exemplarische Rekonstruktionsergebnisse} \label{sec:posscan_recos}
+Einige Beispiele von der \gls{cscan} Darstellung der gewonnenen Rekonstruktionsdaten werden in der Abbildung \ref{fig:posscan_cimgs} dargestellt. 
+%% FIG : posscan cimgs %%
+\begin{figure}
+\centering
+\input{figures/BA_fig_posscan_cimgs.tex}
+\caption[C-Scan-Darstellung mit Positionsabweichungen]{\gls{cscan}-Darstellung der Rekonstruktionsergebnisse für verschieden große Fehler in der Messung der Abtastposition ($\sigma$) und Anzahl der aufgenommenen Messwerte ($\N_{\point}$)}
+\label{fig:posscan_cimgs}
+\end{figure}
+%%
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Auswertung} \label{sec:posscan_evaluation}
+Die Abbildung \ref{fig:posscan_mse} stellt die modifizierten \acrshort{rmse} Werte der gewonnenen Rekonstruktionsergebnissen mit der Abhängigkeit von der Standardabweichung $\sigma$ und der Anzahl der Prüfstellen $\N_{\point}$ dar. Die genauen Werte für die ausgewählten $\sigma$ sind auch in der Tabelle  \ref{table:posscan_mse} zu finden. \par
+% description on the graph : sigma
+Bei allen $\N_{\point}$ ist ein ähnlicher Verlauf über $\sigma$ zu beobachten: der \acrshort{rmse} bleibt bis $\sigma = 0.1 \lambda$ kaum verändert und ab dann fängt die Steigung an. Bis $\sigma = \lambda$ ist die Steigung steil und danach verlangsamt sie sich. Ungefähr ab 1.5 $\lambda$ nähert sich die Steigung an 0 an und es zeigt sich, dass der Kennlinienverlauf stationär wird.\par
+% details : sigma = 0
+Der \acrshort{rmse} ist selbst mit $\sigma = 0$, also ohne Fehler, nicht gleich 0, da die gewonnenen Ergebnisse mit den Referenzdaten in der Abbildung \ref{fig:reference_data} verglichen werden. Allerdings können auch die oben genannten Faktoren wie der Quantisierungsfehler oder die Verschlechterung der Abdeckung beim \acrshort{rmse} von $\sigma = 0$ beobachtet werden. Mit der $\N_{\point} = 1600$ entspricht der \acrshort{rmse} dem Quantisierungsfehler und der durch die fehlende Abdeckung verursachte Unterabtastung, während mit kleineren $\N_{\point}$ dazu noch der Effekt der reduzierenden Abdeckung zu erkennen ist. Mit kleineren $\N_{\point}$ kann der Ortsbereich nicht mehr vollständig abgetastet werden, von daher ist die dadurch resultierende Artefaktenbildung, die in der Abbildung \ref{fig:posscan_cimgs} dargestellt ist, auch nicht vermeidbar. Aus diesen Gründen sind die Anfangswerte des \acrshort{rmse}s bei dieser Simulation allgemein hoch. \par  
+% details : sigma = 0... 0.1 lambda
+Der anfänglich gleichbleibende Verlauf kann in unserem Fall so interpretiert werden, dass die positionelle Abweichung innerhalb von $0.1 \lambda$ die Messdaten kaum beeinflusst und deshalb bezüglich der Abbildungsqualität der Rekonstruktion vernachlässigbar ist. \par 
+% details : sigma > 0.1 lambda
+Die Steigung des \acrshort{rmse} ab $\sigma > 0.1 \lambda$ ist bei allen $\N_{\point}$ zu beobachten, jedoch ist die Steigung steiler bei größeren $\N_{\point}$. Dieses Verhalten kann mit der sinkenden Abdeckung des Ortsbereiches zusammenhängen. Bei $\N_{\point} = 1600$ ist die Abdeckung bei $\sigma =$ \SI{2}{\milli\metre} von ca. 98\% auf 94\% gesunken, während diese bei $\N_{\point} = 160$ nur von 9.8\% auf 9.4\% abgenommen hat. Hier kann festgestellt werden, dass der Effekt der mit der Positionsabweichung reduzierenden Abdeckung auf die Abbildungsqualität der Rekonstruktion deutlich zu erkennen ist. \par
+% MSE krit
+Durch den Vergleich von den \acrshort{rmse} Werten und den \glspl{cscan} in der Abbildung \ref{fig:posscan_cimgs} kann man feststellen, dass ein \acrshort{rmse} Wert von bis zu 0.5 bei unserem Modell eine Abbildungsqualität sichert, mit der alle Streuer detektiert werden können. Hier wird das als \acrshort{rmsekrit} benannt. Mit $\N_{\point} = 160$ erreicht den $\rmse^{\dagger}_{\krit} = 0.5$ bereits bei $\sigma =$ \SI{0.48}{\milli\metre}, was allerdings kleiner als das Abtastintervall $\dx$, $\dy$ in unserem Fall ist, währenddessen mit 400 Prüfstellen der \acrshort{rmsekrit} erst bei $\sigma =$ \SI{1}{\milli\metre} überschritten wird (Tabelle \ref{table:posscan_mse_krit}). Wie die Kennlinie in Abbildung \ref{fig:posscan_mse} zeigt, kann mehr örtliche Abweichung toleriert werden, wenn die Anzahl der Prüfstellen steigt, bzw. die Abdeckung des Ortsbereiches verbessert wird.  
+
+\begin{figure}[h!]
+\begin{center}
+\inputTikZ{1.2}{figures/pytikz/1D/mse_posscan.tex}
+\caption[RMSE$^{\dagger}_{\krit}$ Auswertung des Positionsfehlers]{Verlauf des \acrshort{rmse} in Abhängigkeit der Standartabweichung $\sigma$ des Positionsfehlers sowie der Anzahl der Prüfpositonen $\N_{\point}$}
+\label{fig:posscan_mse}
+\end{center}
+\end{figure}
+
+\input{tables/table_posscan_mse.tex}
+
