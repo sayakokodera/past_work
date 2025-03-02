@@ -1,0 +1,472 @@
+\documentclass[14pt,compress,aspectratio=169]{beamer} % selection of font size = 9, 10, 11, 12, 14, ....pt
+
+
+% specify the language of the document here
+%
+\newcommand\setslidelanguage{english}
+%\newcommand\setslidelanguage{german}
+
+%
+% this flag turns on a basic Fraunhofer CI overwrite
+% this just changes colors atm, types and more convenient
+% theme handling have to be added
+%
+%\newcommand\setslidetheme{tui} % - alpha
+%\newcommand\setslidetheme{tuiiis} % - alpha
+\newcommand\setslidetheme{tuiizfp} % - alpha
+%\newcommand\setslidetheme{iis} % - alpha
+%\newcommand\setslidetheme{iistui} % - alpha
+%\newcommand\setslidetheme{izfp} % - alpha
+%\newcommand\setslidetheme{izfptui} % - alpha
+
+
+%
+% load header with all includes
+%
+\input{header_files/header_beamer}
+
+
+%
+% your settings and includes go here
+%
+%%%% bibliography %%%%%
+\usepackage{url}
+\usepackage{natbib} % required for the citation example
+\usepackage{bibentry} % required for the citation example
+%
+\nobibliography* % required for the citation example
+\bibliographystyle{plain}
+
+\input{header_files/newcommands.tex}
+\input{header_files/set_color.tex}
+\input{header_files/tikzstyles.tex}
+\input{header_files/mathoperators.tex}
+
+
+% PDF-options
+\title{Iterative SAFT Reconstruction for Manually Acquired Ultrasonic Measurement Data in Nondestructive Testing} 
+\subtitle{CSP Research Project 19SS}
+\institute{\foreignlanguage{german}{Technische Universität Ilmenau}}
+\author{Sayako Kodera}
+\date{Aug.07.2019}
+
+% beamer goto-button setup
+\setbeamercolor{button}{fg=white,bg=blue}
+\renewcommand{\beamergotobutton}[1]{%
+    \begingroup% keep color changes local
+    \setbeamercolor{button}{fg=white, bg=tui_orange}%
+    \beamerbutton{\insertgotosymbol#1}% original definition
+    \endgroup
+    }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%================================= tips to use beamer ======%
+
+% \uncover<page-> = the text will be covered (so displayed in light colors) for the particular pages of the slide
+% \ony<page-> = the text/images will be hidden for the particular pages of the slide
+% \footnotetext[number] = text for footnote wirh the givien "number"
+% \footnotemark = displays the mark (i.e. nuber) of the footnote
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+% display only logos but no contact info in footline
+\setbeamertemplate{footline}[light]
+% print title slide
+\begin{frame}[noframenumbering] % noframenumbering prevents the framecounter from increasing for this single slide
+ 	\titlepage
+\end{frame}
+
+% small footline for more content
+\setbeamertemplate{footline}[shrunkplain]
+%\begin{frame}[noframenumbering] % noframenumbering prevents the %framecounter from increasing for this single slide
+%	\frametitle{Table of contents}
+%	\vfill
+% 	\tableofcontents[part=1]
+%\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part{content}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Sec. 1.1 %%%%%
+\section{Background}
+
+\subsection{Measurement Assistance System} 
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Measurement Assistance System}
+%\fontsize{10pt}
+%======================================== content =====%
+	\begin{columns}[t]	
+	% Text part
+	\begin{column}{0.48\textwidth}	
+	\vspace{\topsep}
+	\hspace*{-0.3cm} \textbf{Features}:
+	\vspace*{-0.5cm}
+		\begin{itemize}
+		\item Position recognition
+		\item Data recording
+		\item Data visualization
+		\item Post-processing
+		\end{itemize}
+	%	
+	\vspace*{0.3cm}
+	\textbf{Problem}: Systematic errors\\
+	\hspace*{0.3cm} e.g. tracking error 
+	\end{column}	
+	%
+	% Image part
+	\begin{column}{0.52\textwidth}
+		\begin{overprint} 
+		\centering
+		\vspace*{-0.5cm}
+		\only<1>{
+		\inputTikZ{0.6}{figures/SmartInspect_2D.tex}
+		}
+		\only<2->{
+		\inputTikZ{0.6}{figures/tracking_error_2D.tex}
+		}
+		\end{overprint}
+	\end{column}
+	\end{columns}	
+	
+%===================================================%
+\end{frame}
+
+
+\subsection{Impact of Position-Inaccuracy} 
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Impact of Position-Inaccuracy} 
+%\fontsize{10pt}
+%======================================== content =====%
+	%%=======  Left =======%%%
+%	\begin{textblock}{50}(20, 25) %-> using textblock avoid shifting of figures b/w slides
+%		\only<1-2>{
+%		%\vspace*{10cm}
+%		%\centering	
+%		\includegraphics[scale=1.2]{images/das_3.pdf}
+%		}
+%	\end{textblock}
+	%
+	\begin{textblock}{50}(10, 22)
+	\centering
+	\begin{overprint}
+		% B-Scan ref
+		\only<1>{
+		\textbf{Correct positions}\\
+		\imgbothlabels{1.45}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/iterative_GD/BScan_190815.png}\\
+		% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+		% Reco ref
+		\only<2>{
+		\textbf{Correct positions}\\
+		\imgbothlabels{1.45}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/iterative_GD/Reco_auto_190815.png}\\
+		% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+	\end{overprint}
+	\end{textblock}
+	%
+	%
+	%%======= Right =======%%%
+	\begin{textblock}{50}(85, 22)
+	\centering
+	\begin{overprint}
+		%\centering	 -> do not use this! cause horizontal shifting b/w slides!!
+%		% B-Scan ref
+%		\only<1>{
+%		\textbf{Correct positions}\\
+%		\imgbothlabels{1.45}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/iterative_GD/BScan_190815.png}\\
+%		% <scale size>, <label font size>, <tick font size>, <png file name>
+%		}
+%		% B-scan track
+%		\only<2>{
+%		\textbf{Incorrect positions}\\
+%		\imgbothlabels{1.45}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/iterative_GD/BScan_track_190815_lambda.png}\\
+%		% <scale size>, <label font size>, <tick font size>, <png file name>
+%		}
+		% B-scan track
+		\only<1>{
+		\textbf{Incorrect positions}\\
+		\imgbothlabels{1.45}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/iterative_GD/BScan_track_190815_lambda.png}\\
+		% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+		% Reco track
+		\only<2>{
+		\textbf{Incorrect positions}\\
+		\imgbothlabels{1.45}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/iterative_GD/Reco_track_190815_lambda.png}\\
+		% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+	\end{overprint}
+	\end{textblock}
+	
+%===================================================%
+\end{frame}
+
+
+\subsection{Objective and Contributions}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Objective and Contributions}
+%======================================== content =====%
+	%%========= Left: Text =========%%
+	\begin{textblock}{80}(10, 25) %-> using textblock avoid shifting of figures b/w slides
+	\textbf{Objective} 	
+	\begin{itemize}
+		\item Artefacts reduction
+	\end{itemize}
+	\vspace*{0.2cm}
+	
+	\textbf{Contributions}
+	\begin{itemize}
+		\item Spatial approximation of the reconstruction matrix
+		\item Iterative method to correct the positional information
+	\end{itemize}
+	\end{textblock}
+	
+	%%========= Right: Image =========%%
+	\begin{textblock}{50}(95, 25)
+	\centering
+	\begin{overprint}
+	% Reco track
+	\only<1>{
+	\imgbothlabels{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/iterative_GD/Reco_track_190815_lambda.png}\\
+	}
+	% Reco opt
+	\only<2>{
+	\imgbothlabels{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/iterative_GD/Reco_opt_190815_lambda.png}\\
+	}
+	\end{overprint}
+	\end{textblock}
+	
+%===================================================%	
+\end{frame}
+
+\section{Method}
+\subsection{Iterative Update}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Iterative Matrix Improvement} 
+%======================================== content =====%
+	\textbf{Spatial approximation}
+		\begin{itemize}
+		\item 1st order Taylor approximation
+		\end{itemize}
+	%
+	\textbf{Iterative position correction}
+		\begin{itemize}
+		\item Solving the least squares problem
+		\item Update the positional information $\xhat$ $\rightarrow$ $\xopt$
+		\end{itemize}
+	%
+	\textbf{Evaluation criterion}
+		\begin{itemize}
+		\item Error correction $\xdeltaopt = x - \xopt$
+		\item Approximation quality $\SEdag =$ $0$ ... $1$
+		\end{itemize}
+%===================================================%		
+\end{frame}
+
+
+\section{Results}
+
+\subsection{Results: Error Correction}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Results: Error Correction} 
+%======================================== content =====%
+	%%% Positions
+	\begin{textblock}{70}(10, 20)
+		% Positions
+		\only<1-2>{Variables: $|s_{x} - x| $, $\xdelta$\\}
+		\only<3>{$|s_{x} - x| = $ \SI{1}{\milli \metre} $\hat{=}$ $0.8 \lambda$\\}
+		\only<4>{$|s_{x} - x| = $ \SI{2.5}{\milli \metre} $\hat{=}$ $1.98 \lambda$\\}
+		\only<5>{$|s_{x} - x| = $ \SI{5}{\milli \metre}\\}
+		%
+		\centering
+		% Measurement
+		%\inputTikZ{1}{figures/measurement_animmation.tex}\\
+		\measanimate{1}{2-}{3}{4}{5}\\ 
+		% <scale size>, <slide page for base pulse>, <slide page for highlighting the pulse 1mm away>, <slide page for highlighting the pulse 2.5mm away>, <slide page for highlighting the pulse 5mm away>
+		%
+		\cigray{Wavelength $\lambda$ = \SI{1.26}{\milli \metre}}
+	\end{textblock}
+	%
+	%%% Results
+	\begin{textblock}{80}(70, 25)
+		\centering
+		% errmax_5lambda
+		\gdpeanimate{1}{\small}{\normalsize}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_pe_1mm_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_pe_2_5mm_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_pe_5mm_away.tex}
+	\end{textblock}	 
+%===================================================%		
+\end{frame}
+
+
+\subsection{Results: SE}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Results: A-Scan Approximation} 
+%======================================== content =====%
+	%%% Positions
+	\begin{textblock}{70}(10, 20)
+	% Positions
+	\only<1>{$|s_{x} - x| = $ \SI{1}{\milli \metre} $\hat{=}$ $0.8 \lambda$\\}
+	\only<2>{$|s_{x} - x| = $ \SI{2.5}{\milli \metre} $\hat{=}$ $1.98 \lambda$\\}
+	\only<3>{$|s_{x} - x| = $ \SI{5}{\milli \metre}\\}
+	%
+	\centering
+	% Measurement
+	%\inputTikZ{1}{figures/measurement_animmation.tex}\\
+	\measanimate{1}{1-}{1}{2}{3}\\ 
+	% <scale size>, <slide page for base pulse>, <slide page for highlighting the pulse 1mm away>, <slide page for highlighting the pulse 2.5mm away>, <slide page for highlighting the pulse 5mm away>
+	%
+	\cigray{Wavelength $\lambda$ = \SI{1.26}{\milli \metre}}
+	\end{textblock}
+	%	
+	% Results
+	\begin{textblock}{80}(70, 25)
+	\centering
+	%errmax_5lambda
+	\gdseanimate{1}{\small}{\normalsize}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_se_1mm_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_se_2_5mm_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_se_5mm_away.tex}
+	\end{textblock}	 	 
+%===================================================%		
+\end{frame}
+
+
+\subsection{Results: Reconstruction} 
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Results: Reconstruction} 
+%\fontsize{10pt}
+%======================================== content =====%
+	%%=======  Left: B-Scan =======%%%
+	\begin{textblock}{75}(10, 22)
+	\centering
+	\begin{overprint}
+		% B-Scan ref
+		\only<1>{
+		\textbf{No tracking error}\\
+		\imgbothlabels{1.45}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/iterative_GD/BScan_190815.png}\\
+		% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+		% B-Scan track
+		\only<2>{
+		\textbf{With $\xdelta = $ \SI{1.26}{\milli \metre}}\\
+		\vspace*{0.1cm}
+		\imgbothlabels{1.45}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/iterative_GD/BScan_track_190815_lambda.png}\\
+		% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+		% B-Scan opt
+		\only<3->{
+		\textbf{After position correction}\\
+		\imgbothlabels{1.45}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/iterative_GD/BScan_opt_190815_lambda.png}\\
+		% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+	\end{overprint}
+	\end{textblock}
+	%
+	%
+	%%======= Right: Reco =======%%%
+	\begin{textblock}{75}(85, 22)
+	\centering
+	\begin{overprint}
+		\textbf{Reconstruction}\\
+		% Reco ref
+		\only<1>{
+		\imgbothlabels{1.45}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/iterative_GD/Reco_auto_190815.png}\\
+		% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+		% Reco track
+		\only<2>{
+		\imgbothlabels{1.45}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/iterative_GD/Reco_track_190815_lambda.png}\\
+		% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+		% Reco opt
+		\only<3>{
+		\imgbothlabels{1.45}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/iterative_GD/Reco_opt_190815_lambda.png}\\
+		% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+	\end{overprint}
+	\end{textblock}
+	
+%===================================================%
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Sec. 4 %%%%
+\section{Summary} 
+
+\subsection{Conclusion}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+\frametitle{Conclusion}
+%\vspace*{1cm}
+%\footnotesize
+%======================================== content =====%
+	\begin{table}
+	\LARGE
+	\begin{center}
+		\inputTable{0.96\textwidth}{tables/table_conclusion.tex}
+	\end{center}
+	\end{table}
+%===================================================%
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Bibliography %%%%%
+\bibliography{main}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Backup %%%%%
+\appendix
+\backupbegin
+\section{Appendix}
+
+\subsection{Appendix Start}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	%\frametitle{ } 
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	\centering
+	\huge Appendix
+	%===================================================%
+\end{frame}
+
+\input{appendix.tex} 
+
+\backupend
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

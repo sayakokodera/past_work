@@ -1,0 +1,33 @@
+%%% Intro %%%
+%% General idea
+% (a)
+% Prob(a) : there is a gam b/w automatic & manual UT
+% Goal(a) : reduce the gap
+% Sol(a) : assistance system -> enables post-processing
+% (b)
+% Prob(b): conventional reco does not work well w/ manual UT data due to the systematic errors (e.g. tracking error)
+% Goal(b): reduce the effect of the tracking error
+% Sol(b): correct positions and adjust the reco systems accordingly
+
+%% (1) Background / context
+% UT -> Prob(a)
+Ultrasonic testing (UT) is a nondestructive testing method to inspect structure of test objects without inducing damage. Conventionally, an UT inspection requires either manual operation by a human technician or automated measurement systems. In manual UT, where a human technician observes the change in the echoed pulse, its inspection quality is highly dependent on the expertise of the technician \cite{Cawley01IMechE}. In automatic UT, on the other hand, measurement data and the corresponding scan positions are recorded, which enables to visualize the inner structure of the test object and further process the data to improve the imaging quality, leading to more reliable inspection quality than its manual counterpart. \par
+
+% Goal(a) -> Sol(a)
+Nevertheless, there are still needs for manual UT, when, for instance, a complex structure is inspected, and its inspection reliability has been of great concern. In order to improve the inspection reliability of manual UT, an assistance system can be employed, which records measurement data and recognizes the scan positions through a tracking system. This allows us not only to visualize the measurement data but also to process it further for the better imaging quality \cite{Krieg18SHMNDT}. \par
+
+% Post-processing/ SAFT
+Although their application to manual UT data has been typically excluded, several post-processing techniques have been developed and extensively employed for automatic UT data \cite{Hall88} \cite{Krautkraemer90} \cite{Ericsson98ECNDDT}. While the authors of \cite{Ericsson98ECNDDT} apply the signal processing methods widely used in the telecommunication field to the UT data, one of the well established post-processing method is the synthetic aperture focusing technique (SAFT) \cite{Hall88} \cite{Krautkraemer90}. The aim of SAFT is to improve the spatial resolution through performing superposition with respect to the propagation time delay \cite{Lingvall04PhD}. In other words, SAFT regards the measurement region-of-interest (ROI) as a single aperture and each measurement as its spatial sampling, which indicates that the SAFT reconstruction requires accurate positional information. \par
+
+%% (2) Problem statement 
+% Prob(b) -> Goal(b)
+However, the application of such techniques to manual UT data is so far little studied \cite{Mayer16SAFTwithSmallData} \cite{Krieg18SHMNDT}. The authors of \cite{Krieg18SHMNDT} demonstrate the possibilities of utilizing post-processing with manual measurement data, yet the reconstruction quality is, compared to the reconstruction results of automatic measurement data, significantly degraded. Previously, we identified the possible error sources for such degradation and revealed that several systematic errors, such as varying contact pressure or inaccurate positional information due to the tracking error, can lead to strong artefacts formation \cite{Krieg19IUS}. Since such errors are inevitable in manual measurement, finding the way to reduce those artefacts could improve the reconstruction quality. Unlike other possible error factors which should be entirely estimated from the measurement data, the tracking error can be handled to some extent, as the positional information is, whether accurate or not, available. \par
+
+%% (3) Respons
+% Sol(B) + contributions
+Our goal in this study is to reduce the position-inaccuracy induced artefacts by correcting the measurement positions and adjusting the reconstruction system accordingly. So far, we are unaware of any other works that deal with this topic. However, expressing the reconstruction process mathematically enables us to approximate the correct model with regard to measurement positions, whereas the traditional regression approaches provide us a tool to estimate the tracking error from the available information. As a possible solution for proper handling of positional inaccuracy, we propose an iterative method combining these mathematical tools, which can be incorporated into reconstruction system. \par
+%
+%\cite{Hall88} 
+%In order to approximate the correct model, we derive the spatial approximation of the SAFT reconstruction matrix and implement an iterative method to estimate the positional error and correct the position for assuring the approximation quality. 
+% expressing the reconstruction process mathematically enables us to approximate the correct model with regard to measurement positions
+% Our goal in this study is to find a method to properly handle positional inaccuracy for SAFT reconstruction. 

@@ -1,0 +1,51 @@
+% Description on pulse-echo model
+% General assumptions
+For a measurement setup, we consider a manual contact testing where a handheld transducer is placed directly on the specimen surface at a position $\pp \in \RR^{\K}$.% as depicted in Fig. \ref{fig:pulseecho}. 
+The transducer inserts an ultrasonic pulse $h(t)$ into a specimen and receives the reflected pulse, A-Scan,  $\ascan_{\pp} (t)$ at the same position $\pp$. The specimen is assumed to be homogenous and isotropic with the constant speed of sound $c_0$ and have a flat surface. During the measurement, the contact pressure is considered to be constant so that in the measurement data there is no temporal shift or amplitude change caused by improper coupling. The measurement position $\pp$ is arbitrarily selected on the specimen surface and we suppose that there is at least one scatterer inside the specimen, which is regarded as point source. \par
+
+% Convolution model
+The measured A-Scan $\ascan_{\pp} (t)$ can be considered as a convolution of the inserted pulse and the reflectivity of the specimen
+\begin{equation} \label{eq:ascan_base}
+\ascan_{\pp} (t) = \pulse (t) \ast \reflectivity (t) + n(t).
+\end{equation}
+$\reflectivity (t)$ denotes the reflectivity of the specimen and $n(t)$ the additive measurement noise, respectively, which is assumed to be zero-mean i.i.d. Gaussian noise with variance $\sigma_{N}^2$. \par
+
+% Pulse model
+Conventionally, the inserted pulse $\pulse (t)$ is modeled as a real-valued Gabor function \citep{GaborAsymmChirp}, as
+\begin{equation} \label{eq:pulse}
+\pulse (t) = e^{- \alpha t^2} \cdot \cos (2 \pi f_C t + \phi),
+\end{equation}
+where $f_C$, $\alpha$  and $\phi$ are the carrier frequency, the window width factor and the phase, respectively.\par
+
+% Reflectivity as delta pulse
+Since we consider the scatterers as point sources, the reflectivity $\reflectivity (t)$ can be expressed as a sum of time-shifted delta for all $\I$ scatterers as
+\begin{equation} \label{eq:reflectivity}
+\reflectivity (t; \tau) = \sum_{i = 1}^{I} \refcoeff_{\pp, i} \cdot \delta (t - \tau_{i}).
+\end{equation}
+$\refcoeff_{\pp, i}$ is the reflection coefficient for the position $\pp$ and a scatterer $s_i$, whereas $\tau_{i}$ is the time-of-flight (ToF) which the ultrasonic pulse needs to travel for way forth and back from $\pp$ to $s_i$. 
+% ToF
+The ToF can be obtained with 
+\begin{equation} \label{eq:tof}
+\tau_{i}(\pp) = \frac{2}{c_0} \cdot \norm{\scatterer_{i} - \pp }_{2},
+\end{equation}
+where $\norm{\scatterer_{i} - \pp }_{2}$ the $\ell$-2 norm of $\scatterer_{i}$ and $\pp$. Eq. \eqref{eq:tof} shows that the ToF depends on the position of both measurement and the scaterrer, resulting in the reflectivity as a function of time $t$ and position $\pp$ as well.  \par
+
+% A-Scan = time-shifted pulse
+By inserting \eqref{eq:reflectivity} into \eqref{eq:ascan_base}, we obtain the A-Scan as the time-shifted input pulse as
+\begin{equation} \label{eq:ascan_conv}
+\ascan (t; \pp) = \sum_{i = 1}^{I} \refcoeff_{\pp, i} \cdot \pulse (t - \tau_{i} (\pp) ) + n(t).
+\end{equation}
+Since we process the data digitally with the sampling interval of $\dt = \frac{1}{f_S}$, \eqref{eq:ascan_conv} becomes
+\begin{equation} \label{eq:ascan_discrete}
+\ascan (t; \pp) = \sum_{m = 1}^{\M} \sum_{i = 1}^{\I} \refcoeff_{\pp, i} \cdot \pulse (m \dt - \tau_{i} (\pp) ) + n(m \dt),
+\end{equation}
+where $\M$ is the number of temporal samples. \par
+
+% Fig: measurement setup
+%\begin{figure}
+%\begin{center}
+%\inputTikZ{0.8}{figures/pulse_echo_2D.tex}
+%\caption{Measurement setup ***"Transducer" cannot be added to the figure $\rightarrow$ why??"***}
+%\label{fig:pulseecho}
+%\end{center}
+%\end{figure}

@@ -1,0 +1,596 @@
+%%% Appendix %%%
+\subsection{Parameters (1)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	\frametitle{Parameters w.r.t. Test Object}
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	\centering
+	\begin{table}
+	\begin{center}
+		\inputTable{0.85\textwidth}{tables/table_constant_params_EN.tex}
+	\end{center}
+	\end{table}
+	%===================================================%
+\end{frame}
+
+
+\subsection{Parameters (2)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	\frametitle{Parameters w.r.t. Pulse}
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	\centering
+	\begin{columns}
+	% table
+	\begin{column}{0.5\textwidth}
+	\begin{table}
+	\begin{center}
+		\inputTable{1\textwidth}{tables/table_constant_params_pulse_EN.tex}
+	\end{center}
+	\end{table}
+	\end{column}
+	% FIG : Gabot
+	\begin{column}{0.5\textwidth}
+	\inputTikZ{0.6}{figures/Gabor_pulse.tex}
+	\end{column}
+	\end{columns}	
+	%===================================================%
+\end{frame}
+
+\subsection{Motivation}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Reconstructing UT Data}
+%======================================== content =====%
+	%%% autom = Muse %%%
+	\only<1>{
+	Automatic measurement\\
+	
+	\vspace*{0.5cm}
+	\centering
+	\begin{columns}[c]	
+	% Data
+	\begin{column}{0.5\textwidth}
+		\centering
+		Measurement data\footnotemark \addtocounter{footnote}{-1} \\  \vspace*{0.1cm} 
+		\inputTikZ{0.8}{figures/Krieg_18SHMNDT/reference_reco_data.tex}
+	\end{column}	
+	% Reco
+	\begin{column}{0.5\textwidth}
+		\centering
+		 SAFT Reconstruction\footnotemark \addtocounter{footnote}{-1} \\ \vspace*{0.1cm}
+		\inputTikZ{0.8}{figures/Krieg_18SHMNDT/reference_reco_reco.tex}
+	\end{column}	
+	\end{columns}	
+	}
+	
+	%%% manual = aviation SCAN 5-3 %%%
+	\only<2>{
+	Manual measurement\\
+	
+	\centering
+	\begin{columns}[t]	
+	% Data
+	\begin{column}{0.5\textwidth}
+		\centering
+		Measurement data\footnotemark \addtocounter{footnote}{-1} \\ \vspace*{0.3cm} %\hspace*{0.3cm}
+		\inputTikZ{0.7}{figures/Krieg_18SHMNDT/aviation_SCAN5_3_data_gauss_2.tex}
+	\end{column}
+	% Reco
+	\begin{column}{0.5\textwidth}
+		\centering
+		SAFT Reconstruction\footnotemark \\ \vspace*{0.3cm}
+		\inputTikZ{0.7}{figures/Krieg_18SHMNDT/aviation_SCAN5_3.tex}
+	\end{column}	
+	\end{columns}	
+	}	
+	%\vspace*{0.3cm}
+	% footnote
+	\only<1>{
+	\footnotetext[1]{F. Krieg et al., SAFT processing for manually acquired ultrasonic measurement data with 3D SmartInspect, \textsl{SHM-NDT}, 2018}
+	}
+%===================================================%	
+\end{frame}
+
+
+\subsection{Previous Work}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Impact of Systematic Errors}
+%======================================== content =====%
+%%% positional error from BA %%%
+%\centering
+\begin{columns}[t]
+	%% % Left: Text %%%
+	\begin{column}{0.5\textwidth}
+	\textbf{Vertical shift}
+		\begin{itemize}
+		\item High impact
+		\item No accessible information \\
+				$\rightarrow$ only estimation through data
+		\end{itemize}
+	\textbf{Positional inaccuracy}
+		\begin{itemize}
+		\item Less impact
+		\item Critical when sparsely scanned
+		\item Information available
+		\end{itemize}
+	\end{column}
+	
+	%%% Right: Image %%%
+	\begin{column}{0.5\textwidth}
+	%\vspace*{-0.3cm} 
+	\centering
+	\only<1>{
+	% "Automatic" measurement
+	\small Equidistant 1600 positions\\
+	\small Without systematic errors\\
+	\vspace*{0.02cm} % because SI in other parts caue vertical shift
+	}
+	\only<2>{
+	% Zscan error 1
+	\small Equidistant 1600 positions\\
+	\small Vertical shift $=$ \SI{0.3}{\milli\metre} $(0.24 \lambda)$\\
+	}
+	\only<3>{
+	% Position error  1 -> better with lambda?
+	\small 1600 random positions\\
+	\small Positional error $=$ \SI{2}{\milli\metre} $(1.6 \lambda)$\\
+	}
+	\only<4>{
+	% Position error 2
+	\small 160 random positions\\
+	\small Positional error $=$ \SI{2}{\milli\metre} $(1.6 \lambda)$\\
+	}
+	\vspace*{0.1cm}
+	% Image
+	\begin{overprint} % to keep the figures in the place! 
+	\only<1>{
+	\cimgbothlabels{0.65}{\small}{\small}{figures/pytikz/2D/texpngs/grid/cimg_reco_max_oa_0.png}
+	}
+	%
+	\only<2>{
+	\cimgbothlabels{0.65}{\small}{\small}{figures/pytikz/2D/texpngs/zscan/oa_0_cimg_reco_max_030.png}
+	}
+	\only<3>{
+	\cimgbothlabels{0.65}{\small}{\small}{figures/pytikz/2D/texpngs/posscan/dr_np_5_cimg_max_sigma_400_00.png}
+	}
+	\only<4>{
+	\cimgbothlabels{0.65}{\small}{\small}{figures/pytikz/2D/texpngs/posscan/dr_np_2_cimg_max_sigma_400_00.png}
+	}
+	\end{overprint}
+	\end{column}	
+\end{columns}
+
+%===================================================%	
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Sec. 1.2 %%%%%
+
+
+\subsection{SAFT}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Post-processing Method} 
+%======================================== content =====%
+	Synthetic Aperture Focusing Technique (SAFT)
+	\begin{columns}[t]
+	% Text part
+	\begin{column}{0.48\textwidth}
+	\begin{center}
+		\begin{itemize}
+		\item Superposition according to propagation time delay
+		\item Spatial sampling of the specimen
+		\end{itemize}
+	\end{center}
+	\end{column}	
+	%	
+	% Image part
+	\begin{column}{0.52\textwidth}
+	\vspace*{-0.3cm}
+	\begin{center}
+		\only<1>{\inputTikZ{1.1}{figures/SAFT_superposition.tex}}
+		\only<2>{\inputTikZ{0.9}{figures/Synthetic_aperture.tex}}
+	\end{center}
+	\end{column}
+	%
+	\end{columns}	
+%===================================================%		
+\end{frame}
+
+\subsection{FWM}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{SAFT as Linear Transform} 
+%======================================== content =====%
+	% Defect map
+	\only<1>{
+	\textit{defect map} for ROI = \cihighlight{$\M \times \N_{x}$}\\
+	\centering
+	\inputTikZ{1.1}{figures/ROI_sketch.tex}
+	}
+	%
+	% Linear transform
+	\only<2->{
+	\textbf{Transform}: \textit{defect map} $\rightarrow$ A-Scan\\
+	\only<2>{
+	% Equation
+	\begin{equation*}
+	\ascanvec (\pp) = \SAFTp \cdot \defect + \noisevec
+	\end{equation*}\\ % "\\" avoids to shift the next text horizontaly
+	%
+	\vspace*{0.2cm}
+	% Description
+	\begin{itemize}
+	\item $\ascanvec (\pp)$: measured A-Scan at $\pp$ (\cihighlight{$\M$})
+	\item $\SAFTp$: SAFT matrix at $\pp$ (\cihighlight{$\M \times \LL = \M \times \M \N_{x}$})\\
+			Containing pulse information for $\scatterer_{l} = (x_i, z_j)$, $l = 1$...$\LL$
+	\item $\defect$: vectorized \textit{defect map} (\cihighlight{$\LL = \M \N_{x}$})
+	\item $\noisevec$: noise (\cihighlight{$\M$})
+	\end{itemize}
+	}
+	%
+	\only<3>{
+	% Equation
+	\begin{equation*}
+	\ascanvechat (\pp) = \SAFTp \cdot \defect 
+	\end{equation*}\\
+	%
+	\vspace*{0.2cm}
+	% Description
+	\begin{itemize}
+	\item $\ascanvechat (\pp)$: modeled A-Scan  at $\pp$ (\cihighlight{$\M$})
+	\item \cigray{$\SAFTp$: SAFT matrix at $\pp$ ($\M \times \LL$)\\
+			Containing pulse information for $\scatterer_{l} = (x_i, z_j)$, $l = 1$...$\LL$}
+	\item \cigray{$\defect$: vectorized \textit{defect map} ($\LL$)}
+	\end{itemize}
+	}
+	%
+	\only<4>{
+	% Equation
+	\begin{equation*}
+	\SAFTcol (\pp) = \SAFTp \cdot  \defect^{(l)}
+	\end{equation*}\\
+	%
+	\vspace*{0.2cm}
+	% Description
+	\begin{itemize}
+	\item $\SAFTcol (\pp)$: $l$-th column vector of $\SAFTp$ (\cihighlight{$\M$})
+	\item \cigray{$\SAFTp$: SAFT matrix at $\pp$ ($\M \times \LL$)\\
+			Containing pulse information for $\scatterer_{l} = (x_i, z_j)$, $l = 1$...$\LL$}
+	\item $\defect^{(l)}$: vectorized \textit{defect map} (\cihighlight{$\LL$})\\
+			Containing single non-zero element in $l$-th row
+	\end{itemize}
+	}
+	}
+	%
+%===================================================%		
+\end{frame}
+
+\subsection{Spatial Approximation}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Spatial Approximation of SAFT Matrix} 
+%======================================== content =====%
+	% SAFT as linear transformation : reference
+	\textbf{Transform}: \textit{defect map} $\rightarrow$ A-Scan  
+	\begin{equation*}
+	\SAFTcol (\pp) = \SAFTp \cdot \defect^{(l)}
+	\end{equation*}
+	\hspace*{5.2cm} \cihighlight{$\M$} \hspace*{0.8cm} \cihighlight{$\M \times \LL $} \hspace*{0.3cm} \cihighlight{$\LL$} \\
+	\vspace*{0.2cm}
+	%
+	% Goal
+	\only<1>{
+	\textbf{Goal}: spatial approximation of SAFT matrix
+	\begin{equation*}
+	\SAFTp \approx f \left( \SAFT (\pp + \ppdelta); \SAFTdot (\pp + \ppdelta); \ppdelta \right)
+	\end{equation*}
+	}
+	%
+	\only<2-4>{
+	% Non-linear transformation w.r.t. scan positions
+	\textbf{Transform}: scan position $\rightarrow$ A-Scan
+	% Local linearlity w/ Jacobian matrix
+	\only<2>{
+	\begin{equation*}
+	\SAFTcol (\pp) \approx \SAFTcol (\pp + \ppdelta) - \Jacobianpartial (\pp + \ppdelta)\cdot \ppdelta
+	\end{equation*}
+	\hspace*{3cm} \cihighlight{$\M$} \hspace*{1.5cm} \cihighlight{$\M$} \hspace*{1.7cm} \cihighlight{$\M \times \K $} \hspace*{0.9cm} \cihighlight{$\K$} \\
+	}
+	%
+	% w/ "Comprehensive" Jacobian matrix
+	\only<3>{
+	\begin{equation*}
+	\SAFTcol (\pp) \approx \SAFTcol (\pp + \ppdelta) - \vectorize^{-1}_{\M, \LL} \{ \Jacobian (\pp + \ppdelta)\cdot \ppdelta \} \cdot \defect^{(l)}
+	\end{equation*}
+	\hspace*{2cm} \cihighlight{$\M$} \hspace*{1.5cm} \cihighlight{$\M$} \hspace*{2.5cm} \cihighlight{$\M \LL \times \K $} \hspace*{0.9cm} \cihighlight{$\K$} \hspace*{0.5cm} \cihighlight{$\LL$} \\
+	}
+	%
+	% w/ approximated SAFT matrix
+	\only<4>{
+	\begin{equation*}
+	\SAFTp \cdot \defect_l \approx \left[ \SAFT (\pp + \ppdelta) - \vectorize^{-1}_{\M, \LL} \{ \Jacobian (\pp + \ppdelta) \cdot \ppdelta \} \right] \cdot \defect^{(l)}
+	\end{equation*}
+	\hspace*{1.1cm} \cihighlight{$\M \times \LL $} \hspace*{0.2cm} \cihighlight{$\LL$} \hspace*{1cm} \cihighlight{$\M \times \LL$} \hspace*{2.1cm} \cihighlight{$\M \LL \times \K $} \hspace*{0.9cm} \cihighlight{$\K$} \hspace*{0.5cm} \cihighlight{$\LL$} \\
+	}
+	}
+	\only<5>{
+	% Spatial approximation of SAFT matrix
+	\textbf{Spatial approximation of SAFT matrix}
+	% express vec^{-1} as Kronecker product
+	\begin{equation*}
+	\SAFTp \approx \SAFT (\pp + \ppdelta) - \vectorize^{-1}_{\M, \LL} \{ \Jacobian (\pp + \ppdelta) \cdot \ppdelta \} 
+	\end{equation*}
+	\hspace*{2.2cm} \cihighlight{$\M \times \LL $} \hspace*{0.8cm} \cihighlight{$\M \times \LL$} \hspace*{2.3cm} \cihighlight{$\M \LL \times \K $} \hspace*{0.6cm} \cihighlight{$\K$} \\
+	}
+	\only<6>{
+	% Spatial approximation of SAFT matrix
+	\textbf{Spatial approximation of SAFT matrix \cihighlight{$\pp =$  $[x, 0]$}} 
+	% express vec^{-1} as Kronecker product
+	\begin{equation*}
+	\SAFTx \approx \SAFT (x + \xdelta) - \vectorize^{-1}_{\M, \LL} \{ \Jacobian (x + \xdelta)\} \cdot \xdelta  
+	\end{equation*}
+	\hspace*{2.2cm} \cihighlight{$\M \times \LL $} \hspace*{0.8cm} \cihighlight{$\M \times \LL$} \hspace*{2.3cm} \cihighlight{$\M \LL \times 1 $} \hspace*{0.6cm} \cihighlight{$1$} \\
+	}
+	\only<7>{
+	% Spatial approximation of SAFT matrix in 2D
+	\textbf{Spatial approximation of SAFT matrix \cihighlight{$\pp =$  $[x, 0]$}}
+	% express vec^{-1} as Kronecker product
+	\begin{equation*}
+	\SAFTx \approx \SAFT (x + \xdelta) - \SAFTdot (x + \xdelta) \cdot \xdelta  
+	\end{equation*}
+	\hspace*{2.8cm} \cihighlight{$\M \times \LL $} \hspace*{0.8cm} \cihighlight{$\M \times \LL$} \hspace*{1.2cm} \cihighlight{$\M \times \LL $} \hspace*{0.6cm} \cihighlight{$1$} \\
+	}
+%===================================================%		
+\end{frame}
+
+
+\subsection{Inverse vec Operator}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+\frametitle{Inverse vec Operator}
+%\vspace*{1cm}
+%\footnotesize
+%======================================== content =====%
+	\begin{equation*}
+	\vectorize^{-1}_{\M, \LL} \{ \Jacobian (\pp + \ppdelta)\cdot \ppdelta \} = \left[ (\vectorize \{ \Identity_{\LL} \}^{\T} \otimes \Identity_{\M} \right] \cdot \left[ \Identity_{\LL} \otimes ( \Jacobian (\pp + \ppdelta)\cdot \ppdelta ) \right]
+	\end{equation*}
+%===================================================%
+\end{frame}
+
+
+\subsection{Iterative Update}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Iterative Matrix Improvement} 
+%======================================== content =====%
+	\only<1>{
+	1st order Taylor approximation of A-Scan \cihighlight{$\pp = [x, 0]$}\\
+	\begin{equation*}
+	\SAFTcol (x) \approx \SAFTcol (x + \xdelta) - \SAFTcoldot (x + \xdelta) \cdot \xdelta
+	\end{equation*}\\
+	%
+	% Problems
+	\textbf{Problems}:
+	\begin{itemize}
+	\item Acquisition of $\xdelta$
+	\item Limited validity range
+	\end{itemize}
+	%
+	\vspace*{0.2cm}
+	%
+	$\Rightarrow$ iterative estimation and correction of $\xdelta$\\
+	\begin{equation*}
+	\min_{\xdelta} \| \SAFTcol (x + \xdelta) - \SAFTcol (x) -  \SAFTcoldot (x + \xdelta) \cdot \xdelta \|_{2}
+	\end{equation*}
+	}
+	%
+	% Block diagram
+%	\only<3>{
+%	Iterative process\\
+%	\inputTikZ{1}{figures/blockdiagram_iterativeGD.tex} 
+%	}
+	%
+	% Animation
+	\only<2->{
+	\vspace*{-0.3cm}
+	% Figure part
+	Iterative estimation and correction of $\xdelta$
+	\begin{center}
+		\inputTikZ{1}{figures/GD_Positions.tex} % add p_opt!!!!!
+	\end{center}
+	%
+	\vspace*{-0.5cm}
+	% Text part
+	(1) Calculate $\SAFTcol (\xhat_{\optimized})$ \\
+	(2) Solve the least square problem and obtain $\xdeltaest$ \\
+	(3) Update $\xopt = \xopt - \xdeltaest$\\
+	\vspace*{0.1cm}
+	** Break, when $\| \SAFTcol (x) - \pulsevec_{l, \optimized} (\xopt ; \xdeltaopt ) \|_{2} \leq$ target
+	}
+%===================================================%		
+\end{frame}
+
+
+\subsection{Normalized Squared Error} 
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+\frametitle{Normalized Squared Error $\SEdag$}
+%\vspace*{1cm}
+%\footnotesize
+%======================================== content =====%
+	\begin{equation*}
+	\SEdag = \frac{ \| \gamma \aopt - \ascanvec \|_{2}}{\| \ascanvec \|_{2}}
+	\end{equation*}\\
+	%
+	\vspace*{0.5cm}
+	$\gamma$: normalization factor \\
+	\begin{equation*}
+	\gamma = \frac{\ascanvec^{\T} \cdot \aopt}{\aopt^{\T} \cdot \aopt}.
+	\end{equation*}
+%===================================================%
+\end{frame}
+
+
+
+\subsection{Effect of Error on A-Scan Modeling}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Effect of Error on A-Scan Modeling} 
+%======================================== content =====%
+	\centering
+	% Position illustration
+	\vspace*{-0.1cm}
+	\inputTikZ{0.8}{figures/Results_PositionIllustration.tex}\\
+	%
+	% Figures
+	\begin{overprint} % to keep the figures in the place! 
+	\only<1>{ % 7.5mm away
+	\seoffset{1}{\normalsize}{\normalsize}{figures/pytikz/1D/coordinates/se_offset_7_5mm_away.tex}
+	}
+	%
+	\only<2>{ % 5mm away
+	\seoffset{1}{\normalsize}{\normalsize}{figures/pytikz/1D/coordinates/se_offset_5mm_away.tex}
+	}
+	%
+	\only<3>{ % 1mm away
+	\seoffset{1}{\normalsize}{\normalsize}{figures/pytikz/1D/coordinates/se_offset_1mm_away.tex}
+	}	
+	\only<4>{ % half lambda away
+	\seoffset{1}{\normalsize}{\normalsize}{figures/pytikz/1D/coordinates/se_offset_halflambda_away.tex}
+	}	
+	\only<5>{ % 0mm away
+	\seoffset{1}{\normalsize}{\normalsize}{figures/pytikz/1D/coordinates/se_offset_0mm_away.tex}
+	}	
+	\end{overprint}		 
+%===================================================%		
+\end{frame}
+
+
+\subsection{Results: Error Correction}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Results: Error Correction} 
+%======================================== content =====%
+	\centering
+	% errmax_5lambda
+	\gdpe{1}{\normalsize}{\normalsize}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_pe_halflambda_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_pe_1mm_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_pe_2_5mm_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_pe_5mm_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_pe_7_5mm_away.tex}
+	%
+	% errmax_2lambda
+	%\gdpe{1}{\normalsize}{\large}{figures/pytikz/1D/coordinates/errmax_2lambda/gd_pe_halflambda_away.tex}{figures/pytikz/1D/coordinates/errmax_2lambda/gd_pe_1mm_away.tex}{figures/pytikz/1D/coordinates/errmax_2lambda/gd_pe_2_5mm_away.tex}{figures/pytikz/1D/coordinates/errmax_2lambda/gd_pe_5mm_away.tex}{figures/pytikz/1D/coordinates/errmax_2lambda/gd_pe_7_5mm_away.tex}
+	 
+%===================================================%		
+\end{frame}
+
+
+\subsection{Results: SE}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Results: A-Scan Approximation} 
+%======================================== content =====%
+	\centering
+	%errmax_5lambda
+	\gdse{1}{\normalsize}{\normalsize}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_se_halflambda_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_se_1mm_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_se_2_5mm_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_se_5mm_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_se_7_5mm_away.tex}
+	%
+	%errmax_2lambda	
+	%\gdse{1}{\normalsize}{\large}{figures/pytikz/1D/coordinates/errmax_2lambda/gd_se_halflambda_away.tex}{figures/pytikz/1D/coordinates/errmax_2lambda/gd_se_1mm_away.tex}{figures/pytikz/1D/coordinates/errmax_2lambda/gd_se_2_5mm_away.tex}{figures/pytikz/1D/coordinates/errmax_2lambda/gd_se_5mm_away.tex}{figures/pytikz/1D/coordinates/errmax_2lambda/gd_se_7_5mm_away.tex}
+			 
+%===================================================%		
+\end{frame}
+
+
+\subsection{SAFT reconstruction} 
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+\frametitle{SAFT reconstruction}
+%\vspace*{1cm}
+%\footnotesize
+%======================================== content =====%
+	% SAFT as linear transformation : reference
+	\only<1>{
+	% FWM: A-Scan
+	\textbf{FWM}: \textit{defect map} $\rightarrow$ A-Scan  
+	\begin{equation*}
+	\ascanvechat (\pp) = \SAFTp \cdot \defect
+	\end{equation*}
+	\hspace*{5.2cm} \cihighlight{$\M$} \hspace*{0.8cm} \cihighlight{$\M \times \LL $} \hspace*{0.3cm} \cihighlight{$\LL$} \\
+	\vspace*{0.2cm}
+	%
+	% FWM: B-Scan
+	\textbf{FWM}: \textit{defect map} $\rightarrow$ all A-Scans
+	\begin{equation*}
+	\vectorize \{ \Ascan \} = \SAFTcomp \cdot \defect
+	\end{equation*}
+	\hspace*{5.5cm} \cihighlight{$\LL$} \hspace*{0.8cm} \cihighlight{$\LL \times \LL $} \hspace*{0.3cm} \cihighlight{$\LL$} \\
+	\vspace*{0.2cm}
+	}
+	%
+	% SAFT as linear transformation : reference
+	\only<2>{
+	% FWM
+	\textbf{FWM}: \textit{defect map} $\rightarrow$ all A-Scans
+	\begin{equation*}
+	\vectorize \{ \Ascan \} = \SAFTcomp \cdot \defect
+	\end{equation*}
+	\hspace*{5.5cm} \cihighlight{$\LL$} \hspace*{0.8cm} \cihighlight{$\LL \times \LL $} \hspace*{0.3cm} \cihighlight{$\LL$} \\
+	\vspace*{0.2cm}
+	%
+	% Reco
+	\textbf{Reconstruction}: all A-Scans $\rightarrow$ reconstructed \textit{defect map}
+	\begin{equation*}
+	\tilde{\defect} = \SAFTcomp^{\T} \cdot \vectorize \{ \Ascan \} 
+	\end{equation*}
+	\hspace*{5cm} \cihighlight{$\LL$} \hspace*{0.4cm} \cihighlight{$\LL \times \LL $} \hspace*{0.3cm} \cihighlight{$\LL$} \\
+	\vspace*{0.4cm}
+	}
+%===================================================%
+\end{frame}

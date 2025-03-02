@@ -1,0 +1,93 @@
+%%% simulation %%%
+% Short intro
+Performance of the proposed method was examined through simulations where we applied the algorithm presented in \ref{sec:iterative_GD} to simulated data sets. The goal of the simulations was to illustrate the error sensitivity of the proposed method, which can ultimately lead us to determine how we should incorporate our method into reconstruction process.
+
+% Parameters
+\subsection{Assumptions and Test Parameters} 
+For the simulations we chose an aluminum object for which we set the same assumptions as we described in Sec.\ref{sec:pulse_echo}. For the sake of simplicity, the measurement data is regarded as noise free. Our ROI contains one scatterer and is a part of the test object where back and side wall echoes can be neglected. In order to illuminate the position-dependency of the results, the transducer is assumed to be ominidirectional. Table \ref{tab:params}  provides a summary of the test parameters.
+
+% Param table
+\begin{table}
+\begin{center}
+\input{tables/table_params.tex}
+\caption{Summary of the test parameters for the simulations}
+\label{tab:params}
+\end{center}
+\end{table}
+
+% Fig: positions
+\begin{figure}
+\centering
+\inputTikZ{0.8}{figures/GD_ScanPositions.tex}
+\caption{Illustration of the measurement positions used for the simulation \rom{1} in relation to the scatterer position $s_{x}$}
+\label{fig:GD_positions}
+\setlength{\belowcaptionskip}{-10pt} % reduces the sapces b/w figures & captions
+\end{figure}
+
+% Criterion
+\subsection{Evaluation Criterion and Variables}
+In order to evaluate the simulation results, we chose two criterion: the position correction and the approximation quality. The position correction $\Delta x_{\optimized} = x - \xopt$ shows how close we can correct the position $\xhat$ through the proposed method. The approximation quality is assessed with the modified squared error $\SEdag$ of the approximated A-Scan $\aopt (\xopt; \xdeltaest)$ compared to the measurement data $\ascanvec (x)$. $\SEdag$ can be expressed as
+\begin{equation}
+\SEdag = \frac{ \| \gamma \aopt - \ascanvec \|_{2}}{\| \ascanvec \|_{2}}, 
+\end{equation}
+where $\gamma$ is a normalization factor obtained through
+\begin{equation}
+\gamma = \frac{\ascanvec^{\T} \cdot \aopt}{\aopt^{\T} \cdot \aopt}.
+\end{equation} \par
+
+% Variables
+As we aimed to illustrate the error sensitivity of our method, the simulations were carried out with different tracking error $\xdelta$. Furthermore, since the measurement data is tied to its scan position, the error sensitivity is expected to vary with scan position $x$, which we set as our second variable in the simulations. Considering the symmetry in the measurement setup, we used the \textit{scatterer-scan} distance, $| s_{x} - x|$, as a variable for $x$. Fig. \ref{fig:GD_positions} illustrates the measurement positions used in simulations. For the break condition, we set our target to $\SEdag = 0.01$ and the maximal number of iterations to 15. 
+
+
+\subsection{Results} 
+%% Text 
+% General
+Fig. \ref{fig:results_PE} and Fig. \ref{fig:results_SE} show the positional error correction and the squared error of the approximated A-Scan for four different measurement positions depicted in Fig. \ref{fig:GD_positions}. In general, position-dependency can be well observed, and Fig. \ref{fig:results_SE} shows that our approximation can tolerate the positional error for certain range. \par
+
+% 0.5 lambda away
+When the measurement position is only \SI{0.63}{\milli \metre}, which is equivalent to half wavelength, away from the scatterer, the error up to $- 0.5 \lambda$ can be well corrected, leading to successful approximations. However, when the error is within the range of $- 0.5 \lambda$ and $1.5 \lambda$, the error is not corrected. This is because there is almost no difference in the falsely computed A-Scan and the correct model. This no-correction range is related to the symmetry in the measurement setup, which results in the doubled width in the range. That is to say, in order for the error correction to successfully function, the deviation in A-Scan between the correct model and its falsely computed counterpart should be large enough. On the other hand, as the deviation in A-Scan is very little within the no-correlation range, the correct model can be very well approximated even without error correction. For the error above $0.5 \lambda$ the difference in A-Scan becomes larger, prompting the error correction. Yet, the position is corrected to the opposite side of the measurement position with respect to the scatterer, where we can obtain the identical A-Scan model. \par
+
+% 1mm away
+Likewise, for the measurement position which is \SI{1}{\milli \metre} away from the scatterer we can observe both the correction and the no-correction range, and the both results show very similar progression, except two points. One is the "sudden" improvement in the error correction, when the error is equal to $0.76 \lambda$. This is because the scan position is now located further away from the scatterer than the previous result, making A-Scan modeling more sensitive to the error. As a result, the deviation in A-Scans becomes large enough to prompt the error correction. The other is the "sudden" worsening in the approximation with the error of $0.8 \lambda$, where the falsely tracked position is directly above the scatterer, i.e. $\xhat = s_{x}$. When an A-Scan is modeled directly above the scatterer, the progression in error sensitivity of A-Scan modeling becomes convex  as shown in Fig. \ref{fig:se_offset}. Solving the least squares problem \eqref{eq:LS} based on $\xhat = s_{x}$ "optimizes" the position to $s_{x}$, failing to correct $\xhat$ to $x$. Since A-Scan modeling is more sensitive to the error than the previous result, the correct A-Scan model can be no longer well approximated without correcting the error. \par
+
+% 2.5mm, 5mm away
+On the contrary, as the measurement position moves away from the scatterer, the change in position results in the larger deviation in A-Scan, making the no-correction range negligible. Consequently, the error can be well corrected within the certain correction range. This correction range narrows with the increasing distance between the scatterer and the measurement position, since our approximation becomes more susceptive to the positional error. We've found that the positional error can be successfully corrected up to the first local minima after the global minimum (Fig. \ref{fig:se_offset}). In case of $| s_{x} - x| =$ \SI{2.5}{\milli \metre}, which is equivalent to $1.98 \lambda$, we can also observe that the error correction impairs when $\xhat$ approaches to $s_{x}$. \par
+
+%% Figures: GD PE and GD SE
+\begin{figure}
+\centering
+% Fig: PE
+\begin{subfigure}[T]{0.5\textwidth}
+	\caption{ } 
+	\label{fig:results_PE}
+	\gdpe{1}{\scriptsize}{\scriptsize}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_pe_halflambda_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_pe_1mm_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_pe_2_5mm_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_pe_5mm_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_pe_7_5mm_away.tex}
+ % <scale size>, <label font size>, <tick font size>, <fname for 0.5 lambda>, <fname for 1mm>, <fname for 2.5mm>, <fname for 5mm>, <fname for 7.5mm>
+\end{subfigure}
+%
+% Fig: SE
+\begin{subfigure}[T]{0.5\textwidth}
+	\caption{ }
+	\label{fig:results_SE}
+	\gdse{1}{\scriptsize}{\scriptsize}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_se_halflambda_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_se_1mm_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_se_2_5mm_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_se_5mm_away.tex}{figures/pytikz/1D/coordinates/errmax_5lambda/gd_se_7_5mm_away.tex}
+ % <scale size>, <label font size>, <tick font size>, <fname for 0.5 lambda>, <fname for 1mm>, <fname for 2.5mm>, <fname for 5mm>, <fname for 7.5mm>
+\end{subfigure}
+%
+\caption{Results obtained with simulation \rom{1}: (a) position correction normalized with the wavelength $\lambda$ and (b) normalized squared error of the approximated A-Scans compared to their correct models}
+\end{figure}
+%
+%% Figures : SE offset
+\begin{figure}
+\setlength{\abovecaptionskip}{-10pt} % reduces the sapces b/w figures & captions
+\centering
+\seoffset{1}{\scriptsize}{\scriptsize}{figures/pytikz/1D/coordinates/se_offset/se_offset_0mm_away.tex}{figures/pytikz/1D/coordinates/se_offset/se_offset_2_5mm_away.tex}{figures/pytikz/1D/coordinates/se_offset/se_offset_5mm_away.tex}{figures/pytikz/1D/coordinates/se_offset/se_offset_7_5mm_away.tex}
+%<scale size>, <label font size>, <tick font size>, <fname for xdelta = 0mm>, <fname for xdelta = 2.5mm>, <fname for xdelta = 5mm>
+\caption{Error sensitivity of A-Scan modeling at different scan positions} %
+\label{fig:se_offset} 
+\end{figure}
+
+%% interpretation
+Above all, the obtained results show that the proposed method could improve the accuracy of A-scan modeling with the inaccurate positional information, which ultimately leads us to a better SAFT reconstruction. In order to assure the reconstruction quality, we should find the proper countermeasures for the no-correction range and the error sensitivity which increases with the measurement-scatterer distance. \par
+
+For the no-correction range, we could set the threshold $\SEdag_{\thres}$ to initiate the error correction. Since the deviation in A-Scan is very little within the no-correction range, there is very likely no need for the approximation. When $\SEdag$ of the falsely computed A-scan is smaller than $\SEdag_{\thres}$, then the modeled A-Scan, as well as the corresponding SAFT matrix, will remain unchanged, which reduces the overall computational time. When $\SEdag > \SEdag_{\thres}$ and $\SEdag$ of the resulting approximation is not well improved, which is very likely the case where the tracked position is directly above the scatterer, then this data can be discarded.\par
+
+In order to tackle the increasing error sensitivity with the scatterer-scan distance, it is desirable to suppress the contribution of the measurement data taken at the position far away from the scatterer.For this purpose, we can apply a spatial filter which varies the reflection coefficients according to the positions. A proper filter can be selected through comparing the measurement data with its neighboring data. When the change in the measurement data is large, which indicates that the position is located far away from the scatterer, we can accordingly choose the smaller reflection coefficient. In fact, transducers employed in real measurements have a limited angular sensitivity range which can be regarded as a form of spatial filters. \par

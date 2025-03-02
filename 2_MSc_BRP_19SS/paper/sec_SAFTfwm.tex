@@ -1,0 +1,32 @@
+%% FWM w/ SAFT
+% General description on SAFT
+The goal of SAFT reconstruction is to determine the location of scatterers in a solid test object. As \eqref{eq:tof} indicates, the distance between the scatterer and the measurement position, $\norm{\scatterer_{i} - \pp }_{2}$, can be obtained through the ToF, suggesting that $s_i$ is likely to be on the semicircle with $\pp$ in the center and the radius of $\norm{\scatterer_{i} - \pp }_{2}$. By computing such semicircles at different scan positions, we can specify the position of $s_i$. Based on this idea, SAFT extracts the ToF information, performs the superposition of the multiple measurement data and achieves a spatial focus \cite{Lingvall04PhD}. \par
+
+% Linear transform
+In order to compute SAFT efficiently, it is desirable to express \eqref{eq:ascan_discrete} as a linear transform. As \eqref{eq:ascan_discrete} demonstrates, the obtained A-Scan can be modeled as a sum of the time-shifted input pulse $\pulse (t)$, enabling to form a matrix $\SAFTp$ from the impulse response at the measurement position $\pp$ for all possible scatterer positions. We call $\SAFTp$ a SAFT matrix which is tied to the measurement position and has a dimension of $\RR^{\M \times \LL}$, when there are $\LL$ possible scatterer positions in our ROI. A column vector of the SAFT matrix $\pulsevec \in \RR^{\M}$ can be expressed as
+\begin{equation} \label{eq:saft_colvec}
+[\SAFTp]_{(:, l)} = \SAFTcol (\pp) = \sum_{m = 1}^{\M} \refcoeff_{\pp, l} \cdot \pulse (m \dt - \tau_{l} (\pp)),
+\end{equation}
+where $l$ is the column index which corresponds to the scatterer positions.
+%
+This allows us to rewrite \eqref{eq:ascan_discrete} as a linear transform
+\begin{equation} \label{eq:saft_LT}
+\ascanvec (\pp) = \SAFTp \cdot \defect + \noisevec = \ascanvechat (\pp) + \noisevec
+\end{equation}
+where $\ascanvec (\pp) \in \RR^{\M}$, $\ascanvechat (\pp) \in \RR^{\M}$ and $\noisevec \in \RR^{\M}$ are the A-Scan, its model and the measurement noise, respectively, as vector form and $\defect \in \RR^{\LL}$ is the vectorized "defect map" which represents the scatterer positions \cite{Kirchhof16IUS}.
+%
+When there is only one scatterer located at the $l$-th position of our ROI, each element of the vectorized defect map $b_{q}$ can be expressed as 
+\begin{equation} \label{eq:defect_map}
+b_{q} = 
+\begin{cases}
+\refcoeff_{\pp, l}, & \text{for } q = l\\
+0 & \text{else}
+\end{cases},
+\end{equation}
+where the index $q$ satisfies $q = 1$, $2$, ..., $\LL$. 
+%
+% The goal of SAFT
+Consequently, SAFT reconstruction becomes the following optimization problem \cite{Kirchhof16IUS}
+\begin{equation} \label{eq:saft_optimization}
+\min_{\defect} \| \ascanvec (\pp) -  \SAFTp \cdot \defect \|_{2} .
+\end{equation}

@@ -1,0 +1,149 @@
+\documentclass{article}
+
+\input{header_files/packages.tex}
+\input{header_files/newcommands.tex}
+\input{header_files/mathoperators.tex}
+\input{header_files/set_color.tex}
+
+\author{Sayako Kodera}
+\title{Research Project Intermediate Report v.01}
+
+\begin{document}
+
+\maketitle
+
+\section{Derivative of SAFT Matrix for 2D Case}
+\paragraph*{Forward model (FWM)}
+\begin{equation}
+\ascan_{\point_{0}} = \Hdict (\point_{0}) \cdot \defect ,
+\end{equation}
+%
+where $\ascan_{\point_{0}}$ an A-Scan at a scan position $\point_0$,  $\Hdict$ the SAFT matrix based on the $\point_0$ and $\defect$ a vector indicating the defect position. $\Hdict$ is with a dimension of $\N_{t} \times \N_{z} \N_{x}$.
+
+\paragraph*{Dictionary for an inaccurate scan position}
+\begin{equation}
+\Hdict ( \hat{\point} ) \approx \Hdict (\point) + \frac{\partial \Hdict}{\partial \point} \cdot \Delta \point ,
+\end{equation}
+%
+where $\point$ the actual scan position, $\hat{\point}$ the estimated scan position and $\Delta \point$ difference between $\point$ and $\hat{\point}$.\\
+
+\paragraph*{Vectorized dictionary}
+\begin{equation}
+\hdict ( \hat{\point} ) \approx \hdict (\point) + \frac{\partial \hdict}{\partial \point} \cdot \Delta \point ,
+\end{equation}
+%
+where $\hdict$ is the vectorized version of $\Hdict$, then a $i$-th $\N_t$-length vector of $\hdict$ can be regarded as the impulse response of the $i$-th defect at a position $\point$. 
+
+\paragraph*{Pulse}
+The impulse response here is modeled as a convolution of the inserted pulse $s(t)$ and a reflectivity of the specimen. We assume that $s(t)$ is a Gaussian windowed cosine as following:
+\begin{equation}
+s(t)  = w(t) \cdot \Real \{ e^{- j 2 \pi f_C t} \} = w(t) \cdot \cos(2 \pi f_C t).
+\end{equation}
+%
+$f_C$ is the carrier frequency and $w(t)$ here is the Guassian window and can be expressed\\
+\begin{equation} \label{eq:window}
+w(t) = e^{f(t)} = e ^{- \alpha t^2}
+\end{equation}
+%
+and the window width controlling factor $\alpha$ is as follows (obtained from scipy.signal.gausspulse): !!!! recalculate !!!!!!!
+\begin{equation}
+\alpha \approx (0.18 \pi f_C)^2 
+\end{equation}
+
+\paragraph*{Derivative of the vectorized dictionary $\hdict$}
+\begin{equation} \label{eq:hdictbase}
+\hdict_{i} (t; \point) = w(t - \frac{2 \ltwonorm}{c_0}) \cdot \cos(2 \pi f_C (t - \frac{2 \ltwonorm}{c_0})) .
+\end{equation}
+%
+The $i$-th impulse response $\hdict_{i}$ can be expressed as above. Using $f(t)$ from Eq. \ref{eq:window} and setting $g(t) = 2 \pi f_C t$, we can describe  the Eq. \ref{eq:hdictbase} as follows:
+\begin{equation}
+\hdict_{i} (t; \point) = e^{ f_{i}( t ; \point) } \cdot \cos( g_{i}(t; \point) ).
+\end{equation}
+%
+Then, we can obtain its derivative as
+\begin{equation} \label{eq:hdictderiv1}
+\frac{\partial \hdict_{i} (t; \point) }{\partial \point} = \frac{\partial f_{i}( t ; \point)}{\partial \point} \cdot w_{i}(t; \point) \cdot \cos( g_{i}(t; \point) ) - \frac{\partial g_{i}( t ; \point)}{\partial \point} \cdot w_{i}(t; \point) \cdot \sin( g_{i}(t; \point) ) .
+\end{equation}
+%
+Since $\cos( g_{i}(t; \point) )$ and  $\sin( g_{i}(t; \point) )$ are the in-phase and the quadrature component of $ e^{- j 2 \pi f_C t} $, the Eq. \ref{eq:hdictderiv1} can be expressed as
+\begin{equation}\label{eq:hdictderiv2}
+\frac{\partial \hdict_{i} (t; \point) }{\partial \point} = \frac{\partial f_{i}( t ; \point)}{\partial \point} \cdot \Real \{ s_{i} (t; \point) \} - \frac{\partial g_{i}( t ; \point)}{\partial \point} \cdot \Imag \{ s_{i} (t; \point) \}
+\end{equation}
+From Eq. \ref{eq:hdictderiv2}, we can see that the dictionary for an estimated position $\hdict (\hat{\point})$ can be obtained from elementwise addition of the actual dictionary $\hdict(\point)$ and its derivative:
+\begin{equation} \label{eq:Hdictderiv}
+\hdict (\hat{\point}) = \hdict(\point) \oplus \frac{\partial \hdict(\point)}{\partial \point} \cdot \Delta \point
+\end{equation} 
+
+\paragraph*{Derivative of $f_{i}( t ; \point)$ and $g_{i}( t ; \point)$}
+\begin{equation}
+\frac{\partial \ltwonorm }{\partial \point} = \frac{\point - \defect_{i}}{ \ltwonorm }
+\end{equation}
+This leads to:
+\begin{equation}
+\frac{\partial f_{i}( t ; \point)}{\partial \point} = \frac{4 \alpha (t - \frac{2 \ltwonorm }{c_0})}{c_0 \ltwonorm} \cdot (\point - \defect_{i})
+\end{equation}
+and
+\begin{equation}
+\frac{\partial g_{i}( t ; \point)}{\partial \point} = \frac{- 4 \pi f_C}{c_0 \ltwonorm} \cdot (\point - \defect_{i})
+\end{equation}
+
+\section{Example Results}
+Followings show the obtained A-Scan results with the reference A-scan generated with another (gridless) FWM.
+
+\begin{figure}
+\begin{center}
+\begin{subfigure}[T]{0.4\textwidth}
+\caption{Without error}
+\inputTikZ{0.8}{pytikz/ascans/20190424/ascan_ErrFree.tex}
+\end{subfigure}
+\hfill
+\begin{subfigure}[T]{0.4\textwidth}
+\caption{0.126mm  error}
+\inputTikZ{0.8}{pytikz/ascans/20190424/ascan_ErrNo_5.tex}
+\end{subfigure}
+\hfill
+\begin{subfigure}[T]{0.4\textwidth}
+\caption{0.5mm  error}
+\inputTikZ{0.8}{pytikz/ascans/20190424/ascan_ErrNo_13.tex}
+\end{subfigure}
+\hfill
+\begin{subfigure}[T]{0.4\textwidth}
+\caption{1mm  error}
+\inputTikZ{0.8}{pytikz/ascans/20190424/ascan_ErrNo_18.tex}
+\end{subfigure}
+\hfill
+\begin{subfigure}[T]{0.4\textwidth}
+\caption{2mm  error}
+\inputTikZ{0.8}{pytikz/ascans/20190424/ascan_ErrNo_29.tex}
+\end{subfigure}
+\hfill
+\begin{subfigure}[T]{0.4\textwidth}
+\caption{10mm  error}
+\inputTikZ{0.8}{pytikz/ascans/20190424/ascan_ErrNo_55.tex}
+\end{subfigure}
+\hfill
+\end{center}
+\end{figure}
+
+
+\section{MSE Result}
+Following shows the obtained MSE results. The same reference A-Scan is used as a reference here as well.
+
+\begin{figure}[h!]
+\begin{center}
+\inputTikZ{1}{pytikz/mse2D_20190511.tex}
+\end{center}
+\end{figure}
+
+\section{Considerations and Problems}
+\begin{itemize}
+\item Derivative terms ($\frac{\partial \hdict (\point)}{\partial \point} \cdot \Delta \point $) tend to be larger than the actual term ($\hdict$) due to the $f_C$ in the derivatives\\
+$\rightarrow$ currently the obtained results are normalized with its maximum, more investigation is required\\
+\item The obtained MSE result is not exactly what we expected (no local minima/maxima)\\
+$\rightarrow$ Reason
+\end{itemize}
+
+%\nocite{*}
+%\bibliography{main}
+ 
+\end{document}

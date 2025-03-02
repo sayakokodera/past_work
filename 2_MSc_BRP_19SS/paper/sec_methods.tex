@@ -1,0 +1,112 @@
+%%% Methods %%%
+% Short intro: probelm and introducing the notation: \pphat, \SAFTphat etc...
+Since the inaccurate positional information can lead the SAFT matrix to fail in proper modeling of the measured A-scan, the quality of the SAFT reconstruction strongly depends on the accuracy of the input measurement positions. Suppose an A-Scan $\ascanvec (\pp)$ is taken at the position $\pp \in \RR^{\K}$, and the tracking system recognizes the measurement position as $\pphat = \pp + \ppdelta$ with the tracking error $\ppdelta$. Based on this falsely recognized measurement position $\pphat$, we compute a SAFT matrix $\SAFTphat$ which corresponds to an incorrect A-Scan model $\ascanvechat (\pphat)$. When the deviation between $\ascanvechat (\pphat)$ and the correct A-Scan model $\ascanvechat (\pp)$ is large, reconstructing the measurement data $\ascanvec (\pp)$ with the improper SAFT matrix $\SAFTphat$ results in a significant degradation of reconstruction quality. \par
+
+% Our goal and solution
+For improving the reconstruction quality despite the positional inaccuracy, it is essential to bridge the gap between the proper SAFT matrix $\SAFTp$ and the falsely computed matrix $\SAFTphat$, such that the resulting A-Scan model becomes very similar to the correct model. In order to minimize the deviation in A-Scan modeling, we aim to approximate the correct SAFT matrix from the available information, i.e. the measurement data $\ascanvec (\pp)$ and the positional information $\pphat$. This is done based on the first Taylor approximation of the function $f$ 
+\begin{equation}
+\begin{split}
+f (u) & \approx f (v) + f' (v) \cdot (u - v) \\
+        & \approx f (v) - f' (v) \cdot (v - u),
+\end{split}
+\end{equation} 
+where $f(u)$ for $u$ near $v$ can be approximated with $f(v)$ and its derivative $f'(v)$ when $|u - v| \ll u$. \par
+
+% Description of each subsection
+In the following subsections, the spatial approximation of the SAFT matrix is firstly derived (Sec.\ref{sec:saft_approx}), and an iterative method, which estimates the tracking error $\ppdelta$ and improves the positional accuracy, is presented (Sec.\ref{sec:iterative_GD}). Although SAFT matrix is meant to be used for solving the optimization problem shown in \eqref{eq:saft_optimization}, in this section we will be focusing on modeling A-Scan properly by assuming that the position of scatterers, i.e. the defect map $\defect$, is known. Moreover, for the sake of simplicity we consider a noise free scenario, i.e. the obtained measurement data $\ascanvec (\pp)$ becomes identical to our A-Scan model $\ascanvechat (\pp)$. \par
+
+
+%% Spatial approximation of SAFT
+\subsection{Spatial Approximation of SAFT Matrix} \label{sec:saft_approx}
+% non-linear transformation f_{i} = column of the SAFT matrix
+In order to obtain a spatial approximation of SAFT matrix, we should model A-Scans in terms of measurement positions, which is, as \eqref{eq:pulse}, \eqref{eq:tof} and \eqref{eq:ascan_discrete} suggest, a non-linear transformation $f: \pp \in \RR^{\K} \rightarrow f (\pp) \in \RR^{\M}$. Yet, this non-linear transformation can be considered as a superposition of each scatterer position in the same manner we model an A-Scan in \eqref{eq:ascan_discrete}, resulting in the non-linear transformation for a single scatterer becoming identical to the corresponding column of the SAFT matrix as
+\begin{equation} \label{eq:ascan_model}
+f_{i} (\pp) = \SAFTcol (\pp) = \SAFTp \cdot \defect^{(l)}.
+\end{equation}
+$f_{i}$ denotes the non-linear transformation of the measurement position $\pp$ for the $i$-the scatterer which is located at the $l$-th position in our ROI and $\SAFTcol$ is the corresponding $l$-th column vector of the SAFT matrix. $\defect^{(l)}$ is a vectorized defect map containing only one non-zero element, e.g. 1, in the $l$-th row. \par
+
+% Local linearity  and Jacobian
+When we consider the positional error $\ppdelta$ in a small range, i.e. $\ppdelta \ll \pp$, $\SAFTcol$ becomes locally linear and can be linearly approximated as 
+\begin{equation} \label{eq:local_linearity}
+\SAFTcol (\pp) \approx \SAFTcol (\pp + \ppdelta) - \Jacobianpartial (\pp + \ppdelta) \cdot \ppdelta, 
+\end{equation}
+where $\Jacobianpartial \in \RR^{\M \times \K} $ is the Jacobian matrix of $\SAFTcol$, which can be expressed as
+\begin{equation} \label{eq:jacobian_partial}
+\Jacobianpartial (\pp) =  \left[ \frac{\partial \SAFTcol (\pp)}{\partial \pp} \right] .
+\end{equation} \par
+
+% Comprehensive Jacobian matrix
+Since $\Jacobianpartial$ is associated with the $l$-th column of the SAFT matrix, we can form a comprehensive Jacobian matrix $\Jacobian \in \RR^{\M \LL \times \K}$, in the similar manner as \eqref{eq:saft_LT}, which contains the derivative of $\SAFTcol$ for all possible scatterer positions $\LL$ as
+\begin{equation} \label{eq:jacobian_full}
+\Jacobian (\pp) = \left[ {\Jacobian_{\pulsevec_{1}} (\pp) }^{\T} {\Jacobian_{\pulsevec_{2}} (\pp)}^{\T}  \text{...} {\Jacobian_{\pulsevec_{\LL}} (\pp)}^{\T}  \right]^{\T}.
+\end{equation} 
+%
+% Matricize the resulting vector
+Consequently, the inner product of $\Jacobian$ and $\ppdelta$ in \eqref{eq:local_linearity} yields a vector $\in \RR^{\M \LL}$, from which a matrix $\Deriv \in \RR^{\M \times \LL}$ can be formed with inverse $\vectorize$ operation as 
+\begin{equation} \label{eq:deriv_matrix}
+\begin{split}
+\Deriv (\pphat ; \ppdelta) &= \vectorize^{-1}_{\M, \LL} \{ \Jacobian (\pphat) \cdot \ppdelta \} \\
+                                           &= \left[ (\vectorize \{ \Identity_{\LL} \}^{\T} \otimes \Identity_{\M} \right] \cdot \left[ \Identity_{\LL} \otimes ( \Jacobian (\pphat)\cdot \ppdelta ) \right].
+\end{split}
+\end{equation}\par
+
+% Matrix-vector product
+Since $\Deriv$ has the same dimension as our SAFT matrix $\SAFT$, we can express $\SAFTcol$ by applying the same approach in \eqref{eq:saft_LT} to \eqref{eq:local_linearity} as 
+\begin{equation} \label{eq:local_linearity_jacobianfull}
+\SAFTcol (\pp) \approx \SAFTcol (\pphat) - \defectsingle_{l} \cdot \Derivcol (\pphat; \ppdelta),
+\end{equation}
+where $\defectsingle_{l}$ and $\Derivcol$ are the $l$-th element of $\defect$ and the $l$-th column vector of $\Deriv$, respectively.
+%
+Inserting \eqref{eq:ascan_model} and \eqref{eq:local_linearity_jacobianfull} into \eqref{eq:local_linearity} yields
+\begin{equation}
+\SAFTp \cdot \defect^{(l)} \approx \left[ \SAFT (\pphat) - \Deriv (\pphat ; \ppdelta ) \right] \cdot \defect^{(l)},
+\end{equation}
+which indicates that we can approximate the correct SAFT matrix through the falsely computed SAFT matrix as
+\begin{equation} \label{eq:saft_approx}
+\SAFTp \approx \SAFTphat - \Deriv (\pphat ; \ppdelta ).
+\end{equation} \par
+%
+%%% Fig: position notations %%%
+%\begin{figure}
+%\begin{center}
+%\inputTikZ{1}{figures/PositionNotations.tex}
+%\caption{Position notations: the correct measurement position $\pp$, the falsely recognized position $\pphat$ and their deviation $\ppdelta$}
+%\label{fig:position_notation}
+%\end{center}
+%\end{figure}
+
+
+%% Iterative GD %%
+\subsection{Iterative Position Correction} \label{sec:iterative_GD}
+% Intro: problems
+For properly approximating the correct SAFT matrix, \eqref{eq:saft_approx} indicates that we need the information about the tracking error $\ppdelta$. However, as we only know the falsely tracked position $\pphat$, the tracking error should be estimated from the obtained measurement data $\ascanvec (\pp)$ and the positional information $\pphat$. Moreover, although our approximation is less susceptive to the positional error than just calculating a SAFT matrix at the wrong position, the validity range of our approximation is limited. In order to tackle these problems, we incorporate an iterative method into our approximation process, so that we can estimate the tracking error $\ppdelta$ and improve the positional accuracy. In this subsection, we consider a simple measurement scenario where there is only one scatterer located at the $l$-th position in our ROI, i.e. the measured A-Scan $\ascan$ is identical to $\SAFTcol$, and measurements are taken along the x-axis.\par
+
+% A-Scan approximation -> iterative process
+Eq. \eqref{eq:local_linearity_jacobianfull} indicates that the tracking error can be estimated by comparing the measurement data and the falsely modeled A-Scan. Since the transducer is further assumed to be placed directly on the object surface with the constant contact pressure, the vertical component $z$ becomes 0 and remains constant, resulting in a measurement position becoming $\pp = [x, 0]$. This enables us to express both measured and modeled A-Scans as a function of $x$ and remove the tracking error $\ppdelta = \xdelta$ from $\vectorize^{-1}$ operator in \eqref{eq:deriv_matrix}. As a result, \eqref{eq:local_linearity_jacobianfull} can be formulated with the model derivative $\SAFTcoldot$ into a least squares problem as
+\begin{equation} \label{eq:LS}
+\min_{\xdelta} \| \SAFTcol (\xhat) - \SAFTcol (x) - \SAFTcoldot (\xhat) \cdot \xdelta \|_{2},
+\end{equation}
+through which we can obtain the estimated positional error $\xdeltaest$. \par
+
+% Iterative process  
+If we take into account this estimated error and update the positional information as $\xopt = \xhat - \xdeltaest$, we can further reduce the positional error. With the improved scan position $\xopt$, \eqref{eq:LS} can be solved again, which provides a \textit{new} estimated error, realizing the better approximation than the previous one with $\xhat$. In other words, repeating this procedure can improve the positional accuracy and consequently realize the reliable approximation for the SAFT matrix in \eqref{eq:saft_approx}. \par
+
+% Description of the iteration
+This iterative process is depicted in Fig. \ref{fig:blockdiagram_GD}. The breaking condition is either (a) the squared error of the approximated A-Scan $\aopt (\xopt; \xdeltaest)$ compared to the measured A-Scan $\ascanvec (x)$ (in our scenario, identical to the correct model $\ascanvechat (x)$) reaches the given target value or (b) the maximal number of iteration is carried out. After the iteration break, $\xopt$ and $\xdeltaest$ are returned as output. 
+
+
+%%% Fig: block diagram -> should I simplify the diagram? only upto the break condition? 
+\begin{figure}
+\begin{center}
+\inputTikZ{1.2}{figures/blockdiagram_iterativeGD.tex}
+\caption{Block diagram of the iterative method to estimate and improve the positional error}
+\label{fig:blockdiagram_GD} 
+\end{center}
+\end{figure}
+
+
+
+
+
+
+

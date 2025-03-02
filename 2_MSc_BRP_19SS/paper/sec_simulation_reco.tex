@@ -1,0 +1,19 @@
+%%% Simulation 2 : example reco
+%% Text
+% Assumptions & test parameters
+\subsection{Simulation Setup}
+In order to verify the proposed method, an example measurement data set is reconstructed. The same assumptions as the simulation \rom{1} are made, and a summary of the test parameters are provided in Table \ref{tab:params}. We selected the transducer opening angle as a substitution of a spatial filter, which makes the scatterer \textit{invisible} from the scan positions more than \SI{5}{\milli \metre} away from the scatterer. Each measurement data is considered to be taken at a measurement grid point. The tracking system is, on the other hand, assumed to be capable of providing the positional information between two grid points. With that said, the tracking error is regarded not as quantization error but as mere false recognition due to, for instance, the sudden move of the transducer. Initially, the SAFT matrix is pre-calculated for all measurement grid points based on \textit{a priori} knowledge regarding the test object.\par
+The simulations are carried out with the following steps: first, the measurement data is taken at a particular grid point $x$ which is recognized as $\xhat$. When the reconstruction process is accompanied with position correction, $\xhat$ is corrected to $\xopt$, and the SAFT matrix is modified accordingly, whereas without correction both $\xhat$ and the SAFT matrix remain same. Then, either $\xhat$ or $\xopt$ is rounded to the nearest grid point at which the obtained measurement data is stored in the system. After completing the measurement, the stored data is reconstructed. 
+
+% Results
+\subsection{Results}
+Fig. \ref{fig:results_reco} shows the simulation results. As a reference, the measurement data (Fig. \ref{fig:bscan_ref}) is stored in the system at the correct positions and reconstructed with the pre-calculated SAFT reconstruction matrix (Fig. \ref{fig:reco_ref}). When the positional information is incorrect and, as a result, A-Scans are assigned to the false positions to be stored in the system, the resulting data becomes incomplete and incoherent (Fig. \ref{fig:bscan_track}), which degrades the quality of the reconstruction with the given SAFT matrix (Fig. \ref{fig:reco_track}). However, when the tracked positions are corrected with the proposed method and the SAFT matrix is modified, more A-Scans are assigned to the correct positions (Fig. \ref{fig:bscan_opt}), and the reconstruction quality is significantly improved (Fig. \ref{fig:reco_opt}). 
+
+%% Figure
+\begin{figure}
+\setlength{\abovecaptionskip}{-5pt} % reduces the sapces b/w figures & captions
+\setlength{\belowcaptionskip}{-5pt} % reduces the sapces b/w figures & captions
+\input{figures/pytikz2D_results_data_reco.tex }
+\caption{Results obtained with simulation \rom{2}: (a) measurement data at the correct positions, (b) reference reconstruction, (c) measurement data according to the tracked positions with the tracking error of \SI{1.26}{\milli \metre}, (d) reconstruction of the measurement data, (e) measurement data after position correction, (f) reconstruction of the  position-corrected measurement data}
+\label{fig:results_reco} 
+\end{figure}
