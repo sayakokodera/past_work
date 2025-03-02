@@ -1,0 +1,133 @@
+% "newcommand" collections
+%=====================  for general =======================%
+\renewcommand\thesubsection{\thesection.\Alph{subsection}}
+
+
+%=====================  for math =======================%
+% symbols
+\newcommand{\vech}{\bm{h}}
+\newcommand{\vecv}{\bm{v}}
+\newcommand{\sumjneqk}{\sum_{j \neq k}}
+\newcommand{\Identity}[1]{\bm{I}_{ #1 }}
+\newcommand{\compconj}[1]{ #1^{*} }
+
+
+
+% some special characters
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\ee}{\mathrm{e}}
+\newcommand{\dirac}{\delta}
+
+\newcommand{\RR}{{\mathbb{R}}}
+\newcommand{\NN}{{\mathbb{N}}}
+\newcommand{\CC}{{\mathbb{C}}}
+\newcommand{\OO}{{\mathcal{O}}}
+
+
+\newcommand{\Real}{%  
+     \operatorname{Re}
+}
+\newcommand{\Imag}{%  
+     \operatorname{Im}
+}
+
+
+% for two norms (NEW 01.12.18 cf. https://tex.stackexchange.com/questions/107186/how-to-write-norm-which-adjusts-its-size)
+\newcommand\norm[1]{\left\lVert#1\right\rVert }
+
+%=====================  for Roman numbers =======================%
+
+\newcommand{\rom}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+% from https://tex.stackexchange.com/questions/23487/how-can-i-get-roman-numerals-in-text
+
+%=====================  for TikZ =======================%
+\newcommand{\inputTikZ}[2]{%  
+     \scalebox{#1}{\input{#2}}  
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%=================  for data visualization ===================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%=================== 1D visualization ======================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% reco
+\newcommand{\resultahat}[5]{ % <scale size>, <label font size>, <tick font size>, <fname for reference>, <fname for reco>
+\scalebox{#1}{
+	\begin{tikzpicture}
+            \begin{axis}[
+                width = 7cm, 
+            	height = 4cm,
+                xlabel = {$\frac{t}{\dt}$},
+                ylabel = {Amplitude},
+                label style = {font = #2},
+                tick label style = {font = #3},
+                legend style ={
+                	at={(0.97, 0.85)},
+                	nodes={scale=0.95, transform shape},
+                	font = #3
+                }
+                ]
+                % Reflector
+                \addplot+[ycomb, tui_red, thick, mark options={tui_red}] coordinates{
+                			(50, 1)
+                			(130, 1)
+                };
+                % Reco
+                \input{#5}
+                
+            % legend
+            % To insert the legend title
+		   	%\addlegendimage{empty legend} 
+		   	% Legend entries  
+		   \addlegendentry{Delay}
+            \addlegendentry{Reco}
+            % Legend title
+            %\addlegendentry{$|s_{x} - x|$}        
+            \end{axis}
+	\end{tikzpicture}
+	}
+}
+
+
+% Error 
+\newcommand{\resulterror}[5]{ % <scale size>, <label font size>, <tick font size>, <fname for MP>, <fname for OMP>
+\scalebox{#1}{
+	\begin{tikzpicture}
+            \begin{axis}[
+                width = 7cm, 
+            	height = 4cm,
+                xlabel = {Iteration},
+                ylabel = {$\norm{\bm{r}}$},
+                label style = {font = #2},
+                tick label style = {font = #3},
+                legend style ={
+                	at={(0.97, 0.85)},
+                	nodes={scale=0.95, transform shape},
+                	font = #3
+                }
+                ]
+                \input{#4} % MP
+                \input{#5} % OMP
+                
+            % legend
+            % To insert the legend title
+		   	%\addlegendimage{empty legend} 
+		   	% Legend entries  
+		   \addlegendentry{MP}
+            \addlegendentry{OMP}
+            % Legend title
+            %\addlegendentry{$|s_{x} - x|$}        
+            \end{axis}
+	\end{tikzpicture}
+	}
+}
+
+
+

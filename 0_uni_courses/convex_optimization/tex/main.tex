@@ -1,0 +1,211 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Header: declarations, packages, definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[10pt,a4paper]{article}
+
+\input{header_files/packages.tex}
+\input{header_files/newcommands.tex}
+\input{header_files/mathoperators.tex}
+\input{header_files/set_color.tex}
+
+% Set the indexing of subsections to alphabets
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Main body of the document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\title{Convex Optimization 1920WS HW}
+\author{Sayako Kodera (Matrik.-No. 53168)\\} 
+\date{}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Task 1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Task 1: Water-filling} 
+\subsection{Convexity check}
+The problem to optimize is expressed as follows: 
+\begin{equation} \label{eq:prob_base1}
+p_n = \max \left[ \frac{1}{\mu} - \frac{\sigma}{\alpha_{n}}, 0 \right]
+\end{equation}
+where $p_n$ is the allocated power for the $n$-th channel, $\mu$ is the water-level, $\sigma$ is the noise power and $\alpha_n$ is the corresponding channel gain. Eq. \label{prob_base} can be reformulated with the function of $\mu$ as
+\begin{equation} \label{eq:costfct_1}
+\begin{aligned}
+ & \min_{\mu} & f (\mu) = & \min_{\mu} \left( - \frac{1}{\mu} + \frac{\sigma}{\alpha_{n}} \right) \\
+ & \text{s.t.}  & \mu \geq  & \frac{\alpha_{n}}{\sigma}.
+\end{aligned}
+\end{equation}
+$f (\mu)$ in (\ref{eq:costfct_1}) is convex, if it satisfies the second order condition 
+\begin{equation}
+\begin{aligned}
+ & \frac{\partial^{2} f}{\partial \mu^{2}} \geq 0 & \forall & \mu & \in \text{\bf dom} f .\\
+\end{aligned}
+\end{equation}
+The second order derivative of $f$ is 
+\begin{equation}
+\frac{\partial^{2} f}{\partial \mu^{2}}  = \frac{2}{\mu^{3}}
+\end{equation}
+which is non-negative for $\text{\bf dom} f$. Hence, (\ref{eq:prob_base1}) is a convex function with respect to $\mu$.
+
+\subsection{Implementation}
+See the attached python code, task1.py.
+
+\subsection{Impact of the parameters}
+The figure \ref{fig:task1} illustrates the power allocation to each channel with the different channel gain and the varying transmission power. The higher channel gain $\alpha$ results in the smaller $\frac{\sigma}{\alpha}$ in (\ref{eq:prob_base1}), leading more power to be allocated to the corresponding channel. This effect is especially significant, when the available transmission power is low as the figure \ref{fig:task1_pratio} shows. This indicates that the certain level of the signal quality can be maintained, even with the lower transmission power, by prioritizing the channels with the higher gains over the ones with the lower gains. 
+
+On the other hand, when sufficient power is available for the transmission, the power is almost equally allocated to each channel. The water-level factor $\mu$ becomes smaller with the higher transmission power since the channel prioritization is not necessary, allowing more equal distribution of power to each channel. 
+
+%%%% Figures
+\begin{figure}[ht]
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[scale=0.5]{plots/task1_pmax01.eps}
+		\caption{ }
+		\label{fig:task1_pmax01}
+	\end{subfigure}
+	%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[scale=0.5]{plots/task1_pmax1.eps}
+		\caption{ }
+		\label{fig:task1_pmax1}
+	\end{subfigure}
+	%
+	\newline
+	%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[scale=0.5]{plots/task1_pmax10.eps}
+		\caption{ }
+		\label{fig:task1_pmax10}
+	\end{subfigure}
+	%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[scale=0.5]{plots/task1_pratio.eps}
+		\caption{ }
+		\label{fig:task1_pratio}
+	\end{subfigure}
+%
+\caption{Power allocation to each channel with the different channel gain and the available transmission power. \ref{fig:task1_pmax01} to \ref{fig:task1_pmax10} show the actual power, whereas \ref{fig:task1_pratio} illustrates the ratio of the allocated power for each channel to the corresponding available transmission power.}
+\label{fig:task1}
+\end{figure}
+
+\clearpage
+
+\section{Task2: Downlink Beamforming}
+\subsection{Convexity check}
+\subsubsection*{Method 1}
+One approach to design the transmit beamforming vectors $\bm{v}_k \in \CC^{\M}$ for the $k$-th receiver is to aim at maximizing the difference between the desired signal and the interference leakage. This can be formulated as the following optimization problem 
+\begin{equation} \label{eq:task2_meth1_costfct}
+\begin{aligned}
+  &  \max_{\vecv_k} & f (\vecv_{k}) & \\
+=  & \max_{\vecv_k} & \vech_{k}^{\Hermit} \vecv_k  - & \sum_{j \neq k} \vert \vech_{j} \vecv_{k} \vert^{2} \\
+  & \text{s.t.} & \norm{\vecv_{k}}_{2}^{2} & \leq p_k = \frac{p_{\max}}{\K} .
+\end{aligned}
+\end{equation}
+$\vech_{k} \in \CC^{\M}$ is the propagation channel between the transmitter and the $k$-th receiver, $p_{\max}$ is the available transmission power and $\K$ is the total number of receivers which consists of single antenna element. The constraint is norm ball which is convex and the first order derivative of $f (\vecv_{k})$ is
+\begin{equation}
+\frac{\partial f (\vecv_{k})}{\partial \vecv_{k}} = \vech_{k}^{*} - \sum_{j \neq k} \vech_{j}^{*} \vech_{j}^{\T}  \vecv_{k}^{*}.
+\end{equation}
+This shows that the first order derivative is no longer a function of $\vecv_{k}$, resulting in 
+\begin{equation}
+\frac{\partial^{2} f (\vecv_{k})}{\partial \vecv_{k}^{2}} = \bm{0}_{\K \times \K}.
+\end{equation}
+As $\bm{0}_{\K \times \K}$ is positive semi-definite, (\ref{eq:task2_meth1_costfct}) is convex.
+
+\subsubsection*{Method 2}
+Another approach for $\vecv_{k}$ is to maximize the desired signal while suppressing the signal strength of each interference below the certain level $\eta$. Mathematically this can be expressed as 
+\begin{equation} \label{eq:task2_meth2_costfct}
+\begin{aligned}
+  &  \max_{\vecv_k} & f (\vecv_{k})  &\\
+=  & \max_{\vecv_k} & \vech_{k}^{\Hermit} \vecv_k  & \\
+  & \text{s.t.} & \vert \vech_{j} \vecv_{k} \vert^{2}  & \leq \eta \\
+  & & \norm{\vecv_{k}}_{2}^{2} & \leq p_k = \frac{p_{\max}}{\K} .
+\end{aligned}
+\end{equation}
+The gradient of the other constraint, i.e. the interference constraint, is
+\begin{equation}
+\frac{\partial \vert \vech_{j} \vecv_{k} \vert}{\partial \vecv_{k}^{2}} = \vech_{j}^{*} \vech_{j}^{\T} \vecv_{k}^{*},  
+\end{equation}
+indicating that its Hessian matrix is $\bm{0}_{\K \times \K} \succeq 0$, which is convex. Furthermore, $\norm{\vecv_{k}}_{2}^{2}$ is the norm ball, hence $\text{\bf dom} f$ is convex. The same holds true for the cost function since its gradient is 
+\begin{equation}
+\frac{\partial f (\vecv_{k})}{\partial \vecv_{k}} = \vech_{k}^{*},
+\end{equation}
+suggesting that its Hessian matrix is also the zero matrix $\bm{0}_{\K \times \K}$, which is positive semi-definite. Therefore, (\ref{eq:task2_meth2_costfct}) is convex.
+
+\subsection{Solution of Lagrange multipliers}
+\subsubsection*{Method 1}
+Incorporating the constraint in (\ref{eq:task2_meth1_costfct}) via Lagrange multipliers leads to
+\begin{equation} \label{eq:meth2_lagrange}
+L (\vecv_{k}, \lambda) = \vech_{k}^{\Hermit} \vecv_{k} - \sum_{j \neq k} \vert \vech_{j} \vecv_{k} \vert^{2} - \lambda (\norm{\vecv_{k}}_{2}^{2} - p_{k} ).
+\end{equation}
+The solution for (\ref{eq:meth2_lagrange}) should satisfy both $\frac{ \partial L ( \vecv_{k}, \lambda ) }{ \partial \vecv_{k} } = \bm{0}_{\M}$ and  $\frac{ \partial L ( \vecv_{k}, \lambda ) }{ \partial \lambda } = 0$. The former equation is expressed as 
+\begin{equation} \label{eq:math2_deriv}
+\frac{ \partial L ( \vecv_{k}, \lambda ) }{ \partial \vecv_{k} } = \vech_{k}^{*} - \sumjneqk \vech_{j}^{*} \vech_{j}^{\T} \vecv_{k}^{*} - \lambda \vecv_{k}^{*} = \bm{0}_{\M}.
+\end{equation} 
+Eq. (\ref{eq:math2_deriv}) yields 
+\begin{equation}
+\left( \sumjneqk \vech_{j}^{*} \vech_{j}^{\T} + \lambda \Identity{\M} \right) \compconj{ \vecv_{k} } = \compconj{ \vech_{k} },
+\end{equation}
+from which we obtain the solution for $\vecv_{k}$ as
+\begin{equation}
+\begin{aligned}
+\vecv_{k} & = & \left[ \left( \sumjneqk \vech_{j}^{*} \vech_{j}^{\T} + \lambda \Identity{\M} \right)^{-1}  \compconj{\vech_{k}} \right]^{*} \\
+ & = & \left( \sumjneqk \vech_{j} \vech_{j}^{\Hermit} + \lambda \Identity{\M} \right)^{-1} \vech_{k}
+\end{aligned}
+\end{equation}
+
+\subsection*{Method 2}
+Eq. (\ref{eq:task2_meth2_costfct}) can be also formulated as the following Lagrange multipliers
+\begin{equation}
+L ( \vecv_{k}, \bm{\mu}, \lambda ) =  \vech_{k}^{\Hermit} \vecv_k  - \sumjneqk \mu_{j} \left( \vert \vech_{j} \vecv_{k} \vert^{2} - \eta \right) - \lambda \left( \norm{\vecv_{k}}_{2}^{2} - p_{k} \right)
+\end{equation} 
+which also satisfies all $\frac{ \partial L ( \vecv_{k}, \bm{\mu}, \lambda ) }{ \partial \vecv_{k}} = \bm{0}_{\M} $, $ \frac{ \partial L ( \vecv_{k}, \bm{\mu}, \lambda ) }{ \partial \bm{\mu}} = \bm{0}_{\K -1} $ and $ \frac{ \partial L ( \vecv_{k}, \bm{\mu}, \lambda ) }{ \partial \lambda} = 0$. The first equation is expressed as 
+\begin{equation}
+\frac{ \partial L ( \vecv_{k}, \bm{\mu}, \lambda ) }{ \partial \vecv_{k}} = \compconj{ \vech_{k}} - \sumjneqk \mu_{j} \compconj{\vech_{j}} \vech_{j}^{\T} \compconj{ \vecv_{k}} - \lambda \compconj{\vecv_{k}} = \bm{0}_{\M},
+\end{equation}
+which leads us to the optimal solution for $\vecv_{k}$ as 
+\begin{equation}
+\begin{aligned}
+\vecv_{k} = & = & \left[ \left( \sumjneqk \mu_{j} \vech_{j}^{*} \vech_{j}^{\T} + \lambda \Identity{\M} \right)^{-1}  \compconj{\vech_{k}} \right]^{*} \\
+ & = & \left( \sumjneqk \mu_{j} \vech_{j} \vech_{j}^{\Hermit} + \lambda \Identity{\M} \right)^{-1} \vech_{k}.
+\end{aligned}
+\end{equation}
+
+\subsection{Simulation and results}
+The sum-rate of the SINR for each receiver is compared within three different  beamforming methods: the aforementioned method 1, 2 and the Zero-Forcing (ZF) method as a reference through the Monte-Carlo simulations with 500 realizations for each data set. The code script for the simulation is referred to task2.py. 
+
+With the lower SNR and the fixed $\eta = 0.01$, the method 1 outperforms the other two methods, whereas with the higher SNR the same method results in the worst sum-rate. This is due to the fact that the interference leakage also increases with the higher signal power as there is no penalty regarding the interference level. The other two methods, which prioritizes the desired signal by either suppressing the interference or forcing it to be zero, benefit from the higher SNR as the signal power of the desired signal is enhanced while the interference remains below the certain level. 
+
+On the other hand, with the smaller interference threshold $\eta$ and the constant SNR of 10dB the sum rate can be slightly improved in the method 2 as shown in figure \ref{fig:task2_eta}. However, forcing the very low level of interference does not necessarily lead to the better sum-rate. To suppress the interference, the smaller $\mu_{j}$ should be selected, making $\vecv_{k}$ closer to $\vech_{k}$ which leads to limit $\vert \vech_{k}^{\Hermit} \vecv_k \vert_2^{2} $.
+
+%%%% Figures
+\begin{figure}[ht]
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[scale=0.5]{plots/task2_SNR.eps}
+		\caption{ }
+		\label{fig:task2_SNR}
+	\end{subfigure}
+	%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[scale=0.5]{plots/task2_eta.eps}
+		\caption{ }
+		\label{fig:task2_eta}
+	\end{subfigure}
+	%
+\caption{Impact of the beamforming methods and the parameters on the sum-rate of the SINR for each receiver. \ref{fig:task2_SNR} shows the sum-rate with the varying SNR with the constant $\eta = 0.01$, while \ref{fig:task2_eta} illustrates the effect of the interference threshold which is one of the key parameters in method 2. The results shown in \ref{fig:task2_eta} are obtained with the constant SNR = 10dB. }
+\label{fig:task2}
+\end{figure}
+
+\end{document}
+
+

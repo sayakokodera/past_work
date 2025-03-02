@@ -1,0 +1,107 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Header: declarations, packages, definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[10pt,a4paper]{article}
+
+\input{header_files/packages.tex}
+\input{header_files/newcommands.tex}
+\input{header_files/mathoperators.tex}
+\input{header_files/set_color.tex}
+
+% Set the indexing of subsections to alphabets
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Main body of the document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\title{Compressive Sensing 1920WS HW}
+\author{Sayako Kodera (Matrik.-No. 53168)\\} 
+\date{}
+
+\maketitle
+
+\section{Simulation}
+Parameter values used in the simulations are listed in \ref{tab:params}. The kernel components are selected randomly from the normal distribution with the carrier frequency $f_{C}$ as its mean. 
+
+%%% Parameters 
+\begin{table}[ht]
+\centering
+\input{table_params.tex}
+\caption{Parameter values}
+\label{tab:params}
+\end{table}
+
+\section{Simulation results}
+The obtained results are shown in figure \ref{fig:results}, which are obtained from two different data sets, i.e. with the different kernel components. 
+
+With $\M = 50$ the stable reconstruction quality can be obtained via OMP. On the contrary, the quality of the MP reconstruction depends more on the selection of the frequency components of the kernel, indicating that it requires more kernel components for a stable reconstruction. 
+
+Moreover, as figure \ref{fig:error_50} and \ref{fig:error_50_2} demonstrate, MP needs more iteration until it converges. This is because the same elements in the estimate tend to be updated for several times, making it inefficient. 
+
+%%%% Figures
+\begin{figure}[ht]
+	% MP
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\caption{MP, set 1}
+		\label{fig:ahatMP_50}
+		\resultahat{1}{\small}{\small}{figures/reflector.tex}{figures/ahatMP_50.tex}
+		% <scale size>, <label font size>, <tick font size>, <fname for reference>, <fname for reco>
+	\end{subfigure}
+	%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\caption{MP, set 2}
+		\label{fig:ahatMP_50_2}
+		\resultahat{1}{\small}{\small}{figures/reflector.tex}{figures/ahatMP_50_2.tex}
+		% <scale size>, <label font size>, <tick font size>, <fname for reference>, <fname for reco>
+	\end{subfigure}
+	%
+	\newline
+	% OMP
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\caption{OMP,  set 1}
+		\label{fig:ahatOMP_50}
+		\resultahat{1}{\small}{\small}{figures/reflector.tex}{figures/ahatOMP_50.tex}
+		% <scale size>, <label font size>, <tick font size>, <fname for reference>, <fname for reco>
+	\end{subfigure}
+	%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\caption{OMP, set 2}
+		\label{fig:ahatOMP_50_2}
+		\resultahat{1}{\small}{\small}{figures/reflector.tex}{figures/ahatOMP_50.tex}
+		% <scale size>, <label font size>, <tick font size>, <fname for reference>, <fname for reco>
+	\end{subfigure}
+	%
+	\newline
+	% Error
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\caption{Residual, set 1}
+		\label{fig:error_50}
+		\resulterror{1}{\small}{\small}{figures/errorMP_50.tex}{figures/errorOMP_50.tex}
+		% <scale size>, <label font size>, <tick font size>, <fname for reference>, <fname for reco>
+	\end{subfigure}
+	%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\caption{Residual, set 2}
+		\label{fig:error_50_2}
+		\resulterror{1}{\small}{\small}{figures/errorMP_50_2.tex}{figures/errorOMP_50_2.tex}
+		% <scale size>, <label font size>, <tick font size>, <fname for MP>, <fname for OMP>
+	\end{subfigure}
+	%
+\caption{Actual time shift and the reconstruction via MP and OMP: results are obtained form two different data sets. Figure \ref{fig:ahatMP_50} to \ref{fig:ahatOMP_50_2} show the reconstruction results, whereas figure \ref{fig:error_50} and \ref{fig:error_50_2} illustrate the total norm of the residual at each iteration.}
+\label{fig:results}
+\end{figure}
+
+
+\end{document}
+
+

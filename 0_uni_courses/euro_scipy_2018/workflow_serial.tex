@@ -1,0 +1,20 @@
+\begin{tikzpicture}[scale=3,node distance = 8.5cm, auto, bigbox/.style={draw, inner sep=10pt,label={[shift={(-4ex,2ex)}]south east: \scriptsize #1}}]
+
+\node [block, fill = fri_gray] (RD) {(Raw) Data};
+\node [block, fill = fri_green_light, right of= RD] (processing) {Data Processing};
+\node [block, fill = fri_green, right of= processing] (PD) {Processed Data (np.ndarray)};
+\node [block, fill = tui_orange_light, right of = PD] (VT) {Visualization Tools (plt.imshow + plt.figsave)};
+\node [block, fill = tui_orange, right of= VT] (doc) {Document};
+%\node [bigbox=, draw=black, very thick, fit={(PD)(VT)(doc)}](VP) { };
+%\node [below right = 0.5cm of doc] (vis) {visualization};
+
+
+\draw[line] (RD) -- (processing);
+\draw[line] (processing) -- (PD);
+\draw[line] (PD) -- (VT);
+\draw[line2] (VT) -- (doc);
+
+
+\end{tikzpicture}
+
+

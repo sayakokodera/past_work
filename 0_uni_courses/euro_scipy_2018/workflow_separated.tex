@@ -1,0 +1,25 @@
+% data processing
+
+\begin{tikzpicture}[scale=3,node distance = 9cm, auto, bigbox/.style={draw, inner sep=10pt,label={[shift={(-4ex,2ex)}]south east: \scriptsize #1}}]
+
+% data processing
+\node [block, fill = fri_gray] (RD) {(Raw) Data};
+\node [block, fill = fri_green_light, right of= RD] (processing) {Data Processing};
+\node [block, fill = fri_green, right of= processing] (PD1) {Processed Data (np.ndarray)};
+
+% visualization
+\node [block, fill = fri_green, below of = RD] (PD2) {Processed Data (.txt)};
+\node [block, fill = tui_orange_light, right of= PD2] (VT) {Visualization Bridging Program};
+\node [block, fill = tui_orange, right of= VT] (doc) {Document File (.tex)};
+%\node [coordinate, right= 0.5cm of VT] (axifzbasepoint) {};
+%\node [block, fill = white, below right of =  VT] (axify) {Bridging Program};
+
+
+\draw[line] (RD) -- (processing);
+\draw[line] (processing) -- (PD1);
+\draw[line2] (PD1.south) -- (PD2.north);
+\draw[line] (PD2) -- (VT);
+\draw[line] (VT) -- (doc);
+%\draw[line] (axify) -- (axifzbasepoint);
+
+\end{tikzpicture}

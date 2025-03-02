@@ -1,0 +1,277 @@
+\documentclass[48pt]{tikzposter}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.14}
+\usepackage{enumitem}
+\usepackage{wrapfig}
+
+\usepackage[T1]{fontenc}
+\usepackage{fbb}
+
+\usepackage{caption}
+
+%%%% bibliography %%%%%
+\usepackage{url}
+\usepackage{natbib} % required for the citation example
+\usepackage{bibentry} % required for the citation example
+%
+\nobibliography* % required for the citation example
+\bibliographystyle{plain}
+
+
+\tikzposterlatexaffectionproofoff
+
+\input{set_color.tex}
+
+
+%\pgfplotscreateplotcyclelist{tui_dark}{
+%{tui_orange_dark,mark=*},
+%{tui_green_dark,mark=square},
+%{tui_blue_dark,mark=triangle},
+%{tui_red_dark,mark=diamond},
+%}
+%
+%\pgfplotsset{
+%    cycle list name=tui_dark,
+%}
+
+\tikzstyle{block} = [rectangle, draw, fill=gray!20, 
+    text width=5.5em, text centered, rounded corners, minimum height=2em]
+\tikzstyle{line} = [draw, line width = 1.5mm, ->]%,> =  triangle 60]
+\tikzstyle{line2} = [draw, dashed, line width = 2mm, ->]
+
+
+\newcommand{\inputTikZ}[2]{%  
+     \scalebox{#1}{\input{#2}}  
+}
+
+
+
+\setlist[itemize]{label=\textcolor{tui_orange_dark}{\textbullet}}
+
+
+\title{Optimizing Visualization and Documentation Process of Scientific Writing}
+\institute{TU Ilmenau, Ultrasonic Imaging Team of EMS Research Group}
+\author{Sayako Kodera}
+\titlegraphic{
+\includegraphics[scale = 2.5]{tu_bw_white.pdf}
+}
+\usetheme{Basic}
+
+\defineblockstyle{sampleblockstyle}{
+    titlewidthscale=0.9,
+    bodywidthscale=1,
+    titleleft,
+    titleoffsetx=0pt,
+    titleoffsety=0pt,
+    bodyoffsetx=0mm,
+    bodyoffsety=15mm,
+    bodyverticalshift=10mm,
+    roundedcorners=5,
+    linewidth=2pt,
+    titleinnersep=6mm,
+    bodyinnersep=1cm
+}{
+\draw[
+    line width = \blocklinewidth,
+    color=framecolor,
+    fill=blockbodybgcolor,
+    rounded corners=\blockroundedcorners
+] (blockbody.south west)
+rectangle (blockbody.north east);
+\ifBlockHasTitle
+\draw[
+    line width = \blocklinewidth,
+    color=framecolor,
+    fill=blocktitlebgcolor,
+    rounded corners=\blockroundedcorners
+] (blocktitle.south west)
+rectangle (blocktitle.north east);
+\fi
+}
+
+% TODO:
+% - adapt colors
+% -
+
+% Background Colors
+\colorlet{backgroundcolor}{tui_orange_light!70}
+
+\begin{document}
+
+\colorlet{framecolor}{tui_orange_dark}
+% Title Colors
+\colorlet{titlefgcolor}{tui_blue_dark}
+\colorlet{titlebgcolor}{tui_blue_dark}
+% Block Colors
+\colorlet{blocktitlebgcolor}{tui_blue_dark}
+\colorlet{blocktitlefgcolor}{white}
+\colorlet{blockbodybgcolor}{white}
+\colorlet{blockbodyfgcolor}{black}
+% Innerblock Colors
+\colorlet{innerblocktitlebgcolor}{white}
+\colorlet{innerblocktitlefgcolor}{black}
+\colorlet{innerblockbodybgcolor}{white}
+\colorlet{innerblockbodyfgcolor}{black}
+% Note colors
+\colorlet{notefgcolor}{black}
+\colorlet{notebgcolor}{white}
+\colorlet{noteframecolor}{colorTwo}
+
+\useblockstyle{sampleblockstyle}
+
+\maketitle
+\begin{columns}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% left side %%%%%
+
+\column{0.5}
+
+\block{Introduction}{
+\begin{center}
+	\includegraphics[scale = 2]{image/meas_sig_7.pdf}
+\end{center}
+\begin{itemize}
+    \item Ultrasonic testing (UT) is one of the investigation methods in non-destructive testing (NDT)
+    \item Discontinuities such as cracks or holes in test objects are localized
+    \item Raw measurement data are often (post-)processed to enhance its imaging quality
+    \item Data are conventionally visually analyzed
+\end{itemize}
+}
+
+\block{Motivations and Goals}{
+% B-scan
+\begin{center}
+\begin{minipage}{0.3\colwidth}
+\begin{center}
+	\inputTikZ{1.8}{civa_bscan_zoomed.tex}	
+\end{center}
+\end{minipage}
+% reco
+\begin{minipage}{0.3\colwidth}
+\begin{center}
+	\inputTikZ{1.8}{civa_reco_zoomed.tex}	
+\end{center}
+\end{minipage}
+\end{center}
+%
+\begin{itemize}
+    \item Documents should have sufficient imaging quality for visual analysis
+    \item The imaging quality should remain same even when it's enlarged
+    \item Multiple images should be comparable in documents
+    \item Changes in the data should be reflected in the document automatically
+    \item Changes irrelevant to the data (color map, axis label etc) should be made fast and easily
+\end{itemize}
+}
+
+
+\block{Problems}{ 
+\hspace{0.3cm}\\
+\textbf{\Large Example approach : using plots directly in the document }\\
+%
+\begin{itemize}
+	\item The imaging quality becomes poor, when the image is enlarged 
+	\item Keeping the coherency of the figure frames and styles is cumbersome
+    \item The entire code should run again for making any changes
+\end{itemize}
+}
+
+
+\block{Workflow of the Example Approach}{
+\begin{centering}
+    \begin{tikzfigure}
+        \inputTikZ{0.9}{workflow_serial.tex}
+    \end{tikzfigure}
+\end{centering}
+%
+\hspace{0.5cm}
+%
+\begin{itemize}
+	\item The entire process is in a sequential chain 
+	\item However, only the processed data is required to be visualized
+	\item The data processing part is most time consuming
+	\item The documentation process is often not directly linked to the visualization tools
+\end{itemize}
+}
+    
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% right side %%%%%
+\column{0.5}
+
+\block{Solution}{
+%\begin{flushleft}
+%\textbf{Separate the data processing chain and the visualization chain}
+%\end{flushleft}
+\section*{Separate the visualization process from data processing}
+%
+%\hspace{0.2cm}
+%
+\begin{centering}
+    \begin{tikzfigure}
+        \inputTikZ{0.9}{workflow_separated.tex}
+    \end{tikzfigure}
+\end{centering}
+%
+\hspace{0.5cm}
+%
+\begin{itemize}
+    \item Save the processed data at the end of the data processing chain
+    \item Load the saved data in the visualization chain
+    \item Convert the data into .tex-files with the bridging program
+    \item Both chains can be done solely with Python
+    \item Lastly insert the generated .tex file in the main document file
+\end{itemize}
+
+\section*{Bridging Program}
+\begin{itemize}
+	\item Create a .tex script regarding pgfplot \cite{PGFPlotsGallery} \cite{PGFPlotsManual}
+	\item Specify axis details in the .tex script
+	\item 1D case : use "\textbackslash addplot coordinates" in the script and add x and y values from the loaded data
+	\item 2D case : save the loaded data (np.ndarray) as png images with plt.imsave
+	\item 2D case : use "\textbackslash addplot graphics" in the script \cite{PGFPlotsManual}
+	\item Write a .tex-file with the generated script
+\end{itemize}
+}
+
+\block{Results}{
+
+\begin{center}
+\begin{minipage}{0.35\colwidth}
+	\centering
+	plt.figsave
+	\begin{center}
+		\includegraphics[scale=1.1]{image/civa_reco_snippet.png}	
+		%\caption{Snippet}
+	\end{center}
+\end{minipage}
+\hspace{0.3cm}
+\begin{minipage}{0.35\colwidth}
+	\centering
+	Our Approach
+	\begin{center}
+		\inputTikZ{1.8}{civa_reco_zoomed.tex}	
+		%\caption{Our Approach}
+	\end{center}
+\end{minipage}
+\end{center}
+%
+\begin{itemize}
+	\item Figure frames are easily adjustable to the environment
+	\item Details regarding axis labels and ticks can be modified directly in the document (without running other codes)
+\end{itemize}
+}
+
+
+\block{Summary}{
+\begin{itemize}
+	\item Separate the visualization process from the data processing/generation 
+	\item Use visualization bridging programs to convert the data into .tex-files
+	\item Changes irrelevant to the data can be made directly in the document
+	\item \textbf{less stress with those "last minutes changes"}
+\end{itemize}
+
+% reference
+\bibliography{EuroScipy}
+}
+\end{columns}
+\end{document}
