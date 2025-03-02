@@ -1,0 +1,465 @@
+\documentclass[14pt,compress,aspectratio=169]{beamer} % selection of font size = 9, 10, 11, 12, 14, ....pt
+
+
+% specify the language of the document here
+%
+\newcommand\setslidelanguage{english}
+%\newcommand\setslidelanguage{german}
+
+%
+% this flag turns on a basic Fraunhofer CI overwrite
+% this just changes colors atm, types and more convenient
+% theme handling have to be added
+%
+%\newcommand\setslidetheme{tui} % - alpha
+%\newcommand\setslidetheme{tuiiis} % - alpha
+\newcommand\setslidetheme{tuiizfp} % - alpha
+%\newcommand\setslidetheme{iis} % - alpha
+%\newcommand\setslidetheme{iistui} % - alpha
+%\newcommand\setslidetheme{izfp} % - alpha
+%\newcommand\setslidetheme{izfptui} % - alpha
+
+
+%
+% load header with all includes
+%
+\input{header_files/header_beamer}
+
+
+%
+% your settings and includes go here
+%
+%%%% bibliography %%%%%
+\usepackage{url}
+\usepackage{natbib} % required for the citation example
+\usepackage{bibentry} % required for the citation example
+%
+\nobibliography* % required for the citation example
+\bibliographystyle{plain}
+
+\input{header_files/newcommands.tex}
+\input{header_files/set_color.tex}
+\input{header_files/tikzstyles.tex}
+\input{header_files/mathoperators.tex}
+
+
+% PDF-options
+\title{'Blind' Iterative SAFT Reconstruction for Manually Acquired Ultrasonic Measurement Data in Nondestructive Testing} 
+\subtitle{CSP Advanced Research Project WS19/20}
+\institute{\foreignlanguage{german}{Technische Universität Ilmenau}}
+\author{Sayako Kodera}
+\date{Aug.07.2019}
+
+% beamer goto-button setup
+\setbeamercolor{button}{fg=white,bg=blue}
+\renewcommand{\beamergotobutton}[1]{%
+    \begingroup% keep color changes local
+    \setbeamercolor{button}{fg=white, bg=tui_orange}%
+    \beamerbutton{\insertgotosymbol#1}% original definition
+    \endgroup
+    }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%================================= tips to use beamer ======%
+
+% \uncover<page-> = the text will be covered (so displayed in light colors) for the particular pages of the slide
+% \ony<page-> = the text/images will be hidden for the particular pages of the slide
+% \footnotetext[number] = text for footnote wirh the givien "number"
+% \footnotemark = displays the mark (i.e. nuber) of the footnote
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+% display only logos but no contact info in footline
+\setbeamertemplate{footline}[light]
+% print title slide
+\begin{frame}[noframenumbering] % noframenumbering prevents the framecounter from increasing for this single slide
+ 	\titlepage
+\end{frame}
+
+% small footline for more content
+\setbeamertemplate{footline}[shrunkplain]
+%\begin{frame}[noframenumbering] % noframenumbering prevents the %framecounter from increasing for this single slide
+%	\frametitle{Table of contents}
+%	\vfill
+% 	\tableofcontents[part=1]
+%\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part{content}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Sec. 1.1 %%%%%
+\section{Background}
+
+\subsection{Measurement Assistance System} 
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Measurement Assistance System}
+%\fontsize{10pt}
+%======================================== content =====%
+	\begin{columns}[t]	
+	% Text part
+	\begin{column}{0.48\textwidth}	
+	\vspace{\topsep}
+	\hspace*{-0.3cm} \textbf{Features}:
+	\vspace*{-0.5cm}
+		\begin{itemize}
+		\item Position recognition
+		\item Data recording
+		\item Data visualization
+		\item Post-processing
+		\end{itemize}
+	%	
+	\vspace*{0.3cm}
+	\textbf{Problem}: Observation errors\\
+	\hspace*{0.3cm} e.g. tracking error 
+	\end{column}	
+	%
+	% Image part
+	\begin{column}{0.52\textwidth}
+		\begin{overprint} 
+		\centering
+		\vspace*{-0.5cm}
+		\only<1>{
+		\inputTikZ{0.6}{figures/SmartInspect_2D.tex}
+		}
+		\only<2->{
+		\inputTikZ{0.6}{figures/tracking_error_2D.tex}
+		}
+		\end{overprint}
+	\end{column}
+	\end{columns}	
+	
+%===================================================%
+\end{frame}
+
+
+\subsection{Motivation} 
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Impact of Positional Inaccuracy} 
+%\fontsize{10pt}
+%======================================== content =====%
+	%%=======  Left: B-Scan =======%%%
+	\begin{textblock}{75}(10, 22)
+	\centering
+	\begin{overprint}
+		% B-Scan ref
+		\only<1-2>{
+		\textbf{Measurement data}\\
+		\imgzdefmiddle{1.45}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/30mm_Bscan.png}\\
+		% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+	\end{overprint}
+	\end{textblock}
+	%
+	%
+	%%======= Right: Reco =======%%%
+	\begin{textblock}{75}(85, 22)
+	\centering
+	\begin{overprint}
+		% Reco ref
+		\only<1>{
+		\textbf{Reconstruction (no error)}\\
+		\vspace*{-0.2cm}
+		\imgzdefmiddle{1.45}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/30mm_true.png}\\
+		% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+		% Reco track
+		\only<2>{
+		\textbf{Reconstruction (with error)}\\
+		\vspace*{-0.2cm}
+		\imgzdefmiddle{1.45}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/30mm_track_1lambda.png}\\
+		% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+	\end{overprint}
+	\end{textblock}
+	
+%===================================================%
+\end{frame}
+
+
+\subsection{Objective and Contributions}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Objective and Contributions}
+%======================================== content =====%
+	%%========= Left: Text =========%%
+	\begin{textblock}{80}(10, 25) %-> using textblock avoid shifting of figures b/w slides
+	\textbf{Objective} 	
+	\begin{itemize}
+		\item Reduce error-induced artefacts in SAFT reconstructions
+	\end{itemize}
+	%\vspace*{0.2cm}
+	
+	\textbf{Contributions}
+	\begin{itemize}
+		\item Data model considering the positional inaccuracy 
+		\item Preprocessing method to estimate and correct positional error 
+	\end{itemize}
+	\end{textblock}
+	
+	%%========= Right: Image =========%%
+	\begin{textblock}{50}(95, 25)
+	\centering
+	\begin{overprint}
+	% Reco track
+	\only<1>{
+	\imgzdefmiddle{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/30mm_track_1lambda.png}\\
+	%<scale size>, <label font size>, <tick font size>, <png file name>, <ytick min>, <ytick center>, <ytick max>
+	}
+	% Reco opt
+	\only<2>{
+	\imgzdefmiddle{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/30mm_opt_1lambda.png}\\
+	}
+	\end{overprint}
+	\end{textblock}
+	
+%===================================================%	
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Method}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Blind Error Correction (BEC)}
+%======================================== content =====%
+	\textbf{Data model based on spatial approximation}\\
+	\begin{itemize}
+		\item Signal source positions
+		\item Tracking error
+	\end{itemize}
+	%\vspace*{0.2cm}
+	%
+	\textbf{Preprocessing in 2 steps}\\
+	(1) Estimate the signal source positions\\
+	\hspace*{0.6cm} Known: data structure\\
+	\hspace*{0.6cm} $\rightarrow$ Robust polynomial regression\\
+	\vspace*{0.2cm}
+	%
+	(2) Estimate and correct the tracking error\\
+	\hspace*{0.6cm} $\rightarrow$ Nonlinear programming\\
+%===================================================%	
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Simulations}
+\subsection{Setup}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{BEC Performance Analysis} 
+%======================================== content =====%
+	\only<1-2>{
+		\textbf{Simulation studies}\\
+		\begin{itemize}
+			\item \cigray<2>{Error tolerance}
+			\item\cihighlight<2>{Impact of the ROI depth}
+		\end{itemize}
+		%
+		\textbf{Scenario and Assumptions}
+		\begin{itemize}
+			\item Linear contact scanning (\SI{0.5}{\milli \metre} grids)
+			\item One point source in ROI
+			\item Tracking error $= - \lambda \ldots + \lambda$
+		\end{itemize}
+		\vspace*{0.2cm}
+	}
+	\only<3-4>{
+		\begin{textblock}{130}(10, 25) 
+			\textbf{Evaluation methods}
+			\begin{itemize}
+				\item \cigray<4>{Normalized squared error}
+				\item \cigray<4>{\textit{Generalized Contrast-to-Noise Ratio} (gCNR)}
+				\item \cihighlight<4>{\textit{Array Performance Indicator} (API)}
+			\end{itemize}
+		\end{textblock}
+		%
+		\begin{textblock}{90}(10, 53) 
+			\only<4>{
+				\hspace*{0.8cm} API = area $> \epsilon$ (normalized with $\lambda^{2}$)\\
+				\hspace*{1.4cm} $\Rightarrow$ smaller API $\hat{=}$ better resolution
+			}
+		\end{textblock}
+	}
+%===================================================%	
+\end{frame}
+
+\subsection{Results} 
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Impact of the ROI Depth} 
+%\fontsize{10pt}
+%======================================== content =====%
+	\only<1-2>{
+		\resultAPIanimate{1.55}{\scriptsize}{2}{(20.0, 18.1)}{(20.0, 26.4)}{(20.0, 20.5)}
+		%<scale size>, <font size>, <slide page for mark>, <mark coordinate for Reco_true>, <mark coordinate for Reco_track>, <mark coordinate for Reco_opt>
+	}
+	\only<4>{
+		\resultAPIanimate{1.55}{\scriptsize}{4}{(30.0, 17.79)}{(30.0, 24.97)}{(30.0, 18.69)}
+		%<scale size>, <font size>, <slide page for mark>, <mark coordinate for Reco_true>, <mark coordinate for Reco_track>, <mark coordinate for Reco_opt> 
+		}
+	\only<6>{
+		\resultAPIanimate{1.55}{\scriptsize}{6}{(50.0, 17.63)}{(50.0, 24.74)}{(50.0,18.48)}
+		%<scale size>, <font size>, <slide page for mark>, <mark coordinate for Reco_true>, <mark coordinate for Reco_track>, <mark coordinate for Reco_opt> 
+	}
+	%%=======  Left: Reco true =======%%%
+	\begin{textblock}{50}(5, 22)
+	\centering
+	\begin{overprint}
+		%% 20mm
+		\only<3>{
+			\textbf{Reference}\\
+			\imgzdefshallow{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/20mm_true.png}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+		%% 30mm
+		\only<5>{
+			\textbf{Reference}\\
+			\imgzdefmiddle{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/30mm_true.png}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+		%% 50mm
+		\only<7>{
+			\textbf{Reference}\\
+			\imgzdefdeep{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/50mm_true.png}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+	\end{overprint}
+	\end{textblock}
+	%
+	%
+	%%======= Middle: Reco track =======%%%
+	\begin{textblock}{50}(55, 22)
+	\centering
+	\begin{overprint}
+		%% 20mm
+		\only<3>{
+			\textbf{No error correction}\\
+			\imgzdefshallow{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/20mm_track_1lambda.png}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+		%% 30mm
+		\only<5>{
+			\textbf{No error correction}\\
+			\imgzdefmiddle{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/30mm_track_1lambda.png}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+		%% 50mm
+		\only<7>{
+			\textbf{No error correction}\\
+			\imgzdefdeep{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/50mm_track_1lambda.png}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+	\end{overprint}
+	\end{textblock}
+	%
+	%
+	%%======= Right: Reco opt =======%%%
+	\begin{textblock}{50}(105, 22)
+	\centering
+	\begin{overprint}
+		%% 20mm
+		\only<3>{
+			\textbf{With BEC}\\
+			\imgzdefshallow{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/20mm_opt_1lambda.png}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+		%% 30mm
+		\only<5>{
+			\textbf{With BEC}\\
+			\imgzdefmiddle{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/30mm_opt_1lambda.png}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+		%% 50mm
+		\only<7>{
+			\textbf{With BEC}\\
+			\imgzdefdeep{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/50mm_opt_1lambda.png}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+	\end{overprint}
+	\end{textblock}
+	
+%===================================================%
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Summary} 
+
+\subsection{Conclusion}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+\frametitle{Conclusion}
+%\vspace*{1cm}
+%\footnotesize
+%======================================== content =====%
+	\textbf{BEC $\Rightarrow$ artefacts reduction}
+	\begin{table}
+		\inputTable{0.9\textwidth}{tables/table_conclusion.tex}
+	\end{table}
+	%
+	\vspace*{0.3cm}
+	\textbf{Future Work}
+	\begin{itemize}
+		\item Extension to 3D and/or \textit{gridless} cases
+		\item Error correction via minimax estimator
+	\end{itemize}
+%===================================================%
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Bibliography %%%%%
+%\bibliography{main}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Backup %%%%%
+\appendix
+\backupbegin
+\section{Backup}
+\subsection{Backup Start}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	%\frametitle{ } 
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	\centering
+	\huge Backup
+	%===================================================%
+\end{frame}
+
+\input{appendix.tex} 
+
+\backupend
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

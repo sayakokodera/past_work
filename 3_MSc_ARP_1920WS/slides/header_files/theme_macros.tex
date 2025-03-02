@@ -1,0 +1,164 @@
+%%% presentation style stuff
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% general stuff
+
+% thanks to https://tex.stackexchange.com/questions/2541/beamer-frame-numbering-in-appendix
+% this helps us to organize framenumbering s.t. they do not increase for the appendix
+\newcommand{\backupbegin}{
+   \newcounter{framenumberappendix}
+   \setcounter{framenumberappendix}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+   \addtocounter{framenumberappendix}{-\value{framenumber}}
+   \addtocounter{framenumber}{\value{framenumberappendix}} 
+}
+
+
+% this is required to omit problems with tikz-externalize
+% as I did all that footer/header stuff using tikz
+% so we have to prevent tikz externalize from
+% externalizing these
+% otherwise framecounters and sections will screw up
+\newcommand{\donotexternalize}[1]{
+\tikzset{external/export=false}
+#1
+\tikzset{external/export=true}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TU Ilmenau stuff
+
+%% Logos
+\newcommand\logotuiwhite{\includegraphics[width=1.86cm]{logos/tu_bw_white.pdf}}
+\newcommand\logotuicolor{\includegraphics[width=1.86cm]{logos/tu_col_green.pdf}}
+
+\newcommand\settuitextmacros{
+	% Sets macros for text formatting
+	\newcommand<>{\cihighlight}[1]{\textcolor##2{tui_orange_dark}{##1}}
+	\newcommand<>{\cigray}[1]{\textcolor##2{tui_gray_dark}{##1}}
+	\newcommand<>{\cihide}[1]{\textcolor##2{white}{##1}}
+}
+
+
+%% Style
+\newcommand{\setTUIStyleTwoLogos}{
+	\mode<presentation>
+		{
+			\usepackage{theme/beamerthemetui}
+			\setbeamercovered{transparent}
+		}
+	}
+	
+	
+	
+% for enabling 16:9
+\newlength{\ruleswidth}
+\setlength{\ruleswidth}{\dimexpr(\paperwidth-20mm)\relax}
+	
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Fraunhofer stuff
+
+
+%% Logos
+\newcommand\logoizfpwhite{\raisebox{-6.68mm}{\includegraphics[width=1.86cm]{logos/izfp_85mm_p334_w.pdf}}}
+\newcommand\logoizfpcolor{\raisebox{-6.68mm}{\includegraphics[width=1.86cm]{logos/izfp_85mm_p334-eps-converted-to.pdf}}}
+\newcommand\logoiiswhite{\raisebox{-6.72mm}{\includegraphics[width=1.86cm]{logos/iis_85mm_p334.pdf}}}
+\newcommand\logoiiscolor{\raisebox{-6.72mm}{\includegraphics[width=1.86cm]{logos/iis_85mm_p334.pdf}}}
+
+
+\newcommand\setfhitextmacros{
+	% Sets macros for text formatting
+	\newcommand<>{\cihighlight}[1]{\textcolor##2{fraunhofer_orange}{##1}}
+	\newcommand<>{\cigray}[1]{\textcolor##2{fraunhofer_silver!70!black}{##1}}
+	\newcommand<>{\cihide}[1]{\textcolor##2{white}{##1}}
+	% taken from https://tex.stackexchange.com/questions/23034/how-to-get-larger-item-symbols-for-some-lists-in-a-beamer-	
+	% presentation and
+	% https://tex.stackexchange.com/questions/87133/changing-the-color-of-itemize-item-in-beamer
+	\setbeamertemplate{itemize subsubitem}{\tiny\raise0.5pt\hbox{\color{fraunhofer_silver}$ \blacksquare$}}
+}
+
+\newcommand{\setFHIStyleTwoLogos}{
+	\mode<presentation>
+		{
+			\usepackage{theme/beamerthemefhi}
+			\setbeamercovered{transparent}
+		}
+	% Big TODO: Frutiger font
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% set everything up using the macros
+%% TUI
+\ifthenelse{\equal{\setslidetheme}{tui}}
+{
+		\newcommand\setfirstlogo{\logotuiwhite}
+		\newcommand\setsecondlogo{}
+		
+		\setTUIStyleTwoLogos
+		
+		\settuitextmacros
+}{}
+\ifthenelse{\equal{\setslidetheme}{tuiiis}}
+{
+		\newcommand\setfirstlogo{\logotuiwhite}
+		\newcommand\setsecondlogo{\logoiiswhite}
+		
+		\setTUIStyleTwoLogos
+		
+		\settuitextmacros
+}{}
+\ifthenelse{\equal{\setslidetheme}{tuiizfp}}
+{
+		\newcommand\setfirstlogo{\logotuiwhite}
+		\newcommand\setsecondlogo{\logoizfpwhite}
+		
+		\setTUIStyleTwoLogos
+		
+		\settuitextmacros
+}{}
+
+
+%% Fraunhofer 
+\ifthenelse{ \equal{\setslidetheme}{iis}}
+{
+		\newcommand\setfirstlogo{\logoiiscolor}
+		\newcommand\setsecondlogo{}
+
+		\setFHIStyleTwoLogos
+		
+		\setfhitextmacros
+}{}
+\ifthenelse{ \equal{\setslidetheme}{izfp}}
+{
+		\newcommand\setfirstlogo{\logoizfpcolor}
+		\newcommand\setsecondlogo{}
+		
+		\setFHIStyleTwoLogos
+		
+		\setfhitextmacros
+}{}
+\ifthenelse{ \equal{\setslidetheme}{iistui}}
+{
+		\newcommand\setfirstlogo{\logoiiscolor}
+		\newcommand\setsecondlogo{\logotuicolor}
+
+		\setFHIStyleTwoLogos
+		
+		\setfhitextmacros
+}{}
+\ifthenelse{ \equal{\setslidetheme}{izfptui}}
+{
+		\newcommand\setfirstlogo{\logoizfpcolor}
+		\newcommand\setsecondlogo{\logotuicolor}
+
+		\setFHIStyleTwoLogos
+		
+		\setfhitextmacros
+}{}

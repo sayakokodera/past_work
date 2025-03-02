@@ -1,0 +1,477 @@
+% "newcommand" collections
+% !!! In newcommands: numbers cannot be used for the command names!!!
+%=====================  for general =======================%
+\renewcommand\thesubsection{\thesection.\Alph{subsection}}
+
+\newcommand{\ToDo}[1]{%
+	\textcolor{red}{#1}
+}
+
+%=====================  for math =======================%
+% Math operands
+% l2 norms
+\newcommand{\norm}[1]{%
+	\left\lVert#1\right\rVert
+}
+% Transpose
+\newcommand{\TP}[1]{%
+	#1^{\T}
+}
+% Vectorization
+\newcommand{\vectorize}[1]{%
+	\operatorname{vec} \{ #1 \}
+}
+% Diagonal matrix
+\newcommand{\diag}[1]{%
+	\operatorname{diag} \{ #1 \}
+}
+% Real part
+\newcommand{\Real}{%  
+     \operatorname{Re}
+}
+ % Imaginary part
+\newcommand{\Imag}{%  
+     \operatorname{Im}
+}
+% Column space
+\newcommand{\Col}[1]{
+	\operatorname{col} \{ #1 \}
+}
+% Nullspace 
+\newcommand{\Null}[1]{
+	\operatorname{null} \{ #1 \}
+} 
+
+
+% symbols
+% General
+\newcommand{\Identity}[1]{\bm{I}_{#1}} % Identity matrix
+\newcommand{\RR}{{\mathbb{R}}}
+\newcommand{\CC}{{\mathbb{C}}}
+
+% TLS relevant
+\newcommand{\Mone}{\bm{\Omega}}
+\newcommand{\MoneDelta}{\Delta \Mone}
+\newcommand{\MonePerturb}{\Mone + \MoneDelta}
+\newcommand{\Mtwo}{\bm{\Psi}}
+\newcommand{\MtwoDelta}{\Delta \Mtwo}
+\newcommand{\MtwoPerturb}{\Mtwo + \MtwoDelta}
+\newcommand{\Mthree}{\bm{\Upsilon}}
+\newcommand{\Mfour}{\bm{T}}
+\newcommand{\UU}{\bm{U}} % SVD: U
+\newcommand{\VV}{\bm{V}} % SVD: V
+\newcommand{\SSigma}{\bm{\Sigma}} % SVD: Sigma
+% Newton relevant
+\newcommand{\gradf}{g}
+\newcommand{\Hess}{\bm{H_{f}}}
+\newcommand{\dd}[1]{\bm{d}_{#1}}
+\newcommand{\iter}[1]{\xx_{#1}}
+
+% scan positions
+% p = scalar, \pp = vector
+\newcommand{\pp}{\bm{p}}
+\newcommand{\pphat}{\bm{\hat{p}}}
+\newcommand{\ppdelta}{\Delta \pp}
+% x = scalar, \xx = vector
+\newcommand{\xdelta}[1]{\Delta x_{#1}}
+\newcommand{\xhat}[1]{\hat{x}_{#1}}
+\newcommand{\xopt}{\xhat_{\optimized}}
+\newcommand{\xx}{\bm{x}}
+\newcommand{\xxdelta}{\Delta \xx}
+\newcommand{\xxhat}{\hat{\xx}}
+\newcommand{\xxopt}{\xxhat_{\optimized}}
+\newcommand{\xxdeltahat}{\Delta \xxhat}
+\newcommand{\xxdeltaopt}{\xxdeltahat_{\optimized}}
+% scatter position
+\newcommand{\scatterer}{\bm{s}}
+% A-Scans
+\newcommand{\ascansig}{a}
+\newcommand{\ascan}[1]{\bm{a}_{#1}} % with \xx
+\newcommand{\ascanhat}[1]{\hat{\ascan}_{#1}} % with \xxhat
+\newcommand{\Ascan}{\bm{A}} % with \xx
+\newcommand{\Ascanhat}{\hat{\Ascan}} % with \xxhat
+% Pulse, SAFT matrix, spatial approximation
+\newcommand{\pulsesig}{h}
+\newcommand{\pulse}{\bm{h}}
+\newcommand{\pulsehat}{\hat{\pulse}}
+\newcommand{\pulsederiv}{\bm{j}}
+\newcommand{\pulsederivhat}{\hat{\pulsederiv}}
+\newcommand{\SAFTcol}[2]{\pulse_{#1}^{(#2)}}
+\newcommand{\SAFThatcol}[2]{\pulsehat_{#1}^{(#2)}}
+\newcommand{\SAFT}{\bm{H}}
+\newcommand{\SAFThat}{\hat{\SAFT}}
+\newcommand{\SAFTdot}{\bm{J}}
+\newcommand{\SAFTdotcol}[2]{\pulsederiv_{#1}^{(#2)}}
+\newcommand{\SAFTdothat}{\hat{\SAFTdot}}
+\newcommand{\SAFTdothatcol}[2]{\pulsederivhat_{#1}^{(#2)}}
+\newcommand{\Error}{\bm{E}}
+\newcommand{\ErrorDef}{\diag{\xxdelta} \otimes \Identity{\M}}
+% Defect map
+\newcommand{\defect}{\bm{b}} 
+\newcommand{\defecthat}{\hat{\defect}}
+% Reco
+\newcommand{\Reco}{\bm{B}}  
+\newcommand{\Recohat}{\hat{\Reco}}  
+
+% TLS curve fit
+\newcommand{\zz}{\bm{z}}
+\newcommand{\zzperturb}{\zz + \Delta \zz}
+\newcommand{\XX}{\bm{X}}
+\newcommand{\XXperturb}{\XX + \Delta \XX}
+\newcommand{\ww}{\bm{w}}
+% Iterative EC via Newton
+\newcommand{\vonebase}{\alpha}
+\newcommand{\voneall}{\bm{\tilde{\vonebase}}}
+\newcommand{\vonepart}[1]{\bm{\vonebase}_{#1}}
+\newcommand{\vtwobase}{j}
+\newcommand{\vtwoall}{\bm{\tilde{\vtwobase}}}
+\newcommand{\vtwopart}[1]{\bm{\vtwobase}_{#1}}
+% Metrics
+\newcommand{\SEdag}{\SE^{\dagger}} 
+\newcommand{\MSEdag}{\MSE^{\dagger}} 
+
+% else
+\newcommand{\refcoeff}{\beta}
+\newcommand{\noisevec}{\bm{n}} 
+
+
+% Dimensions
+\newcommand{\N}{N}
+\newcommand{\M}{M}
+\newcommand{\K}{K}
+\newcommand{\LL}{L}
+\newcommand{\I}{I}
+
+%=====================  for roman numbers =======================%
+
+\newcommand{\rom}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+% from https://tex.stackexchange.com/questions/23487/how-can-i-get-roman-numerals-in-text
+
+
+%=====================  for tables =======================%
+\newcommand{\inputTable}[4]{ % <scaling factor>, <file name for the table>, <caption>, <label>
+	%\resizebox{#1}{!}{ -> only works in the beamer setting?
+		\begin{table}
+		\begin{center}
+			\input{#2}
+			\caption{#3}
+			\label{#4}
+		\end{center}
+		\end{table}
+	%}
+}
+
+%=====================  for TikZ =======================%
+\newcommand{\inputTikZ}[2]{%  
+     \scalebox{#1}{\input{#2}}  
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%=================  for data visualization ===================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%=================== 1D visualization ======================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% SE tolerance
+\newcommand{\resultSEtolerance}[6]{ % <scale size>, <font size>,  <fname for track 50mm>, <fname for opt 50mm>,  <fname for track 30mm>, <fname for opt 30mm>
+\scalebox{#1}{
+	\begin{tikzpicture}
+            \begin{axis}[
+                width = 7cm, height = 4cm,
+                xlabel = {Tracking error / $\lambda$}, ylabel = {$\MSEdag$},
+                ymin= -0.04, ymax= 0.65,
+                label style = {font = #2},
+                tick label style = {font = #2},
+                xtick = {0, 0.2, ..., 1.01},
+                ytick = {0, 0.2, ..., 0.6}, 
+                grid=both, grid style={line width=.1pt, draw=gray!20},
+                legend style ={
+                	at={(1.45, 0.7)},
+                	nodes={scale=0.95, transform shape},
+                	font = #2
+                }
+                ]
+                \input{#3} % track 50mm
+                \input{#4} % opt 50mm
+                \input{#5} % track 30mm
+                \input{#6} % opt 30mm
+                
+             % legend
+             % To insert the legend title
+		   	%\addlegendimage{empty legend} 
+		   	% Legend entries  
+             \addlegendentry{No correction}
+             \addlegendentry{BEC} 
+             % Title
+             %\addlegendentry{$|s_{x} - x|$}        
+            \end{axis}
+	\end{tikzpicture}
+	}
+}
+
+% SE depth 
+\newcommand{\resultSE}[7]{ % <scale size>, <font size>, <xlabel>, <ymax>, <xtick>, <fname for track>, <fname for opt>
+\scalebox{#1}{
+	\begin{tikzpicture}
+            \begin{axis}[
+                width = 7cm, height = 4cm,
+                xlabel = {#3}, ylabel = {$\MSEdag$},
+                ymin= -0.04, ymax= #4,
+                label style = {font = #2},
+                tick label style = {font = #2},
+                xtick = {#5},
+                ytick = {0, 0.2, ..., #4}, 
+                grid=both, grid style={line width=.1pt, draw=gray!20},
+                legend style ={
+                	at={(1.45, 0.7)},
+                	nodes={scale=0.95, transform shape},
+                	font = #2
+                }
+                ]
+                \input{#6} % track
+                \input{#7} % opt
+                
+             % legend
+             % To insert the legend title
+		   	%\addlegendimage{empty legend} 
+		   	% Legend entries  
+             \addlegendentry{No correction}
+             \addlegendentry{BEC} 
+             % Title
+             %\addlegendentry{$|s_{x} - x|$}        
+            \end{axis}
+	\end{tikzpicture}
+	}
+}
+
+% API
+\newcommand{\resultAPI}[9]{ % <scale size>, <font size>, <xlabel>, <ymax>, <xtick>, <ytick>, <fname for true>, <fname for track>, <fname for opt>
+\scalebox{#1}{
+	\begin{tikzpicture}
+            \begin{axis}[
+                width = 7cm, height = 4cm,
+                xlabel = {#3}, ylabel = {$\MAPI$},
+                ymin= 16.5, ymax= #4,
+                label style = {font = #2},
+                tick label style = {font = #2},
+                xtick = {#5},
+                ytick = {#6},
+                grid=both, grid style={line width=.1pt, draw=gray!20},
+                legend style ={
+                	at={(1.45, 0.8)},
+                	nodes={scale=0.95, transform shape},
+                	font = #2
+                }
+                ]
+                \input{#7} % true
+                \input{#8} % track
+                \input{#9} % opt
+                
+             % legend
+             % To insert the legend title
+		   	%\addlegendimage{empty legend} 
+		   	% Legend entries  
+		   	\addlegendentry{Reference}
+             \addlegendentry{No correction}
+             \addlegendentry{BEC}
+             % Title
+             %\addlegendentry{$|s_{x} - x|$}        
+            \end{axis}
+	\end{tikzpicture}
+	}
+}
+
+
+% GCNR
+\newcommand{\resultGCNR}[9]{ % <scale size>, <font size>, <xlabel>, <ymin>, <xtick>, <ytick>, <fname for true>, <fname for track>, <fname for opt>
+\scalebox{#1}{
+	\begin{tikzpicture}
+            \begin{axis}[
+                width = 7cm, height = 4cm,
+                xlabel = {#3}, ylabel = {$\MGCNR$},
+                ymin= #4, ymax= 0.97,
+                label style = {font = #2},
+                tick label style = {font = #2},
+                xtick = {#5},
+                ytick = {#6},  % 1.01 = otherwise the tick does not show up 
+                grid=both, grid style={line width=.1pt, draw=gray!20},
+                legend style ={
+                	at={(1.45, 0.8)},
+                	nodes={scale=0.95, transform shape},
+                	font = #2
+                }
+                ]
+                \input{#7} % true
+                \input{#8} % track
+                \input{#9} % opt
+                
+             % legend
+             % To insert the legend title
+		   	%\addlegendimage{empty legend} 
+		   	% Legend entries  
+		   	\addlegendentry{Reference}
+             \addlegendentry{No correction}
+             \addlegendentry{BEC}
+             % Title
+             %\addlegendentry{$|s_{x} - x|$}        
+            \end{axis}
+	\end{tikzpicture}
+	}
+}
+
+% GD SE
+\newcommand{\gdse}[8]{ %  <scale size>, <label font size>, <tick font size>, <fname for 0.5 lambda>, <fname for 1mm>, <fname for 2.5mm>, <fname for 5mm>, <fname for 7.5mm>
+\scalebox{#1}{
+	\begin{tikzpicture}
+            \begin{axis}[
+                width = 7cm, 
+            	   height = 4cm,
+            	   xmin = -2.1,
+            	   xmax = 2.1,
+            	   ymin = -0.1,
+            	   ymax = 1.1,
+                xlabel = {$\xdelta / \lambda$},
+                ylabel = {$\SEdag$},
+                label style = {font = #2},
+                tick label style = {font = #3},
+                %y dir = reverse,
+                %xtick = {0, 10, ..., 30}, %to customize the axis
+                extra x ticks={0.8}, 
+                extra x tick style={font = #3, tui_orange},%yshift={-1.2em}
+                %xticklabel = {0, 5, 10, 15}
+                legend style ={
+                	at={(1.4, 0.9)},
+                	nodes={scale=0.95, transform shape},
+                	font = #3
+                }
+                ]
+                % Reverse the input order, so that 7.5mm away is sent to background
+                \input{#8} %7.5mm
+                \input{#7} %5mm
+                \input{#6} %2.5mm
+                \input{#5} %1mm
+                \input{#4} %0.5 lambda
+                
+             % legend
+             % To insert the legend title
+		   	\addlegendimage{empty legend} 
+		   	% Legend entries  
+             \addlegendentry{\SI{7.5}{\milli\metre}}
+             \addlegendentry{\SI{5}{\milli\metre}}
+             \addlegendentry{\SI{2.5}{\milli\metre}} %{$1.98 \lambda$}
+             \addlegendentry{\SI{1}{\milli\metre}} %{$0.8 \lambda$}
+             \addlegendentry{\SI{0.63}{\milli\metre}} %{$0.5 \lambda$}
+             % Title
+             \addlegendentry{$| s_{x} - x |$}
+             
+%             % x = 0.8 line
+%	            \addplot[gray, dashed, line width = 1pt, mark = ] coordinates{
+%	            			(0.8, 0.2)
+%	            			(0.8, -0.1)
+%            		};
+                         
+            \end{axis}
+	\end{tikzpicture}
+	}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%=================== 2D visualization ======================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% image with both x- & y-labels
+\newcommand{\imgbothlabels}[7]{% <scale size>, <label font size>, <tick font size>,<ytick>, <ymin>, <ymax>, <png file name>
+\scalebox{#1}{
+	\begin{tikzpicture}
+            \begin{axis}[
+                enlargelimits = false,
+                axis on top = true,
+                axis equal image,
+                unit vector ratio= 0.5 1, % change aspect ratio, one of them should be 1
+                point meta min = -1,   
+                point meta max = 1,
+                xlabel = {$x$ [\SI{}{\milli \metre}]},
+                ylabel = {$z$ [\SI{}{\milli \metre}]},
+                label style = {font = #2},
+                tick label style = {font = #3},
+                y dir = reverse,
+                xtick = {15, 20, 25},
+                ytick = {#4},
+                ]
+                \addplot graphics [
+                    xmin = 15,
+                    xmax = 25,
+                    ymin = #5,
+                    ymax = #6
+                ]{#7};
+            \end{axis}
+	\end{tikzpicture}
+	}
+}
+            
+% img with only x-label
+\newcommand{\imgxlabel}[7]{% <scale size>, <label font size>, <tick font size>, <ytick>, <ymin>, <ymax>, <png file name>
+\scalebox{#1}{
+	\begin{tikzpicture}
+            \begin{axis}[
+                enlargelimits = false,
+                axis on top = true,
+                axis equal image,
+                unit vector ratio= 0.5 1, % change aspect ratio, one of them should be 1
+                point meta min = -1,   
+                point meta max = 1,
+                xlabel = {$x$ [\SI{}{\milli \metre}]},
+                %ylabel = {$y / \dy$},
+                label style = {font = #2},
+                tick label style = {font = #3},
+                xtick = {15, 20, 25},
+                ytick = {#4},
+                %yticklabel = \empty,
+                y dir = reverse,
+                ]
+                \addplot graphics [
+                    xmin = 15,
+                    xmax = 25,
+                    ymin = #5,
+                    ymax = #6
+                ]{#7};
+            \end{axis}
+	\end{tikzpicture}
+	}
+}
+
+
+
+% img with only x-label and cmap
+\newcommand{\imgxlabelwithcmap}[7]{% <scale size>, <label font size>, <tick font size>, <ytick>, <ymin>, <ymax>, <png file name>
+\scalebox{#1}{
+	\begin{tikzpicture}
+            \begin{axis}[
+                enlargelimits = false,
+                axis on top = true,
+                axis equal image,
+                unit vector ratio= 0.5 1, % change aspect ratio, one of them should be 1
+                point meta min = -1,   
+                point meta max = 1,
+                colorbar,
+                colormap = {mymap}{rgb(0.0pt) = (0, 0.22, 0.39) ; rgb(0.43pt) = (0.91, 0.93, 0.96) ; rgb(0.5pt) = (0.97, 0.97, 0.98) ; rgb(0.57pt) = (0.99, 0.93, 0.87) ; rgb(1.0pt) = (0.94, 0.49, 0) ; } ,
+                xlabel = {$x$ [\SI{}{\milli \metre}]},
+                %ylabel = {$y / \dy$},
+                label style = {font = #2},
+                tick label style = {font = #3},
+                xtick = {15, 20, 25},
+                ytick = {#4},
+                %yticklabel = \empty,
+                y dir = reverse,
+                ]
+                \addplot graphics [
+                    xmin = 15,
+                    xmax = 25,
+                    ymin = #5,
+                    ymax = #6
+                ]{#7};
+            \end{axis}
+	\end{tikzpicture}
+	}
+}
+

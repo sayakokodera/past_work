@@ -1,0 +1,707 @@
+%%% Appendix %%%
+\subsection{Parameters (1)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	\frametitle{Parameters w.r.t. Test Object}
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	\centering
+	\begin{table}
+	\begin{center}
+		\inputTable{0.85\textwidth}{tables/table_constant_params_EN.tex}
+	\end{center}
+	\end{table}
+	%===================================================%
+\end{frame}
+
+
+\subsection{Parameters (2)}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+	\frametitle{Parameters w.r.t. Pulse}
+	%\vspace*{1cm}
+	%\footnotesize
+	%======================================== content =====%
+	\centering
+	\begin{columns}
+	% table
+	\begin{column}{0.5\textwidth}
+	\begin{table}
+	\begin{center}
+		\inputTable{1\textwidth}{tables/table_constant_params_pulse_EN.tex}
+	\end{center}
+	\end{table}
+	\end{column}
+	% FIG : Gabot
+	\begin{column}{0.5\textwidth}
+	\inputTikZ{0.6}{figures/Gabor_pulse.tex}
+	\end{column}
+	\end{columns}	
+	%===================================================%
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Sec. 1.2 %%%%%
+
+
+\subsection{SAFT}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Post-processing Method} 
+%======================================== content =====%
+	Synthetic Aperture Focusing Technique (SAFT)
+	\begin{columns}[t]
+	% Text part
+	\begin{column}{0.48\textwidth}
+	\begin{center}
+		\begin{itemize}
+		\item Superposition according to propagation time delay
+		\item Spatial sampling of the specimen
+		\end{itemize}
+	\end{center}
+	\end{column}	
+	%	
+	% Image part
+	\begin{column}{0.52\textwidth}
+	\vspace*{-0.3cm}
+	\begin{center}
+		\only<1>{\inputTikZ{1.1}{figures/SAFT_superposition.tex}}
+		\only<2>{\inputTikZ{0.9}{figures/Synthetic_aperture.tex}}
+	\end{center}
+	\end{column}
+	%
+	\end{columns}	
+%===================================================%		
+\end{frame}
+
+\subsection{FWM}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Mathematical Model} 
+%======================================== content =====%
+	% Defect map
+	\only<1>{
+	\textit{defect map} for ROI = \cihighlight{$\M \times \N_{x}$}\\
+	\centering
+	\inputTikZ{1.1}{figures/ROI_sketch.tex}
+	}
+	%
+	% Linear transform: single A-Scan
+	\only<2-3>{
+	\textbf{Transform}: \textit{defect map} $\rightarrow$ single A-Scan at $x_{k}$ $\in$ $\RR$\\
+	% Equation
+	\begin{equation*}
+	\ascank = \SAFTk \defect + \noisevec \in \RR^{\M}
+	\end{equation*}\\ % "\\" avoids to shift the next text horizontaly
+	%
+	\vspace*{0.2cm}
+	% Description
+	\only<2>{
+		\begin{itemize}
+			\item $\ascank$: measured A-Scan at $x_{k}$ (\cihighlight{$\M$})
+			\item $\SAFTk$: SAFT matrix at $x_k$ (\cihighlight{$\M \times \LL = \M \times \M \N_{x}$})\\
+					\hspace*{0.7cm} Containing pulse information for $\scatterer_{l} = (x_i, z_j)$, $l = 1$...$\LL$
+			\item $\defect$: vectorized \textit{defect map} (\cihighlight{$\LL = \M \N_{x}$})
+			\item $\noisevec$: noise (\cihighlight{$\M$})
+		\end{itemize}
+	}
+	\only<3>{
+		% SAFT_k
+		\textbf{SAFT matrix}  at $x_k$\\
+		\begin{equation*}
+			\SAFTk = 
+			\begin{bmatrix} \SAFTcol{k}{1} & \SAFTcol{k}{2} & \cdots & \SAFTcol{k}{\LL} \end{bmatrix}
+			\in \RR^{\M \times \LL}
+		\end{equation*}
+	}}
+	%
+	% Linear transform: K A-Scans
+	\only<4->{
+	\textbf{Transform}: \textit{defect map} $\rightarrow$ $\K$ A-Scans at $\xvec$ $\in$ $\RR^{\K}$\\
+	% Equation
+	\begin{equation*}
+	\vecoperator{\Ascan} = \SAFT \defect + \vecoperator{\bm{N}} \in \RR^{\M \K}
+	\end{equation*}\\ % "\\" avoids to shift the next text horizontaly
+	%
+	\vspace*{0.2cm}
+	% Description
+	\only<4>{
+	\begin{itemize}
+	\item $\Ascan$: measured A-Scans at $\xvec$ (\cihighlight{$\M \times \K$})
+	\item $\SAFT$: SAFT matrix at $\xvec$ (\cihighlight{$\M \K \times \LL = \M \times \M \N_{x}$})\\
+			\hspace*{0.7cm} Containing pulse information for $\scatterer_{l} = (x_i, z_j)$, $l = 1$...$\LL$
+	\item $\defect$: vectorized \textit{defect map} (\cihighlight{$\LL = \M \N_{x}$})
+	\item $\bm{N}$: noise (\cihighlight{$\M \times \K$})
+	\end{itemize}
+	}
+	\only<5>{
+		% A-Scans
+		\textbf{A-Scans}  collected at $\xvec$\\
+		\begin{equation*}
+			\Ascan = 
+		\begin{bmatrix} \ascanvec_{1} & \ascanvec_{2} & \cdots & \ascanvec_{\K} \end{bmatrix}
+			\in \RR^{\M \times \K}
+		\end{equation*}
+	}
+	\only<6>{
+		% SAFT
+		\textbf{SAFT matrix}  at $\xvec$\\
+		\begin{equation*}
+			\SAFT = 
+			\begin{bmatrix} \SAFT_1 \\ \SAFT_2 \\ \vdots \\ \SAFT_{\K} \end{bmatrix}
+			\in \RR^{\M \K \times \LL}
+		\end{equation*}
+	}}
+	%
+%	% Matrix description
+%	\only<6>{
+%	% SAFT_k
+%	\begin{equation*}
+%		\SAFTk = 
+%		\begin{bmatrix} \SAFTcol{k}{1} & \SAFTcol{k}{2} & \cdots & \SAFTcol{k}{\LL} \end{bmatrix}
+%	\end{equation*}
+%	%
+%	% A-Scans
+%	\begin{equation*}
+%		\Ascan = 
+%		\begin{bmatrix} \ascanvec_{1} & \ascanvec_{2} & \cdots & \ascanvec_{\K} \end{bmatrix}
+%	\end{equation*}
+%	%
+%	% SAFT matrix
+%	\begin{equation*} 
+%		\SAFT = \begin{bmatrix} \SAFT_1 \\ \SAFT_2 \\ \vdots \\ \SAFT_{\K} \end{bmatrix}.
+%	\end{equation*}
+%	}
+%===================================================%		
+\end{frame}
+
+
+\subsection{Spatial Approximation}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Spatial Approximation} 
+%======================================== content =====%
+	% Single A-Scan
+	\only<1>{
+	\textbf{\cihighlight{Tracked position}}: $\xhat_{k}$ $=$ $x_k + \Delta x_k$ $\in$ $\RR$ \\
+	\vspace*{0.3cm}
+	%
+	\hspace*{0.5cm} \textbf{Data model}\\
+	\vspace*{-0.5cm}
+	\begin{equation*}
+	\ascank = \SAFTk \defect + \noisevec \in \RR^{\M}
+	\end{equation*}
+	%
+	\hspace*{0.5cm} \textbf{Approximation}\\
+	\vspace*{-0.5cm}
+	\begin{equation*}
+	\SAFTk \approx \SAFThatk - \Jacobianhat_{k} \Delta x_k \in \RR^{\M \times \LL}
+	\end{equation*}
+	%
+	% Description
+	\vspace*{-0.5cm}
+	\begin{itemize}
+	\item $\SAFThatk$: SAFT matrix at $\xhat_{k}$ (\cihighlight{$\M \times \LL$})
+	\item $\Jacobianhat_{k}$: Derivative of $\SAFThatk$ w.r.t. $x$ (\cihighlight{$\M \times \LL$})
+	\end{itemize}
+	%
+	}
+	%
+	% multiple (K) A-Scans
+	\only<2->{ 
+	\textbf{\cihighlight{Tracked positions}}: $\xvechat$ $=$ $\xvec + \Delta \xvec$ $\in$ $\RR^{\K}$\\
+	\vspace*{0.3cm}
+	%
+	\hspace*{0.5cm} \textbf{Data model}\\
+	\vspace*{-0.5cm}
+	\begin{equation*}
+	\vecoperator{\Ascan} = \SAFT \defect + \vecoperator{\bm{N}} \in \RR^{\M \K}
+	\end{equation*}
+	%
+	\hspace*{0.5cm} \textbf{Approximation}\\
+	\vspace*{-0.5cm}
+	\begin{equation*}
+	\SAFT \approx \SAFThat + \bm{E} \Jacobianhat \in \RR^{\M \K \times \LL}
+	\end{equation*}
+	%
+	% Description
+	\vspace*{-0.5cm}
+	\begin{itemize}
+	\item $\SAFThat$: SAFT matrix at $\xvechat$ (\cihighlight{$\M \K \times \LL$})
+	\item $\Jacobianhat$: Derivative of $\SAFThat$ w.r.t. $\xvec$ (\cihighlight{$\M \K \times \LL$})
+	\item $\bm{E}$: Error matrix $= \diagoperator{\Delta \xvec} \otimes \Identity_{\M}$ (\cihighlight{$\M \K \times \M \K$})
+	\end{itemize}
+	}
+%===================================================%		
+\end{frame}
+
+
+\subsection{Proposed Preprocessing}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Proposed Preprocessing} 
+%======================================== content =====%
+	% Cost function
+	\begin{equation*}
+	\min_{\xdeltavec} \min_{\defect} \norm{ \vecoperator{\Ascan}  - \SAFTapproxxvec \defect }_{2}^{2}
+	\end{equation*}
+	%
+	% Block diagram
+	\begin{figure}
+	\inputTikZ{1}{figures/block_diagram_simulation_flow_base.tex}
+	\end{figure}
+	%
+%===================================================%		
+\end{frame}
+
+
+\subsection{Curve Fitting}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Curve Fitting} 
+%======================================== content =====%
+	\only<1>{%
+		% Cost function
+		%\vspace*{-0.18cm} % to compensate the vertical shift
+		\begin{equation*}
+		\min_{\xdeltavec} \cihighlight{\min_{\defect}} \norm{ \vecoperator{\Ascan}  - \SAFTapproxxvec \cihighlight{\defect}}_{2}^{2}
+		\end{equation*}
+		%
+		% Block diagram
+		\begin{figure}
+		\inputTikZ{1}{figures/block_diagram_simulation_flow_hyperbolafit.tex}
+		\end{figure}
+		%
+	}%
+	\only<2->{%
+	\begin{textblock}{80}(10, 25)
+		\only<2-4>{%
+			\textbf{B-Scan}
+			\begin{itemize}
+				\item Defect map $\defect$ $\hat{=}$ \cihighlight{$(x_{\dist}, z_{\dist})$} 
+				\item Scan positions $\xvec$ $\in$ $\RR^{\K}$
+				\item Peak positions $\zvec$ $\in$ $\RR^{\K}$ \\
+						$\hat{=}$ Time-of-Flight
+				\item Curvature
+			\end{itemize}
+		$\Rightarrow$ \textbf{$\approx$ Parabola}
+		}%
+		%
+		\only<5->{%
+			% Eq: parabola approx. polynomial form
+			\textbf{Parabola approximation}: $k$-th scan\\ \vspace*{-0.5cm}
+			\begin{equation*}
+			z_{k} \approx  u_{0} + u_1 \cdot x_{k} + u_{2} \cdot x_{k}^{2}
+			\end{equation*}
+			%
+			\only<5>{%
+				$\Rightarrow$ \hspace*{1.4cm} $x_{\dist} = - \frac{u_{1}}{2 u_{2}}$\\
+				\vspace*{0.2cm}
+				\hspace*{2.2cm}$z_{\dist} = u_{0} - \frac{u_{1}^{2}}{4 u_{2}}$\\
+			}%
+			\only<6->{
+				% K scan positions
+				\textbf{$\K$ scan positions}:
+				\begin{equation*}
+				\begin{bmatrix} z_{1}\\ z_{2}\\  \vdots \\ z_{\K} \end{bmatrix} \approx 
+				\begin{bmatrix} 1 & x_{1} & x_{1}^{2}\\ 1 & x_{2} & x_{2}^{2}\\ \vdots & \vdots & \vdots \\ 1 & x_{\K} & x_{\K}^{2} \end{bmatrix} \cdot
+				\begin{bmatrix} u_{0}\\ u_{1}\\ u_{2} \end{bmatrix}
+				\end{equation*}
+				%
+				\hspace*{1.4cm} $\bm{z}$ \hspace*{1.7cm} $\bm{X}$ \hspace*{1.5cm} $\bm{u}$
+			}
+		}%
+		%
+	\end{textblock}
+	%
+	%
+	\begin{textblock}{80}(90, 27.5)
+		\centering
+		% Measurement
+		%\inputTikZ{1}{figures/measurement_animmation.tex}\\
+		\curvefit{1}{4-}{5-}{3-}{5-}\\ 
+		% <scale size>, <slide page for base pulse>, <slide page for highlighting the pulse 2.5mm away>, <slide page for adding the defect position>, <slide page for adding the scan position>, 
+		%
+	\end{textblock}	 
+	}
+%===================================================%		
+\end{frame}
+
+
+\subsection{TLS}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Polynomial Regression via TLS} 
+%======================================== content =====%
+	\only<1>{%
+	% Data approximation: K scan positions
+	\begin{textblock}{80}(10, 25)
+		\textbf{Approximation}
+		\begin{equation*}
+		\begin{bmatrix} z_{1}^{2}\\ z_{2}^{2}\\  \vdots \\ z_{\K}^{2} \end{bmatrix} \approx 
+		\begin{bmatrix} 1 & x_{1} & x_{1}^{2}\\ 1 & x_{2} & x_{2}^{2}\\ \vdots & \vdots & \vdots \\ 1 & x_{\K} & x_{\K}^{2} \end{bmatrix} \cdot
+		\begin{bmatrix} u_{0}\\ u_{1}\\ u_{2} \end{bmatrix}
+		\end{equation*}
+		%
+		\hspace*{1.4cm} $\bm{z}$ \hspace*{1.7cm} $\bm{X}$ \hspace*{1.5cm} $\bm{u}$\\
+	\end{textblock}	
+	%
+	% Errors
+	\begin{textblock}{60}(85, 30)
+		Errors in $\bm{z}$ and $\bm{X}$\\
+		\begin{itemize}
+			\item $\Delta \bm{z}$: Measurement noise, quantization error etc
+			\item $\Delta \bm{X}$:Tracking error
+		\end{itemize}
+		$\Rightarrow$ \textbf{independent errors}
+	\end{textblock}	
+	}%
+	%
+	\only<2->{%
+	\begin{textblock}{150}(10, 25)
+		\only<2>{\textbf{Approximation}\\}%
+		\only<3->{\textbf{Incorporating errors}\\}%
+		\vspace*{0.3cm}
+		% Equation
+		\only<2>{%
+			\hspace*{4.3cm} $\bm{z}$ \hspace*{0.8cm} $\approx$ \hspace*{0.8cm} $\bm{X}$ \hspace*{0.8cm} $\cdot$ \hspace*{0.8cm} $\bm{u}$\\%
+		}%
+		\only<3->{%
+			\hspace*{3.3cm} $\bm{z} + \cihighlight{\Delta \bm{z}}$ \hspace*{0.4cm} $=$ \hspace*{0.4cm} $\left( \bm{X} + \cihighlight{\Delta \bm{X}} \right)$ \hspace*{0.2cm} $\cdot$ \hspace*{0.2cm} $\bm{u}$\\%
+		}%
+		\vspace*{0.3cm}
+		% Dimension
+		\cigray{\hspace*{4.3cm} \cigray{$\K$} \hspace*{2cm} $\K \times 3$ \hspace*{1.8cm} $3$}\\
+	\end{textblock}	
+	%
+	\begin{textblock}{150}(10, 50)
+		\only<4->{
+			$\Rightarrow$ \textbf{Total least squares}\\
+			\vspace*{-0.7cm}
+				\begin{eqnarray*}
+					\min \norm{\left[ \Delta \bm{X} \cigray{\vert} \Delta \bm{z} \right] }_{\F}^{2} & 
+					\mbox{s.t.} & 
+					\bm{z} + \Delta \bm{z} = \left[ \bm{X} + \Delta \bm{X} \right] \cdot \bm{u} \\
+				\end{eqnarray*}
+		}
+	\end{textblock}	
+	%
+	\begin{textblock}{150}(10, 70)
+		\only<4->{
+			\hspace*{1cm} $\Rightarrow$ $\bm{u}$ $\Rightarrow$ $\defecthat_{\estimated}$
+		}
+	\end{textblock}	
+	}%
+	%
+%===================================================%		
+\end{frame}
+
+\subsection{Iterative Error Correction}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Iterative Error Correction} 
+%======================================== content =====%
+	\only<1>{
+	% Cost function
+	\begin{equation*}
+	\cihighlight{\min_{\xdeltavec}} \min_{\defect} \norm{ \vecoperator{\Ascan}  - \left( \SAFThat + \cihighlight{\bm{E} \Jacobianhat} \right) \defect }_{2}^{2}
+	\end{equation*}
+	%
+	% Block diagram
+	\begin{figure}
+	\inputTikZ{1}{figures/block_diagram_simulation_flow_Newton.tex}
+	\end{figure}
+	}
+	\only<2->{%
+	\begin{textblock}{150}(10, 25)
+		\textbf{Taylor approximation}
+		\begin{equation*}
+		\vecoperator{\Ascan} \approx \SAFTapproxxvec \defect 
+		\end{equation*}
+		%
+		\textbf{Cost function (2nd step)}
+		\only<2->{%
+		\begin{equation*}
+		\min_{\xdeltavec} \norm{ \vecoperator{\Ascan} - \SAFTapproxxvec \cihighlight{\defecthat_{\estimated}} }_{2}^{2}
+		\end{equation*}
+		}%
+	\end{textblock}	
+	%
+	\begin{textblock}{150}(10, 75)
+		\only<3->{%
+		$\Rightarrow$ Nonlinear programming (e.g. Newton method)
+		}%
+	\end{textblock}	
+	}%
+	%
+%===================================================%		
+\end{frame}
+
+
+\subsection{TLS Performance}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Signal Source Estimation} 
+%======================================== content =====%
+	% SE result
+	\begin{textblock}{80}(10, 25)
+		\textbf{Estimation error}\\%
+		%
+		\meTLS{0.8}{\large}{\large}{1-}{figures/pytikz/1D/TLS_error_762dz_200207_lambda.tex}{2-}{figures/pytikz/1D/TLS_error_1270dz_200207_lambda.tex} 
+		% <scale size>, <label font size>, <tick font size>,  <slide page to pop up the fname for ME 762dz>, <fname for ME 762dz>, <slide page to pop up the ME 1270dz>, <fname for ME 1270dz>
+		
+	\end{textblock}
+	%
+	% TikZ image
+	\begin{textblock}{80}(90, 25)
+		\centering
+		\TLSanimate{0.9}{1}{2}
+		% <scale size>,  <slide page for z_def = 762dz>, <slide page for z_def = 1270dz>
+	\end{textblock}	 
+%===================================================%		
+\end{frame}
+
+\subsection{Metrics: $\SEdag$} 
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}
+\frametitle{Metrics: $\SEdag$}
+%\vspace*{1cm}
+%\footnotesize
+%======================================== content =====%
+	\begin{equation*}
+	\SEdag = \frac{ \| \gamma \ascanvechat - \ascanvec \|_{2}}{\| \ascanvec \|_{2}}
+	\end{equation*}\\
+	%
+	\vspace*{0.5cm}
+	$\gamma$: normalization factor \\
+	\begin{equation*}
+	\gamma = \frac{\ascanvec^{\T} \cdot \ascanvechat}{\ascanvechat^{\T} \cdot \ascanvechat}.
+	\end{equation*}
+%===================================================%
+\end{frame}
+
+
+\subsection{Metrics: $\API$}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Metrics: $\API$}
+%======================================== content =====%
+	\begin{equation*}
+		\API = \frac{A_{\epsilon}}{\lambda^{2}} 
+	\end{equation*}
+%===================================================%	
+\end{frame}
+
+
+\subsection{Metrics: $\GCNR$}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Metrics: $\GCNR$}
+%======================================== content =====%
+	\begin{equation*}
+		\OVL = \int \min \{ p_i (x), p_o (x) \} \dx
+	\end{equation*}
+	where
+	\begin{itemize}
+		\item $p_i (x)$: p.d.f for inside the target area
+		\item $p_o (x)$: p.d.f for outside the target area
+	\end{itemize}
+	%
+	\vspace*{0.5cm}
+	\begin{equation*}
+		\GCNR = 1 - \OVL
+	\end{equation*}
+%===================================================%	
+\end{frame}
+
+\subsection{Error tolerance Images}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Error Tolerance: Images}
+%======================================== content =====%
+	\vspace*{-0.5cm}
+	\only<1>{\textbf{Error = $0.4 \lambda$}}\only<2>{\textbf{Error = $0.8 \lambda$}}\only<3>{\textbf{Error = $1 \lambda$}} ($\lambda = $ \SI{1.26}{\milli \metre})\\
+	%%=======  Left: Reco true =======%%%
+	\begin{textblock}{50}(5, 27)
+	\centering
+	\begin{overprint}
+		%% 30mm
+			\textbf{Reference}\\
+			\imgzdefmiddle{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/30mm_true.png}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+	\end{overprint}
+	\end{textblock}
+	%
+	%
+	%%======= Middle: Reco track =======%%%
+	\begin{textblock}{50}(55, 27)
+	\centering
+	\begin{overprint}
+		%% 30mm 0.4 lambda
+		\only<1>{
+			\textbf{No error correction}\\
+			\imgzdefmiddle{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/30mm_track_04lambda.png}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+		%% 30mm 0.8 lambda
+		\only<2>{
+			\textbf{No error correction}\\
+			\imgzdefmiddle{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/30mm_track_08lambda.png}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+		%% 30mm 1 lambda
+		\only<3>{
+			\textbf{No error correction}\\
+			\imgzdefmiddle{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/50mm_track_1lambda.png}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+	\end{overprint}
+	\end{textblock}
+	%
+	%
+	%%======= Right: Reco opt =======%%%
+	\begin{textblock}{50}(105, 27)
+	\centering
+	\begin{overprint}
+		%% 30mm 0.4 lambda
+		\only<1>{
+			\textbf{With BEC}\\
+			\imgzdefmiddle{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/30mm_opt_04lambda.png}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+		%% 30mm 0.8 lambda
+		\only<2>{
+			\textbf{With BEC}\\
+			\imgzdefmiddle{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/30mm_opt_08lambda.png}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+		%% 30mm 1 lambda
+		\only<3>{
+			\textbf{With BEC}\\
+			\imgzdefmiddle{1.2}{\scriptsize}{\scriptsize}{figures/pytikz/2D/texpngs/ARP/30mm_opt_1lambda.png}\\
+			% <scale size>, <label font size>, <tick font size>, <png file name>
+		}
+	\end{overprint}
+	\end{textblock}	
+%===================================================%	
+\end{frame}
+
+\subsection{Error tolerance: $\SEdag$}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Error tolerance Results: $\SEdag$}
+%======================================== content =====%
+	\resultSE{1.55}{\scriptsize}{Tracking error / $\lambda$}{0.6}{0, 0.2, ..., 1.01}{figures/pytikz/1D/se_track_tolerance_30mm.tex}{figures/pytikz/1D/se_opt_tolerance_30mm.tex} 
+%===================================================%	
+\end{frame}
+
+\subsection{Error tolerance: $\API$}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Error tolerance Results: $\API$}
+%======================================== content =====%
+	\resultAPI{1.55}{\scriptsize}{Tracking error / $\lambda$}{26.5}{0, 0.2, ..., 1.01}{18, 20, ..., 26}{figures/pytikz/1D/api_true_tolerance_30mm.tex}{figures/pytikz/1D/api_track_tolerance_30mm.tex}{figures/pytikz/1D/api_opt_tolerance_30mm.tex} 
+%===================================================%	
+\end{frame}
+
+
+\subsection{Error tolerance: $\GCNR$}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Error tolerance Results: $\GCNR$}
+%======================================== content =====%
+	\resultGCNR{1.55}{\scriptsize}{Tracking error / $\lambda$}{0.85}{0, 0.2, ..., 1.01}{0.85, 0.9, 0.95}{figures/pytikz/1D/gcnr_true_tolerance_30mm.tex}{figures/pytikz/1D/gcnr_track_tolerance_30mm.tex}{figures/pytikz/1D/gcnr_opt_tolerance_30mm.tex}
+%===================================================%	
+\end{frame}
+
+
+\subsection{Impact of the ROI Depth: $\SEdag$}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Impact of the ROI Depth: $\SEdag$}
+%======================================== content =====%
+	\resultSE{1.55}{\scriptsize}{ROI depth [\SI{}{\milli \metre}]}{0.8}{20, 30, ..., 80}{figures/pytikz/1D/se_track_depth.tex}{figures/pytikz/1D/se_opt_depth.tex}
+%===================================================%	
+\end{frame}
+
+
+\subsection{Impact of the ROI Depth: $\API$}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Impact of the ROI Depth: $\API$}
+%======================================== content =====%
+	\resultAPI{1.55}{\scriptsize}{ROI depth [\SI{}{\milli \metre}]}{28}{20, 30, ..., 80}{18, 20, ..., 26}{figures/pytikz/1D/api_true_depth.tex}{figures/pytikz/1D/api_track_depth.tex}{figures/pytikz/1D/api_opt_depth.tex} 
+%===================================================%	
+\end{frame}
+
+
+\subsection{Impact of the ROI Depth: $\GCNR$}
+% small footline with pagenumbers
+\setbeamertemplate{footline}[shrunklight]
+% full headline for sections in headline
+\setbeamertemplate{frametitle}[full]
+\begin{frame}[t]
+\frametitle{Impact of the ROI Depth: $\GCNR$}
+%======================================== content =====%
+	\resultGCNR{1.55}{\scriptsize}{ROI depth [\SI{}{\milli \metre}]}{0.65}{20, 30, ..., 80}{0.65, 0.75, ..., 1.01}{figures/pytikz/1D/gcnr_true_depth.tex}{figures/pytikz/1D/gcnr_track_depth.tex}{figures/pytikz/1D/gcnr_opt_depth.tex}	
+%===================================================%	
+\end{frame}

@@ -1,0 +1,33 @@
+% Sec: Curve Fit via TLS
+% Intro
+The goal of this preprocessing step is to estimate the scatterer positions based on which we can model the measurement data in the next step. Here we assume that the total of $I$ scatterers are located sufficiently far apart in the specimen so that they can be separated into single source from the measurement data. Thus, we aim to estimate the scan position of a single scatter $\scatterer_{i} = \begin{bmatrix} x^{(s)}_{i} & z^{(s)}_{i} \end{bmatrix}$, which resides in the ROI, from the measurement data corresponding to this particular region $\ascan{}^{\ROI}$ and the erroneous positional information $\xxhat$. \par
+
+% Why curve fitting?
+What we know regarding the measurement data is its geometric properties. Due to the symmetric change in the ToF with respect to the scatterer $\scatterer_{i}$, the collection of the measurements, called B-Scan, follows a similar trend as hyperbola. Although they are not the same, a hyperbola can be, with the proper parameterization, well approximated as a parabola within a limited horizontal range. The horizontal range of the UT measurement data is typically very limited as it is confined to the beam spread of the transducer. This enables us to approximate the curve, which a set of measurement data traces, as a parabola, providing the information on the scatterer position. \par 
+
+% Polynomial
+One approach to find the best approximate is curve fitting. In the sense of a parabola this can be done via quadratic regression, where we seek to fit the data to a quadratic equation. For the measurement data $\ascan{k}^{\ROI}$ taken at the position $x_{k}$, the polynomial model of the data can be expressed as 
+\begin{equation} \label{eq:CF_polynomial}
+	z_k = w_0 + w_1 \cdot x_k + w_2 \cdot x_k^{2},
+\end{equation}
+where $z_k$ denotes the peak position of $\ascan{k}^{\ROI}$ and $w_0$, $w_1$ and $w_2$ are polynomial coefficients. From these coefficients, the scatterer positions can be calculated with
+\begin{eqnarray} \label{eq:CF_scatterer}
+	x^{(s)}_i =  - \frac{w_1}{2 w_2} & \mbox{,} & z^{(s)}_i  = w_0 - \frac{w_{1}^{2}}{4 w_2}.
+\end{eqnarray}
+
+% Vector-Matrix form
+Since there are three unknowns in the polynomial, more than three A-Scans are required, and to achieve the sufficient precision of the model the total number of $\K \gg 3$ A-scans are considered to be collected at the scan positions $\xx \in \RR^{\K}$. This lets us formulate \eqref{eq:CF_scatterer} as a vector-matrix product as
+\begin{equation} \label{CF_noerror}
+	\begin{bmatrix} z_1 \\ z_2 \\ \vdots \\ z_{\K} \end{bmatrix} =
+	\begin{bmatrix} 1 & x_1 & x_{1}^{2} \\ 1 & x_2 & x_{2}^{2} \\ & \vdots &  \\ 1 & x_{\K} & x_{\K}^{2} \end{bmatrix}
+	\begin{bmatrix} w_0 \\ w_1 \\ w_2\end{bmatrix},
+\end{equation}
+which can be simply denoted as $\zz = \XX \ww $ with $\zz \in \RR^{\K}$, $\XX \in \RR^{\K \times 3}$ and $\ww \in \RR^{3}$. 
+
+% Errors on both sides -> TLS
+The problem here is that both dependent and independent variables, $\zz$ and $\XX$ respectively, contain the error. $\zz$ may include the measurement noise, quantization error or other possible errors, whereas $\XX$ is corrupted due to the tracking error. This results in \eqref{CF_noerror} becoming approximation which can be solved via TLS as these errors are independent. Hence, we can estimate the position of $\scatterer_i$ by solving the following optimization problem 
+\begin{eqnarray} \label{eq:CF_costfct}
+	\hspace*{-0.4cm} \min \norm{\begin{bmatrix} \Delta \zz & \Delta \XX \end{bmatrix}}_{\Frob}^{2} 
+	& \mbox{s.t.}  
+	& \zzperturb = \left( \XXperturb \right) \ww.
+\end{eqnarray}

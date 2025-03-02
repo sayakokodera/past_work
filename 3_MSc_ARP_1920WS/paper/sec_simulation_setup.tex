@@ -1,0 +1,12 @@
+% Sec: simulation setup
+% Specimen + geometry
+We conducted sets of Monte Carlo simulations with respect to the tracking error with an aluminum object for which we set the same assumptions as we described in Sec. \ref{sec:data_model}. For the sake of simplicity, the measurement data is regarded as noise free. Our ROI contains one scatterer and is a part of the test object where back and side wall echoes can be neglected. The transducer parameters we assumed are based on the Olympus standard contact transducer SUC 166-1 \cite{OlympusCatalog}. \par
+
+% Measurements
+Each measurement data is considered to be taken at a measurement grid point. The resolution of the tracking system, on the other hand, depends on the camera specifications and is assumed to be finer than the measurement grids in order to minimize the quantization error. This means that the tracking positions may be between two grid points, based on which the corresponding measurement matrix is calculated. Since more than three A-Scans are required to estimate a scatterer position, we consider an offline reconstruction process, where each measurement data is first stored in the system before it is reconstructed together with the other A-Scans. Table \ref{tab:params} provides a summary of the test parameters. \par
+
+% Values
+\inputTable{1}{tables/table_params.tex}{Summary of the test parameter values for the simulations}{tab:params}
+\setlength{\belowcaptionskip}{-10pt} % reduces the sapces b/w figures & captions
+% <scaling factor>, <file name for the table>, <caption>, <label>
+% Scaling factor does not work currently!

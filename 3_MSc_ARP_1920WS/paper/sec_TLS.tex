@@ -1,0 +1,60 @@
+% section: TLS
+% Intro
+The TLS method seeks for an optimal solution of an overdetermined system of equations 
+\begin{equation} \label{eq:TLS_approx}
+	\Mone \approx \Mtwo \Mthree
+\end{equation}
+where $\Mone \in \CC^{m \times d}$ and $\Mtwo \in \CC^{m \times n}$ are the given data and $\Mthree \in \CC^{n \times d}$ is unknown with $n, d < m$ \cite{Markovsky07TLS}. \par
+
+% Pertubed eq -> Cost fct
+With $m > n$ and $\Mtwo$ being full column rank, there is typically no exact solution, requiring $\Mthree$ to be approximated. Unlike the least-squares approach, where all modeling errors are assumed to be originated from the dependent variables $\Mone$, TLS takes into account the errors in both $\Mone$ and $\Mtwo$.  By incorporating the errors on both sides, the approximation \eqref{eq:TLS_approx} becomes an equality
+\begin{equation} \label{eq:TLS_perturb}
+	\MonePerturb = \left( \MtwoPerturb \right) \Mthree,
+\end{equation} 
+with $\MoneDelta \in \CC^{m \times d}$ and $\MtwoDelta \in \CC^{m \times n}$ representing the introduced perturbations on both sides.
+% Cost fct 
+Under the assumption that $\MoneDelta$ and $\MtwoDelta$ are independent, TLS seeks for the solution which minimizes both perturbations while satisfying the perturbed equation \eqref{eq:TLS_perturb} \cite{Markovsky07TLS} 
+\begin{eqnarray} \label{eq:TLS_costfct}
+	\hspace*{-0.4cm} \min \norm{\begin{bmatrix}\MtwoDelta & \MoneDelta \end{bmatrix}}_{\Frob}^{2} &
+	\mbox{s.t.} & 
+	\MonePerturb = \left( \MtwoPerturb \right) \Mthree .
+\end{eqnarray} \par
+
+% SVD of measurement matrices
+In order to solve \eqref{eq:TLS_costfct}, singular value decomposition (SVD) can be utilized \cite{Markovsky07TLS, VanHuffel07TLS}. Without perturbations $\Mtwo$ and $\Mone$ are assumed to be linearly independent, making their concatenation matrix full column-rank of $n + d$. The SVD of this concatenation matrix can be obtained as 
+\begin{align} \label{eq:SVD_meas}
+	\begin{bmatrix} \Mtwo & \Mone \end{bmatrix}
+	& = \UU \SSigma \VV^{\Hermit} \nonumber \\
+	& = \begin{bmatrix} \UU_{1} & \UU_{2} \end{bmatrix} 
+	\begin{bmatrix} \SSigma_{1} & \bm{0}_{n \times d} \\ \bm{0}_{(m-n) \times n} & \SSigma_{2} \end{bmatrix} 
+	\begin{bmatrix} \VV_{11} & \VV_{12} \\ \VV_{21} & \VV_{22} \end{bmatrix} ^{\Hermit},
+\end{align}
+where $\UU \in \CC^{m \times m}$ and $\VV \in \CC^{(n + d) \times (n + d)}$ are both unitary matrices and orthogonal to each other, whereas $\SSigma \in \RR^{m \times (n + d)}_{+}$ is a diagonal matrix containing $n + d$ singular values. $\UU$, $\SSigma$ and $\VV$ are further divided into sub matrices $\UU_{1} \in \CC^{m \times n}$ and $\UU_{2} \in \CC^{m \times (m-n)}$, $\SSigma_{1} \in \RR^{n \times n}_{+}$ and  $\SSigma_{2} \in \RR^{(m-n) \times d}_{+}$ and $\VV_{11} \in \CC^{n \times n}$, $\VV_{12} \in \CC^{n \times d}$, $\VV_{21} \in \CC^{d \times n}$ and $\VV_{22} \in \CC^{d \times d}$, respectively. \par
+
+% SVD of pertubed matrices
+The perturbed equation \eqref{eq:TLS_perturb} indicates that the perturbed matrices span the same subspace, i.e. $ \Col{\MonePerturb} = \Col{\MtwoPerturb}$ with $\Col{\cdot}$ representing the column space of a matrix. This results in the concatenation matrix of perturbed matrices with the rank of n, whose SVD can be expressed as 
+\begin{equation} \label{eq:SVD_perturbed}
+	\begin{bmatrix} \MtwoPerturb & \MonePerturb \end{bmatrix}
+	= \UU_{1} \SSigma_{1} 
+	\begin{bmatrix} \VV_{11}^{\Hermit} & \VV_{21}^{\Hermit} \end{bmatrix}.
+\end{equation} \par
+
+% Reformulate the perturbed eq.
+With this concatenation matrix, the perturbed equation \eqref{eq:TLS_perturb}, which is the constraint of the cost function \eqref{eq:TLS_costfct}, can be formulated as
+\begin{equation} \label{eq:TLS_constraint_matrix}
+	\begin{bmatrix} \MtwoPerturb & \MonePerturb \end{bmatrix}
+	\begin{bmatrix} \Mthree \\ - \Identity{d} \end{bmatrix}
+	= \bm{0}_{m \times d}.
+\end{equation}
+This suggests that $\begin{bmatrix} \Mthree^{\Hermit} & - \Identity{d} \end{bmatrix}$ lies in the nullspace of the concatenation of the perturbed matrix $\Null{ \begin{bmatrix} \MtwoPerturb & \MonePerturb \end{bmatrix} } $, which is equal to $\Null{ \begin{bmatrix} \VV_{11}^{\Hermit} & \VV_{21}^{\Hermit} \end{bmatrix} } $. Hence, $\begin{bmatrix} \Mthree^{\Hermit} & - \Identity{d} \end{bmatrix}$ spans the same subspace as $\begin{bmatrix} \VV_{12}^{\Hermit} & \VV_{22}^{\Hermit} \end{bmatrix}$, leading to 
+%\begin{equation} \label{eq:TLS_colspace}
+%	\begin{bmatrix} \Mthree \\ - \Identity{d} \end{bmatrix}
+%	= \begin{bmatrix} \VV_{12} \\ \VV_{22} \end{bmatrix} \Mfour
+%\end{equation}
+%where $\Mfour \in \CC^{d \times d}$. Eq. \eqref{eq:TLS_colspace} yields $- \Identity{d} = \VV_{22} \Mfour$, resulting in $\Mfour = - \VV_{22}^{-1}$. 
+%Thus, 
+the TLS solution for \eqref{eq:TLS_costfct} %can be obtained from
+\begin{equation} \label{eq: TLS_solution}
+	\Mthree_{\TLS} = - \VV_{12} \VV_{22}^{-1}.
+\end{equation}
+

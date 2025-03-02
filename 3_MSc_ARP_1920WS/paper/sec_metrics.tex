@@ -1,0 +1,33 @@
+% Sec: Evaluation Metrics
+Since the imaging quality is strongly related to the human perception, providing satisfactory numerical evaluations is challenging. For this reason, we used three different metrics: normalized root squared error $\SEdag$, \textit{Array Performance Indicator} ($\API$) \cite{Holmes05API} and \textit{Generalized Contrast-to-Noise Ratio} ($\GCNR$) \cite{Molares19GCNR}. As reference we chose the reconstruction results of the measurement data which is processed at the exact measurement positions. \par
+
+% SE
+The normalized root squared error $\SEdag$ shows the difference between the obtained reconstruction results $\Recohat$ and the reference $\Reco$. This is calculated with
+\begin{equation} \label{eq:SEdag}
+	\SEdag = \frac{\norm{\gamma \Recohat - \Reco}_2}{\norm{\Reco}_2},
+\end{equation}
+where $\gamma$ is a normalization factor which can be obtained from 
+\begin{equation}
+	\gamma = \frac{\vectorize{\Reco}^{\T} \vectorize{\Recohat}}{\vectorize{\Recohat}^{\T} \vectorize{\Recohat}}.
+\end{equation} \par
+
+% API
+The $\API$ evaluates the reconstruction resolution in terms of the area which is above a certain threshold, suggesting that the better resolution is attainable with the smaller $\API$. This is defined by \cite{Holmes05API}
+\begin{equation} \label{eq:API}
+	\API = \frac{A_{\epsilon}}{\lambda^{2}},
+\end{equation}
+where $A_{\epsilon}$ and $\lambda$ denote the area which is above the given threshold $\epsilon$ and the wavelength, respectively. In this study we considered the envelop of the reconstruction image and set $\epsilon$ to \SI{-3}{\deci \bel} of its maximum value. \par
+
+% GCNR
+On the other hand, the $\GCNR$ accounts more for human perception of the image contrast by considering the overlap of the probability density functions of inside and outside the target area \cite{Molares19GCNR}. %The superiority of this metric over other conventional contrast metrics is that $\GCNR$ remains unaltered when the contrast of an image is intensified after transforming the dynamic range by applying adaptive beamforming methods. 
+For the given target area, the overlap of the probability density functions is calculated with
+\begin{equation} \label{eq:OVL}
+	\OVL = \int \min \{ p_i (x), p_o (x) \} \dx,
+\end{equation} 
+where $\OVL$ represents the overlap, while $p_i$ and $p_o$ are the probability density function of inside and outside the target area, respectively. Based on this, the $\GCNR$ is obtained from
+\begin{equation} \label{eq:GCNR}
+	\GCNR = 1 - \OVL,
+\end{equation}
+revealing that the higher $\GCNR$ value indicates the better resolution of the image. Here we defined the target area from the reference where its envelope is above \SI{-3}{\deci \bel} of its maximum value.\par
+
+Since we conducted sets of Monte Carlo simulations, the average value of each data set, denoted as $\MSEdag$, $\MAPI$ and $\MGCNR$, is calculated and shown in the following sections. 

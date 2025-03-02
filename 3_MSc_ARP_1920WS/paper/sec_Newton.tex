@@ -1,0 +1,38 @@
+% Sec: Newton's method
+% Intro
+In optimization, the Newton's method is applied to solve unconstrained nonlinear optimization problems iteratively using both first and second derivative of the cost function. Despite its fast convergence, the Newton's method is often less preferred to other gradient-based methods, such as quasi-Newton's method, since it requires to compute the second derivative, which is computationally expensive. Yet, if the second derivative for the particular problem is easy to calculate, it provides more precise and faster convergence than its counterparts which rely only on the first derivative \cite{Nocedal06NumOpt}. \par
+
+% Optimality check
+Suppose we want to minimize a twice differentiable cost function $f: \RR^{\LL} \rightarrow \RR$ 
+\begin{equation}
+	\min_{\xx \in \RR^{\LL}} f (\xx).
+\end{equation}
+The solution of this problem $\xx_{\optimized}$ should satisfy the following two necessary conditions \cite{Bonnans06NumOpt}:
+\begin{eqnarray*} 
+	\mbox{NC1:} & \nabla f (\xx_{\optimized}) = \gradf (\xx_{\optimized}) = \bm{0}_{\LL}\\
+	\mbox{NC2:} & \frac{\partial^{2} f (\xxopt)}{\partial x_{i} \partial x_{j}} = \Hess (\xxopt) \succeq 0 & \mbox{(positive semi-definite)}.
+\end{eqnarray*}
+Under the assumption that NC2 is satisfied for all $\xx \in \RR^{\LL}$, the Newton's method converges towards $\xx_{\optimized}$ by seeking for the roots of $\gradf$, which is equivalent to NC1. \par
+
+% Taylor expansion
+Each iteration of the Newton's method computes a search direction $\dd{n}$ based on the current iterate $\iter{n}$ and searches for a new iterate $\iter{n + 1}$ whose function value $f (\iter{n+1})$ is lower than the current one $f (\iter{n})$ \cite{Nocedal06NumOpt}. Both the function value and its gradient of the next iterate can be expressed with the current iterate using Taylor expansion as
+\begin{align} \label{eq:Taylor_fx}
+	f (\iter{n + 1})
+	& = f (\iter{n} +  \dd{n}) \nonumber \\
+	& \approx f (\iter{n}) + \left[ \gradf (\iter{n}) \right]^{\T} \dd{n} + \frac{1}{2} \dd{n}^{\T} \Hess (\iter{n}) \dd{n}
+\end{align}
+%
+\begin{equation} \label{eq:Taylor_gx}
+	\gradf (\iter{n + 1}) = \gradf (\iter{n} +  \dd{n}) \approx \gradf (\iter{n}) + \Hess (\iter{n}) \dd{n}.
+\end{equation} \par
+
+% Search direction 
+Considering \eqref{eq:Taylor_gx} to satisfy NC1 yields the search direction as
+\begin{equation} \label{eq:search_dir}
+	\dd{n} = - \left[ \Hess (\iter{n}) \right]^{-1} \left[ \gradf (\iter{n}) \right]^{\T},
+\end{equation}
+which can be inserted into \eqref{eq:Taylor_fx} 
+\begin{equation}
+	f (\iter{n + 1}) \approx f (\iter{n}) - \frac{1}{2} \left[ \gradf (\iter{n}) \right]^{\T} \left[ \Hess (\iter{n}) \right]^{-1} \gradf (\iter{n}).
+\end{equation}
+Since $\Hess$ is assumed to be positive semi-definite, $f (\iter{n + 1}) \leq f (\iter{n})$ is ensured, suggesting that $\dd{n}$ in \eqref{eq:search_dir} is an appropriate choice for the search direction. \par

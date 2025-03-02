@@ -1,0 +1,173 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Header: declarations, packages, definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[10pt,twocolumn,a4paper,conference]{IEEEtran}
+
+\input{header_files/packages.tex}
+\input{header_files/newcommands.tex}
+\input{header_files/mathoperators.tex}
+\input{header_files/tikzstyles.tex}
+\input{header_files/set_color.tex}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Main body of the document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\title{\bf "Blind" Iterative SAFT Reconstruction for Manually Acquired Ultrasonic Measurement Data in Nondestructive Testing}
+
+\author{
+\textit{Sayako Kodera}\\
+Ilmenau University of Technology\\
+P. O. Box 100565, D-98684 Ilmenau, Germany \\
+Email: sayako.kodera@tu-ilmenau.de
+} 
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% The abstract
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf {\bf \slshape Abstract \symbol{124}} %
+\input{abstract.tex}  
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Keywords: 2-5, used for indexing the paper
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Keywords may be selected from the IEEE keyword list found at 
+% http://www.ieee.org/organizations/pubs/ani_prod/keywrd98.txt
+
+\smallskip
+
+\begin{IEEEkeywords}
+   Nondestructive testing, Ultrasonic testing, SAFT, Manual measurement, Positional inaccuracy, Total least squares, Newton's method
+\end{IEEEkeywords}
+
+%\section{Major Changes (v.190814)} 
+%\begin{itemize}
+%\item Sec. \ref{sec:intro}: modify motivation and background, eliminate \textit{Contributions} ($\rightarrow$ will be included in abstract)
+%\item Sec. \ref{sec:pulse_echo}: reduce equations, adjust dimension for $\pp$ and $\scatterer$, modify defect map \ref{eq:defect_map}
+%\item Sec. \ref{sec:methods}: modify intro, adjust dimension in \ref{sec:saft_approx}, eliminate long algorithm explanation in \ref{sec:iterative_GD} (to spare the space)
+%\item Add sections for simulation \ref{sec:simulation} and results \ref{sec:results}
+%\end{itemize}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% The introduction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction} \label{sec:intro}
+
+%Your introduction motivates the problem again, emphasizing why it is important
+%and what are the practical applications. Use references wherever possible to support
+%your points. The introduction also introduces the state of the art, citing journal
+%papers \cite{Shannon:48}, conference papers \cite{Haykin:07}, books \cite{Mittelbach:2004},  
+%standards, RFCs, and other references. The use of BibTeX to organize your references is
+%strongly encouraged. Try to avoid using websites as sources since these may change
+%over time.
+%
+%After providing the state of the art, you should emphasize what are the novelties of your proposed 
+%solution and how it differs from the existing ones. Why would anyone need your solution?
+
+\input{sec_intro.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% The main part of the paper
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Chapters are just an example, feel free to modify.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sec.2 %%%%
+\section{Data Model} \label{sec:data_model}
+% Dimension
+% M = Nt = Nz
+% Nx
+% I = Ndefect 
+% L = # of all possible scatters
+% K = dimension of p (either 1 for 2D measurement, 2 for 3D measurement) 
+\input{sec_datamodel.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sec.3 %%%%
+\section{Employed Optimization Techniques} % change the section name
+In the proposed method of this study, two different optimization techniques are used, namely the total least-squares (TLS) and the Newton's method. The former is employed to estimate the scatterer positions, whereas the latter is applied to correct the tracking error  based on the estimated scatterer positions. In this section, the basic ideas and approaches of those techniques are presented. 
+
+\subsection{Total Least-Squares}
+% Dimension
+% Mone = m x d
+% Mtwo = m x n
+% Mthree = n x d
+\input{sec_TLS.tex}
+
+
+\subsection{Newton's Method} \label{sec:Newton}
+% Dimension
+% f: \RR^{\LL} \rightarrow \RR
+\input{sec_Newton.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sec.4 %%%%
+\section{Blind Error Correction (BEC)} \label{sec:methods}  
+% Intro
+\input{sec_spatial_approx.tex}
+
+\subsection{TLS Curve Fitting}
+\input{sec_curvefit.tex}
+
+\subsection{Iterative Error Correction}
+\input{sec_error_correction.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sec.5 %%%%
+\section{Simulation: Investigation of Error Tolerance and Impact Analysis of the ROI Depth} \label{sec:simulation}  
+% Write specific "name" to indicate what kind of s
+%
+%This section may for instance be a ``simulations'' section if the verification is based
+%on computer simulations. In this case, please remember to indicate the simulations setup as completely
+%as possible, including all assumptions that were made (e.g., uncorrelated Rayleigh fading
+%channels or isotropic antenna elements). The reader should be able to reproduce your 
+%simulation results based on your descriptions!
+%
+%Similarly, if measurements were performed, the measurement setup and equipment 
+%as well as your test conditions must be described in detail and the outcome should
+%be discussed.
+%
+%The description of your main results which may of course also span more than one section.
+%Point out its main features, discuss its limitations, compare it to alternative solutions.
+%
+%All results that you show should be interpreted properly -- what do we learn from them?
+%
+Performance of the proposed method was examined through two simulation studies: the simulation \rom{1} shows the error sensitivity of the proposed method, while the simulation \rom{2} illustrates the impact of the ROI depth. The former seeks to provide the insight to assess whether the proposed method is appropriate for the selected measurement assistance system whose error deviation is known as a part of the device specifications. The simulation \rom{2}, on the other hand, is aimed to determine from and up to which ROI depth it is worthwhile to correct the error, since the impact of the horizontal deviation varies with the ROI depth. \par
+
+
+\subsection{Assumptions and Test Parameters} 
+\input{sec_simulation_setup.tex} 
+
+\subsection{Evaluation Metrics} 
+\input{sec_metrics.tex}
+
+\subsection{Results of the Simulation \rom{1}} 
+\input{sec_results_simu1.tex}
+
+\subsection{Results of the Simulation \rom{2}} 
+\input{sec_results_simu2.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% The conclusions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Conclusion} \label{sec:conclusions}
+\input{sec_conclusion.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% References
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\small \bibliography{main}
+
+\end{document}
+
+
+% Some more hints on formatting and avoiding common mistakes can be found here:
+%    http://www.ieee-icc.org/2008/template.pdf

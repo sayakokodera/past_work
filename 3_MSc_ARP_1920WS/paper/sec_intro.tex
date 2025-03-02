@@ -1,0 +1,31 @@
+%%% Intro %%%
+%% General idea
+% (a)
+% Prob(a) : there is a gam b/w automatic & manual UT
+% Goal(a) : reduce the gap
+% Sol(a) : assistance system -> enables post-processing
+% (b)
+% Prob(b): conventional reco does not work well w/ manual UT data due to the systematic errors (e.g. tracking error)
+% Goal(b): reduce the effect of the tracking error
+% Sol(b): error correction via spatial approximation 
+
+%% (1) Background / context
+% UT -> Prob(a)
+Ultrasonic testing (UT) is a nondestructive testing method to inspect the structure of test objects without inducing damage. Conventionally, an UT inspection requires either manual operation by a human technician or automated measurement systems. In manual UT, where a human technician observes the change in the echoed pulse, its inspection quality is highly dependent on the expertise of the technician \cite{Cawley01IMechE}. In automatic UT, on the other hand, measurement data and the corresponding scan positions are recorded, which enables to visualize the inner structure of the test object and further process the data to improve the imaging quality, leading to more reliable inspection quality than its manual counterpart. \par
+
+% Goal(a) -> Sol(a)
+Nevertheless, there are still needs for manual UT, for instance when a complex structure is inspected, and its inspection reliability has been of great concern. In order to improve the inspection reliability of manual UT, an assistance system can be employed, which records measurement data and recognizes the scan positions through a tracking system. This allows us not only to visualize the measurement data but also to process it further to increase its imaging quality \cite{Krieg18SHMNDT}. \par
+
+% Post-processing/ SAFT
+Although their application to manual UT data has been typically excluded, several post-processing techniques have been developed and extensively employed for automatic UT data \cite{Ericsson98ECNDDT, Hall88, Krautkraemer90}. While the authors of \cite{Ericsson98ECNDDT} apply the signal processing methods widely used in the telecommunication field to the UT data, one of the well established post-processing method is the synthetic aperture focusing technique (SAFT) \cite{Hall88, Krautkraemer90}. The aim of SAFT is to improve the spatial resolution through performing superposition with respect to the propagation time delay \cite{Lingvall04PhD}. In other words, SAFT regards the measurement region-of-interest (ROI) as a synthetic aperture and each measurement as its spatial sampling, indicating that the SAFT reconstruction requires accurate positional information. \par
+
+%% (2) Problem statement 
+% Prob(b) -> Goal(b)
+On the contrary, the application of such techniques to manual UT data has not been investigated extensively \cite{Krieg18SHMNDT, Mayer16SAFTwithSmallData}. Previously, we revealed that several stochastic observational errors, such as varying contact pressure or inaccurate positional information due to the tracking error, may result in strong artefacts formation in SAFT reconstructions \cite{Krieg19IUS}. Since such errors are inevitable in manual measurement, finding the way to reduce those artefacts could improve the reconstruction quality. Unlike other possible error factors which should be entirely estimated from the measurement data, the tracking error can be handled to some extent, as the positional information is, whether accurate or not, available. \par
+
+%% (3) Respons
+% Sol(B) = tracking error correction via spatial approximation
+Our goal in this study is to reduce the position-inaccuracy induced artefacts in SAFT reconstructions by correcting the tracking error and modifying the reconstruction system accordingly. Although we are unaware of any other works that deal with this topic, the spatial approximation of the measurement data can be mathematically derived, allowing us to deduce the tracking error by comparing our data model with the actual measurements. This estimate of the tracking error can be utilized to modify the positional information, making it possible to repeat the same procedure to further reduce the tracking error. \par
+
+% Preprocessing as a tool
+Modeling the data, however, requires the information regarding the unknown location of the signal sources. This leads us to formulate a joint optimization problem where both the position of the signal sources and the tracking error are to be estimated. In order to solve this problem, we introduce two preprocessing steps: firstly the signal source positions are estimated from the measurement data and the erroneous positional information via robust regression technique, and in the next step the tracking error is estimated and corrected iteratively using nonlinear programming. Extensive simulation studies have demonstrated that the proposed method is more resistant to positional error and can achieve higher resolution, which is comparable to that of the reconstruction with the exact positional information, than the reconstruction without preprocessing. Furthermore, the depth-dependency of our method is also investigated, which can be used to determine when it is beneficial to apply error correction.

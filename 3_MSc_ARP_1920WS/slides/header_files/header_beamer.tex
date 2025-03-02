@@ -1,0 +1,90 @@
+%%% input encoding, font encoding
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+
+%%% beamerstuff - requirements
+\usepackage{ifthen}
+\usepackage[absolute,overlay]{textpos}
+\setlength{\TPHorizModule}{1cm}
+\setlength{\TPVertModule}{1cm}
+
+
+%%% presentation style stuff
+% load a lot of custom macros and sets the
+% beamer theme
+% when new logos and stuff are required
+% look there
+\input{header_files/theme_macros}
+
+
+
+%%% language settings
+\ifthenelse{ \equal{\setslidelanguage}{german}}
+	{	\usepackage[ngerman]{babel} }
+	{	\usepackage[english]{babel} }
+
+
+%%% general (useful) packages
+% math
+\usepackage{amsmath}
+\usepackage{bm}
+%\usepackage{mathrsfs}
+
+% graphics
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage{animate}
+\usepackage{tikz}
+\usepackage{multido}
+\usetikzlibrary{patterns}
+\usetikzlibrary{matrix,arrows,shapes,trees,fit, snakes, spy}
+\usetikzlibrary{calc,positioning,scopes,backgrounds}
+\usetikzlibrary{tikzmark,decorations.pathreplacing,calligraphy}
+\usepgfplotslibrary{colormaps}
+\usetikzlibrary{external} % most useful, but requires --shell-escape
+\usetikzlibrary{petri} %for tokens in the block diagram for iterative GD
+% this can be used if you want to use tikzexternalize
+% it precompiles your plots to a subfolder called
+% figures/tikz-ext/ and names them according to
+% the section 
+% see https://tex.stackexchange.com/questions/177292/chapter-and-figure-numbers-in-tikz-externalize-prefix
+%
+%
+%\tikzexternalize[
+%    prefix=figures/tikz-ext/,
+%    figure name=plot_sec\thesubsection_no,
+%]
+
+%% for putting figures at the specific locations
+\usepackage[absolute,overlay]{textpos}
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+
+% for checkmark in conclusion
+\usepackage{bbding}
+
+
+% settings and default macros
+\usepackage[load-configurations=abbreviations,load-configurations=binary,binary-units=true]{siunitx}	%korrektes Setzen von SI-Einheiten
+\DeclareSIUnit{\mms}{\milli\squaremetre}
+\DeclareSIUnit{\inch}{in}
+\DeclareSIUnit{\inchs}{in\squared}
+\DeclareSIUnit{\mil}{mil}
+\DeclareSIUnit{\Msps}{Msps}
+\DeclareSIUnit{\Mbps}{Mbps}
+\DeclareSIUnit{\LSB}{LSB}
+\DeclareSIUnit{\pFS}{\percent FS}
+\DeclareSIUnit{\dBc}{\deci\bel c}
+\DeclareSIUnit{\dBm}{\deci\bel m}
+\DeclareSIUnit{\dBFS}{\deci\bel FS}
+\DeclareSIUnit{\dB}{\deci\bel}
+\DeclareSIUnit{\dBi}{\deci\bel i}
+\DeclareSIUnit{\hex}{0x}
+\DeclareSIUnit{\vp}{\volt_{\text{p}}}
+\DeclareSIUnit{\vpp}{\volt_{\text{pp}}}
+\DeclareSIUnit{\kb}{\kilo\bit}
+\DeclareSIUnit{\kB}{\kilo\byte}
+\DeclareSIUnit{\MB}{\mega\byte}
+

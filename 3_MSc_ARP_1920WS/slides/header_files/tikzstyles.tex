@@ -1,0 +1,36 @@
+%%%% TikZ setup %%%%
+
+% for SmartInspect
+\tikzstyle{scanpath} = [tui_blue, dotted, ->, shorten >=1mm, shorten <=1mm,]
+\tikzstyle{scanpoint} = [circle, draw, tui_blue, inner sep = \rCircle, fill = tui_blue]
+\tikzstyle{campoint} = [circle, draw, black, inner sep = \rCircleCamera, fill = gray]
+
+% for synthetic aperture
+\tikzstyle{griddot} = [circle, draw, black, inner sep = 0.01cm, fill = black]
+
+% for drawing block diagram
+\tikzstyle{line} = [draw, thick]
+\tikzstyle{line1} = [draw, thick, ->]
+\tikzstyle{line3} = [draw, gray, thick, dashed, ->]
+\tikzstyle{block} = [rectangle, draw, 
+    text width=2cm, text centered, minimum height=0.8cm]
+\tikzstyle{block2} = [rectangle, draw, 
+    text width=1.8cm, text centered, minimum height=2.8cm]
+\tikzstyle{largebox} = [rectangle, draw, tui_orange, very thick,
+    text width=7cm, text centered, minimum height=3cm]
+\tikzstyle{block4} = [rectangle, draw, 
+    text width=2.2cm, text centered, minimum height=2cm]
+\tikzstyle{adder} = [circle, draw, minimum size=2em]
+\tikzstyle{junction} = [circle, draw, fill=black, minimum size=1pt]
+\tikzstyle{middlepoint} = [circle, draw, fill=gray!30, minimum size=1em]
+\tikzstyle{end} = [circle, draw, fill=black!90, minimum size=1em \and circle, draw, minimum size=1.5em]
+
+
+% for markers in RMSE
+\pgfplotsset{
+  every axis plot post/.append style={
+    every mark/.append style={line width=3pt}
+  }
+}
+% for posscan simulation flow
+\tikzstyle{graydashed} = [draw, gray, thick, dashed]

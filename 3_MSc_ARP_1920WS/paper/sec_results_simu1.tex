@@ -1,0 +1,27 @@
+% Sec: Results of the simulation 1
+% General
+Figure \ref{fig:results_tolerance} presents the evaluation of the obtained results for the simulation \rom{1}, and Figure \ref{fig:recoimg_tolerance}, \ref{fig:true30}, \ref{fig:track30} and \ref{fig:opt30} show the corresponding example reconstruction images. We compared three results: reconstruction without error correction, with error correction (BEC) and the reference. \par
+
+% Smaller error ... 0.4 lambda
+If the tracking error is very little, up to $0.4 \lambda$ in the selected ROI , $\MAPI$ and $\MGCNR$ of the uncorrected reconstruction remains almost the same, showing that such error has negligible effect on the imaging quality. Although it is within the satisfying level, $\MSEdag$ and $\MGCNR$ of the proposed method is worse than that of the uncorrected one. At the same time, $\MAPI$ remains low, which suggests that for a small range of the error approximating the measurement matrix causes weak but more artefacts in the reconstruction than an erroneous measurement matrix. Correcting the tracking error for this error range is, thus, not necessary. \par
+
+% Larger error
+With increasing error, all results illustrate that the tracking error starts making nonnegligible difference between the erroneous and the actual measurement matrices and affecting the imaging quality of the reconstructions. Despite their similar $\MGCNR$ values, the $\MAPI$ values of the uncorrected and the corrected reconstruction vary significantly. These results imply that, while both reconstruction contains the same "amount" of the artefacts, the magnitude of the artefacts in the uncorrected reconstruction is stronger than that in the error-corrected counterpart. Indeed, the imaging quality of the proposed method is comparable to that of the reference (Figure \ref{fig:opt30} and \ref{fig:true30}). This indicates that the proposed method can tolerate larger positional error than reconstructing without preprocessing.  \par
+
+% Results with evaluation
+\begin{figure}
+\input{figures/fig_results_tolerance.tex}
+\setlength{\abovecaptionskip}{-5pt} % reduces the sapces b/w figures & captions
+\caption{Results obtained with the simulation \rom{1}: the reconstruction imaging quality for the varying tracking error}
+\label{fig:results_tolerance}
+\setlength{\belowcaptionskip}{-20pt} % reduces the sapces b/w figures & captions
+\end{figure}
+
+%% Reco images
+\begin{figure}	
+\input{figures/fig_recoimgs_tolerance.tex}
+\setlength{\abovecaptionskip}{-10pt} % reduces the sapces b/w figures & captions
+\caption{Example reconstruction results of the simulation \rom{1}: \ref{fig:true30tolerance} for reference reconstruction, \ref{fig:track04} and \ref{fig:track08} for reconstruction without correction and \ref{fig:opt04} and \ref{fig:opt08} for reconstruction with BEC. The upper row (except the reference) is with the tracking error of $0.4 \lambda$, while the lower row is with the error of $0.8 \lambda$.}
+\label{fig:recoimg_tolerance}
+\setlength{\belowcaptionskip}{-20pt} % reduces the sapces b/w figures & captions
+\end{figure}

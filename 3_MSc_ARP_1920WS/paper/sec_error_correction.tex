@@ -1,0 +1,44 @@
+% Sec: Error Correction via Newton
+In the second step of the preprocessing, the tracking error should be estimated and corrected. As the scatterer positions are estimated in the prior process, yielding $\defecthat_{\CF}$, measurement data can be modeled with \eqref{eq:Ascanapprox} based on the tracked positions $\xxhat$ and $\defecthat_{\CF}$. We now can formulate an optimization problem to estimate the tracking error as
+\begin{equation} \label{eq:ECcostfct}
+	\min_{\xxdelta} f (\xxdelta) = 
+	\norm{
+		\vectorize{\Ascan} - \SAFThat \defecthat_{\CF} + \Error \SAFTdothat \defecthat_{\CF} 
+	}_{2}^{2}.
+\end{equation} 
+As \eqref{eq:ECcostfct} is an unconstrained nonlinear problem, it can be solved iteratively using, for instance, the Newton's method. \par 
+
+%% Prove: Hessian is very easy to compute
+% Simplification
+Employing the Newton's method is, however, only meaningful, when the Hessian matrix of \eqref{eq:ECcostfct} is proven to be easy to compute. Considering that all $\vectorize{\Ascan}$, $\SAFThat \defecthat_{\CF}$ and $\SAFTdothat \defecthat_{\CF}$ are vectors, $f (\xxdelta)$ in \eqref{eq:ECcostfct} can be symplified as 
+\begin{equation}
+	f (\xxdelta) 
+	= \norm{\voneall + \Error \vtwoall}_{2}^{2}
+	= \left[ \voneall + \Error \vtwoall \right]^{\T} \left[ \voneall + \Error \vtwoall \right].
+\end{equation}
+$\voneall \in \RR^{\M \K}$ represents the difference of the $\vectorize{\Ascan}$ and $\SAFThat \defecthat_{\CF}$, while $\vtwoall \in \RR^{\M \K}$ denotes the vector obtained from $\SAFTdothat \defecthat_{\CF}$, both of which are concatenation of $\M$ length vector related to a single A-Scan and the corresponding data model of each measurement position
+\begin{eqnarray}
+	\voneall = \begin{bmatrix} \vonepart{1} \\ \vonepart{2} \\ \vdots \\ \vonepart{\K}	\end{bmatrix} &
+	, &
+	\vtwoall = \begin{bmatrix} \vtwopart{1} \\ \vtwopart{2} \\ \vdots \\ \vtwopart{\K}	\end{bmatrix}.
+\end{eqnarray}
+
+%
+Since $\Error$ is a diagonal matrix, indicating that the tracking error of each measurement position only accounts for the corresponding  modeled A-Scan, the gradient and the Hessian matrix of $f$ can be calculated very easily with 
+\begin{equation}
+	\gradf (\xxdelta) = 
+	\begin{bmatrix}
+		2 \cdot \vonepart{1}^{\T} \vtwopart{1} + \xdelta{1} \cdot \norm{\vtwopart{1}}_{2}^{2}\\
+		2 \cdot \vonepart{2}^{\T} \vtwopart{2} + \xdelta{2} \cdot \norm{\vtwopart{2}}_{2}^{2}\\
+		\vdots \\
+		2 \cdot \vonepart{\K}^{\T} \vtwopart{\K} + \xdelta{\K} \cdot \norm{\vtwopart{\K}}_{2}^{2}\\
+	\end{bmatrix},
+\end{equation}
+and
+\begin{equation}
+	\Hess (\xxdelta) = \diag{\norm{\vtwopart{k}}_{2}^{2}}_{k = 1}^{\K}.
+\end{equation}
+This implies that we can benefit from the fast convergence of the Newton's method without expensive calculation of the second derivative. \par
+
+% Iteration step
+After we estimate the deviation $\xxdeltahat$ by solving \eqref{eq:ECcostfct} via the Newton's method, we modify the erroneous positional information $\xxhat$ to $\xxhat = \xxhat - \xxdeltahat$ and repeat the same procedure based on the newly set and improved positional information $\xxhat$. As a result, the deviation to the actual measurement positions is reduced with each iteration, improving the accuracy of the measurement matrix in \eqref{eq:SAFTapprox} which is used for the reconstruction in \eqref{eq:reco}.

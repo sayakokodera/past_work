@@ -1,0 +1,90 @@
+{
+    "colors" : { 
+        "TUI_blue_dark" : {
+            "space": "rgb",
+            "def": [0, 0.2188, 0.3867]
+        },
+        "TUI_blue_light" : {
+            "space": "rgb",
+            "def": [0.9141, 0.9297, 0.9648]
+        },
+	"TUI_white" : {
+            "space": "rgb",
+            "def": [0.9688, 0.9688, 0.9766]
+        },
+
+	"TUI_orange_dark" : {
+            "space": "rgb",
+            "def": [0.9414, 0.4922, 0]
+        },
+	"TUI_orange_light" : {
+            "space": "rgb",
+            "def": [0.9883, 0.9297, 0.8672]
+        },
+        "TUI_green_dark" : {
+            "space": "rgb",
+            "def": [0, 0.5765, 0.5451]
+        },
+        "TUI_green_light" : {
+            "space": "rgb",
+            "def": [0.9176, 0.9765, 0.9333]
+        },
+	"TUI_red_dark" : {
+            "space": "rgb",
+            "def": [0.7490, 0.1216, 0.0627]
+        },
+	"TUI_red_light" : {
+            "space": "rgb",
+            "def": [1, 0.9176, 0.9176]
+        },
+	"FRI_blue_ultra_light" : {
+            "space": "rgb",
+            "def": [0.9686, 0.9765, 0.9922]
+        },	
+        "FRI_blue_very_light" : {
+            "space": "rgb",
+            "def": [0.8471, 0.9098, 0.9725]
+        },
+        "FRI_blue_light" : {
+            "space": "rgb",
+            "def": [0.5767, 0.7529, 0.8941]
+        },
+	"FRI_blue" : {
+            "space": "rgb",
+            "def": [0.2510, 0.5373, 0.7686]
+        },
+	"FRI_gray_dark" : {
+            "space": "rgb",
+            "def": [0.2784, 0.3529, 0.3882]
+        },
+	"FRI_Gray_customized" : {
+            "space": "rgb",
+            "def": [0.0431, 0.1451, 0.1804]
+        },
+        "FRI_green_ultra_light" : {
+            "space": "rgb",
+            "def": [0.9020, 0.9686, 0.9804]
+        },
+        "FRI_green_very_light" : {
+            "space": "rgb",
+            "def": [0.7608, 0.9451, 0.9137]
+        },
+	"FRI_green_light" : {
+            "space": "rgb",
+            "def": [0.5098, 0.8706, 0.7804]
+        },
+	"FRI_green" : {
+            "space": "rgb",
+            "def": [0, 0.6588, 0.5373]
+        },
+	"FRI_red_dark" : {
+            "space": "rgb",
+            "def": [0.6118, 0.1647, 0.1451]
+        },
+	"FRI_silver" : {
+            "space": "rgb",
+            "def": [0.7225, 0.7843, 0.7922]
+        }	   
+    }		   
+}
+

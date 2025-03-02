@@ -1,0 +1,27 @@
+% Sec: Results of the simulation 2
+% General
+The evaluation of the simulation \rom{2} is presented in Figure \ref{fig:results_depth}, and the example reconstruction results are provided in Figure \ref{fig:recoimg_depth}.  Both results demonstrate that the ROI depth affects the performance of the proposed method. \par
+
+% Shallower region
+Near the object surface, in our case up to \SI{20}{\milli \metre} depth, the imaging quality of the SAFT reconstruction, including the reference, is degraded than the deeper region. This is firstly because of the limited horizontal range due to the transducer beam spread, which generally impairs the spatial resolution of SAFT reconstructions. Furthermore, there is larger change in the ToF of two consecutive scan positions than the deeper region. This not only causes the same horizontal deviation to have more impact on the imaging quality than the deeper region but also reduces the validity range of the spatial approximation. Consequently, the proposed method becomes very susceptive to the horizontal deviation and yields similar or even worse results compared to the reconstruction without error correction. \par
+
+% Middle region
+If the ROI lies deeper in the object, the resolution of all SAFT reconstructions becomes better than in the shallower region. This is because the horizontal range captured within the beam spread expands, enhancing the SAFT reconstruction, which can be seen in improved value of $\MAPI$ and $\MGCNR$ in the reference. The most significant improvement in the imaging quality, however, can be observed in our proposed method. As Figure \ref{fig:opt30} demonstrates, artefacts formation is considerably reduced, resulting in the improved evaluation values in Figure \ref{fig:results_depth}. This is due to the fact that there is smaller change in ToF between two neighboring scans than in the shallower region, which increases the validity range of the spatial approximation and enables to correct the tracking error. Decrease in the ToF change also makes the horizontal deviation less impactful compared to the near surface region, however the uncorrected reconstruction shows less significant improvement than our proposed method, revealing that either strong artefacts or horizontal shifts in the reconstruction cannot be avoided in this region (Figure \ref{fig:track30}). Overall, the results suggest that applying error correction is beneficial, if the ROI does not lie near the surface. \par
+
+% Deeper region
+In much deeper region, deeper than \SI{50}{\milli \metre} for our setup, the evaluation results in Figure \ref{fig:results_depth} indicates that the resolution of all three methods converges. Notably, $\MGCNR$ of the proposed method converges to that of the reference, demonstrating that in this region the tracking error can be very well corrected. Even without error correction, a satisfying resolution is attainable (Figure \ref{fig:track50}). This implies that the horizontal deviation of $1 \lambda$ has little effect on the imaging quality in this region. Although applying error correction may seem not worthwhile, both $\MAPI$ and $\MGCNR$ show that the uncorrected reconstruction cannot achieve the high resolution as that of other two reconstructions. This may become crucial for reconstructing the actual measurement data, as the attainable resolution is much lower than that of the simulations based on the point source assumption.
+
+% Results with evaluation
+\begin{figure}
+\input{figures/fig_results_depth.tex}
+\setlength{\abovecaptionskip}{-5pt} % reduces the sapces b/w figures & captions
+\caption{Results obtained with the simulation \rom{2}: the reconstruction imaging quality for the varying ROI depth}
+\label{fig:results_depth}
+\end{figure}
+
+%% Reco images
+\begin{figure}	
+\input{figures/fig_recoimgs_depth.tex}
+\caption{Example reconstruction results of the simulation \rom{2}: \ref{fig:true20} to \ref{fig:true50} for reference reconstruction, \ref{fig:track20} to \ref{fig:track50} for reconstruction without correction and \ref{fig:opt20} to \ref{fig:opt50} for reconstruction with BEC}
+\label{fig:recoimg_depth}
+\end{figure}

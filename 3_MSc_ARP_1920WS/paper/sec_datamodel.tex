@@ -1,0 +1,68 @@
+% Description on data model
+% General assumptions
+For a measurement setup, we consider a manual contact testing where a handheld transducer is placed directly on the specimen surface at a position $\pp_{k} \in \RR^{3}$.
+The transducer inserts an ultrasonic pulse $\pulsesig (t)$ into a specimen and receives the reflected signal, A-Scan, at the same position $\pp_{k}$. The specimen is assumed to be homogenous and isotropic with the constant speed of sound $c_0$ and to have a flat surface. During the measurement, the contact pressure is considered to be constant so that in the measurement data there is no temporal shift or amplitude change caused by improper coupling. The measurement position $\pp$ is arbitrarily selected on the specimen surface and we suppose that there is at least one scatterer inside the specimen, which is regarded as point source. \par
+
+% Pulse model
+Conventionally, the inserted pulse $\pulsesig (t)$ is modeled as a real-valued Gabor function \citep{GaborAsymmChirp}, as
+\begin{equation} \label{eq:pulse}
+	\pulsesig (t) = e^{- \alpha t^2} \cdot \cos (2 \pi f_C t + \phi),
+\end{equation}
+where $f_C$, $\alpha$  and $\phi$ are the carrier frequency, the window width factor and the phase, respectively.
+% ToF
+The time which the sound travels from $\pp_{k}$ to a scatterer $\scatterer_{i}$ and reflects back to $\pp_{k}$ is so called \textit{time-of-flight}, ToF, which can be obtained with
+\begin{equation} \label{eq:tof}
+	\tau_{i}(\pp_{k}) = \frac{2}{c_0} \cdot \norm{\scatterer_{i} - \pp_{k} }_{2}.
+\end{equation}
+This includes $\norm{\scatterer_{i} - \pp_{k}}_{2}$, which is the $\ell$-2 norm of the difference between $\scatterer_{i}$ and $\pp_{k}$, indicating that the ToF is determined by the position of both measurement and the scatterer. \par
+
+% A-Scan
+The obtained A-Scan is the sum of all $\I$ reflected echoes, which are delayed version of the inserted pulse $\pulsesig (t)$
+\begin{equation} \label{eq:ascan_continuous}
+	\ascansig (t; \pp_{k}) = \sum_{i = 1}^{I} \refcoeff_{\pp_{k}, i} \cdot \pulse (t - \tau_{i} (\pp_{k}) ) + n(t),
+\end{equation}
+where $\refcoeff_{\pp, i}$ is the reflection coefficient for the position $\pp_{k}$ and a scatterer $s_i$ and $n (t)$ is the measurement noise. Since we process the data digitally with the sampling interval of $\dt = \frac{1}{f_S}$, \eqref{eq:ascan_continuous} can be formulated as a vector $ \ascan{\pp_{k}} \in \RR^{\M}$ with $\M$ representing the number of temporal samples 
+\begin{equation} \label{eq:ascan_discrete}
+	\left[ \ascan{\pp_{k}} \right]_m = \sum_{i = 1}^{\I} \refcoeff_{\pp_{k}, i} \cdot \pulsesig (m \dt - \tau_{i} (\pp_{k}) ) + \left[ \noisevec \right]_m.
+\end{equation}
+Here $[ \cdot ]_m$ denotes the $m$-th element of a vector and $\noisevec \in \RR^{\M}$ is the measurement noise in the vector form. \par
+
+% p_{k} -> x_{k}
+As the specimen is assumed to be isotropic, the ToF changes symmetric with respect to the scatterer $\scatterer_{i}$ and so does the measurement data. For the sake of simplicity, in this study we consider the case where the measurements are taken along a line on the flat surface, resulting in $\pp_{k} = \begin{bmatrix} x_k & 0 & 0 \end{bmatrix}^{\T}$. This indicates that \eqref{eq:ascan_discrete} now solely depends on $x_k$, denoted as $\ascan{k}$. \par
+
+% FWM for a single A-Scan
+By collecting the impulse response at $x_k$ for all possible scatterer positions $\scatterer_{i}$ $\forall i = 1 \ldots \LL$, we can form a measurement dictionary $\SAFT_{k} \in \RR^{\M \times \LL} $ as
+\begin{equation} \label{eq:SAFTk_def}
+	\SAFT_k = 
+	\begin{bmatrix} \SAFTcol{k}{1} & \SAFTcol{k}{2} & \cdots & \SAFTcol{k}{\LL} \end{bmatrix}.
+\end{equation}
+$\SAFTcol{k}{l} \in \RR^{\M}$ is the $l$-th column vector of $\SAFT_{k}$, corresponding to the $l$-th scatterer position in the specimen which is
+\begin{equation} \label{eq:SAFTcol}
+	\SAFTcol{k}{l} = \sum_{m = 1}^{\M} \refcoeff_{x_{k}, l} \cdot \pulsesig (m \dt - \tau_{l} (x_{k}) ).
+\end{equation} 
+This enables us to reformulate \eqref{eq:ascan_discrete} as a vector-matrix product as
+\begin{equation} \label{eq:FWM_single}
+	\ascan{k} = \SAFT_k \defect + \noisevec,
+\end{equation}
+where $\defect \in \RR^{\LL}$ is the vectorized \textit{defect map} which represents the scatterer positions and thier amplitudes $\beta_{l}$ \cite{Kirchhof16IUS}. \par
+
+% K A-Scans
+After taking $\K$ measurements at the positions $\xx \in \RR^{\K}$, we can obtain the set of measurements $\Ascan \in \RR^{\M \times \K}$ as 
+\begin{equation} \label{eq:bscan}
+	\Ascan = \left[ \ascan{1} \ascan{2}  \cdots \ascan{\LL} \right].
+\end{equation}
+Column-wise concatenation of measurement dictionaries for all scan positions yields the complete dictionary $\SAFT \in \RR^{\M \K \times \LL}$
+\begin{equation} \label{eq:SAFTdef}
+	\SAFT = \begin{bmatrix} \SAFT_1 \\ \SAFT_2 \\ \vdots \\ \SAFT_{\K} \end{bmatrix}.
+\end{equation}
+This allows us to express $\Ascan$ as linear transform similar to \eqref{eq:FWM_single} 
+\begin{equation} \label{eq:FWM}
+	\vectorize{ \Ascan} = \SAFT \defect + \vectorize { \bm{N} },
+\end{equation}
+in which $\vectorize{ \cdot }$ is the vectorize operation of a matrix and $\vectorize { \bm{N} } \in \RR^{\M \K}$ is the concatenation of all noise vectors.\par
+
+% SAFT
+The ultimate goal of the inspection is to locate the scatterer positions, which can be recovered from \eqref{eq:FWM} with SAFT by computing
+\begin{equation} \label{eq:reco}
+	\defecthat = \SAFT^{\T} \vectorize{ \Ascan}.
+\end{equation}

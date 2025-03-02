@@ -1,0 +1,71 @@
+% Sec: spatial approximation in method intro
+% Intro
+Although SAFT reconstruction is well known for its robustness, computing the measurement matrix from the inaccurate positional information may significantly impair the imaging quality of its reconstruction. However, if the deviation between the actual and the tracked positions is little, the measurement matrix for the actual positions can be spatially approximated via the first order Taylor approximation which we discussed in Section \ref{sec:Newton}. %\par
+%
+%% Taylor
+%Using the first order Taylor approximation the value of an arbitrary function $f$ at the point $u$ can be approximated as   
+%\begin{equation}
+%	f(u) \approx f (u + \Delta u) - f' (u + \Delta u) \cdot  \Delta u,
+%\end{equation}
+%where $\Delta u$ represents the deviation and $f'$ denotes the derivative of $f$. If $f(u)$ and $f (u + \Delta u)$ are available, the deviation $ \Delta u$ can be deduced by comparing these two function values. 
+The same analogy can be employed for approximating the measurement matrix $\SAFT$ in \eqref{eq:FWM}.\par
+
+% Setup & goal
+In this study, we suppose that $\K$ measurements are taken at the positions $\xx \in \RR^{\K}$ which are recognized falsely by the tracking system with the tracking error $\xxdelta \in \RR^{\K}$. This leads the measurement assistance system to provide us the inaccurate positional information $\xxhat = \xx + \xxdelta$. Based on the available information, namely the measurement data $\Ascan$ and the tracked positions $\xxhat$, we aim to estimate and correct the tracking error through comparing our data model with the actual measurement data. \par
+
+% SAFT matrix approximation for ingle A-Scan
+For a single A-Scan taken at $x_{k}$, the measurement matrix of the actual position can be approximated with its tracked position $\xhat{k}$ and deviation $\xdelta{k}$ as
+\begin{equation} \label{eq:SAFTapproxsingle}
+	\SAFT_{k} \approx \SAFThat_{k} - \SAFTdothat_{k} \cdot \xdelta{k}.
+\end{equation}
+Here, $\SAFT_{k} \in \RR^{\M \times \LL}$ and $\SAFThat_{k} \in \RR^{\M \times \LL}$ are the measurement matrix at the actual position $x_{k}$ and the tracked position $\xhat{k}$, respectively, while $\SAFTdothat_{k} \in \RR^{\M \times \LL}$ denotes the derivative of the measurement matrix with respect to the position at $\xhat{k}$. The derivative of the measurement matrix is obtained from 
+\begin{equation} \label{eq:SAFTderivsingle}
+	\SAFTdothat_{k} = \begin{bmatrix} \SAFTdothatcol{k}{1} & \SAFTdothatcol{k}{2} & \cdots & \SAFTdothatcol{k}{\LL} \end{bmatrix}, 
+\end{equation}
+where its column vectors are derived from the corresponding column vectors of the measurement matrix with
+\begin{equation}
+	\SAFTdothatcol{k}{l} = \frac{\partial \SAFThatcol{k}{l}}{\partial x}.
+\end{equation}
+
+% SAFT matrix approximation for K scans
+The approximation of the complete measurement matrix $\SAFT$ of the actual measurement positions $\xx$ can be now expressed based on \eqref{eq:SAFTdef} and \eqref{eq:SAFTapproxsingle} as
+\begin{align} \label{eq:SAFTapprox}
+	\SAFT 
+	& \approx
+	\begin{bmatrix} 
+		\SAFThat_{1} \\ \SAFThat_{2} \\ \vdots \\ \SAFThat_{\K} 
+	\end{bmatrix} -
+	\begin{bmatrix} 
+		\SAFTdothat_{1} \cdot \xdelta{1}\\ \SAFTdothat_{2} \cdot \xdelta{2}\\ \vdots \\ \SAFTdothat_{\K} \cdot \xdelta{\K} 
+	\end{bmatrix} \\
+	& =
+	\SAFThat - \Error \SAFTdothat. \nonumber
+\end{align}
+Here, $\SAFTdothat \in \RR^{\M \K \times \LL}$ is the complete derivative matrix, whereas $\Error \in \RR^{\M \K \times \M\K}$ is obtained from
+\begin{equation} \label{eq:ErrorMat}
+	\Error = \ErrorDef
+\end{equation}
+with the diagonalization operator $\diag{\cdot}$ and $\otimes$ representing the Kronecker product.
+
+% A-Scan approximation ^> cost function
+Based on \eqref{eq:FWM} and \eqref{eq:SAFTapprox}, the measurement data can be modeled as 
+\begin{equation} \label{eq:Ascanapprox}
+	\vectorize{\Ascan} \approx \left[ \SAFThat - \Error \SAFTdothat \right] \defect + \vectorize{\bm{N}}.
+\end{equation}
+Yet, for estimating the tracking error we still lack the information regarding the scatterer positions $\defect$, resulting in \eqref{eq:Ascanapprox} becoming a joint optimization problem as
+\begin{equation} \label{eq:CostFct}
+	\min_{\xxdelta} \min_{\defect} 
+	\norm{ 
+		\vectorize{\Ascan} - \left[ \SAFThat - \Error \SAFTdothat \right] \defect	 
+	}_2^{2}.
+\end{equation} \par
+
+% Preprocessing steps
+Solving \eqref{eq:CostFct} can be divided into two steps shown as Fig. \ref{fig:blockdiagram}. Firstly we estimate the scatterer positions $\defect$ via curve fitting while taking the tracking error into account. Then, we aim to estimate and correct the tracking error iteratively by comparing our data model in \eqref{eq:Ascanapprox} to the measurement data. In the following subsections we demonstrate each step of the preprocessing in detail.
+%
+\begin{figure} 
+	\inputTikZ{0.8}{figures/block_diagram_simulation_flow_base.tex}
+	\caption{Block diagram of the blind error correction as preprocessing}
+	\label{fig:blockdiagram}
+\end{figure}
+
